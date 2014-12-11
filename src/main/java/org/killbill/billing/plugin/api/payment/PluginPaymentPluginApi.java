@@ -90,6 +90,8 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
 
     protected abstract String getPaymentMethodId(PM_R input);
 
+    // Payments
+
     @Override
     public List<PaymentTransactionInfoPlugin> getPaymentInfo(final UUID kbAccountId, final UUID kbPaymentId, final Iterable<PluginProperty> properties, final TenantContext context) throws PaymentPluginApiException {
         final List<RESP_R> records;
@@ -106,6 +108,11 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
                                                                              return buildPaymentTransactionInfoPlugin(record);
                                                                          }
                                                                      });
+    }
+
+    @Override
+    public Pagination<PaymentTransactionInfoPlugin> searchPayments(final String searchKey, final Long offset, final Long limit, final Iterable<PluginProperty> properties, final TenantContext context) throws PaymentPluginApiException {
+        throw new PaymentPluginApiException(null, "SEARCH: unsupported operation");
     }
 
     // Payment methods
