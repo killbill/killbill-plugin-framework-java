@@ -85,7 +85,10 @@ public class PluginDao {
         if (additionalData == null || additionalData.isEmpty()) {
             return null;
         }
+        return asString((Object) additionalData);
+    }
 
+    protected String asString(final Object additionalData) throws SQLException {
         try {
             return objectMapper.writeValueAsString(additionalData);
         } catch (final JsonProcessingException e) {

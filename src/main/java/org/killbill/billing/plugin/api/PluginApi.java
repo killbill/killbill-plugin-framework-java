@@ -403,6 +403,17 @@ public abstract class PluginApi {
         }
     }
 
+    protected PaymentMethod getPaymentMethod(final UUID paymentMethodId, final TenantContext context) throws OSGIServiceNotAvailable {
+        final PaymentApi paymentApi = getPaymentUserApi();
+
+        try {
+            return paymentApi.getPaymentMethodById(paymentMethodId, true, false, PLUGIN_PROPERTIES, context);
+        } catch (final PaymentApiException e) {
+            logService.log(LogService.LOG_INFO, "Error retrieving payment method for paymentMethodId " + paymentMethodId + ": " + e.getMessage());
+            throw new OSGIServiceNotAvailable(e);
+        }
+    }
+
     protected AuditLog getPaymentCreationAuditLog(final UUID paymentId, final AccountAuditLogs accountAuditLogs) throws OSGIServiceNotAvailable {
         final List<AuditLog> auditLogsForPayment = accountAuditLogs.getAuditLogsForPayment(paymentId);
         for (final AuditLog auditLog : auditLogsForPayment) {
