@@ -33,6 +33,12 @@ import com.google.common.collect.Iterables;
 
 public abstract class PluginProperties {
 
+    // Last one has precedence
+    public static Iterable<PluginProperty> merge(final Iterable<PluginProperty>... propertiesLists) {
+        return buildPluginProperties(toMap(propertiesLists));
+    }
+
+    // Last one has precedence
     public static Map<String, String> toMap(final Iterable<PluginProperty>... propertiesLists) {
         final Map<String, String> mergedProperties = new HashMap<String, String>();
         for (final Iterable<PluginProperty> propertiesList : propertiesLists) {
