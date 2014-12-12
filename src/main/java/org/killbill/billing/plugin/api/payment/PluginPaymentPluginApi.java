@@ -69,6 +69,7 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
     public static final String PROPERTY_STATE = "state";
     public static final String PROPERTY_ZIP = "zip";
     public static final String PROPERTY_COUNTRY = "country";
+    public static final String PROPERTY_AMOUNT = "amount";
     public static final String PROPERTY_CURRENCY = "currency";
 
     protected final PluginPaymentDao<RESP_R, RESP_T, PM_R, PM_T> dao;
