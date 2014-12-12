@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -126,7 +127,8 @@ public abstract class TestUtils {
         Mockito.when(account.getCurrency()).thenReturn(currency);
         Mockito.when(account.getPaymentMethodId()).thenReturn(UUID.randomUUID());
         Mockito.when(account.getTimeZone()).thenReturn(DateTimeZone.getDefault());
-        Mockito.when(account.getLocale()).thenReturn(UUID.randomUUID().toString().substring(0, 5));
+        // Return language tag to be able to use Locale.forLanguageTag
+        Mockito.when(account.getLocale()).thenReturn(Locale.US.toLanguageTag());
         Mockito.when(account.getAddress1()).thenReturn(UUID.randomUUID().toString());
         Mockito.when(account.getAddress2()).thenReturn(UUID.randomUUID().toString());
         Mockito.when(account.getCompanyName()).thenReturn(UUID.randomUUID().toString());
