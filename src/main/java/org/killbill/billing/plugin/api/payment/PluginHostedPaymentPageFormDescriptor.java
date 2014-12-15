@@ -45,7 +45,6 @@ public class PluginHostedPaymentPageFormDescriptor implements HostedPaymentPageF
         this(kbAccountId, GET, formUrl, ImmutableList.<PluginProperty>of());
     }
 
-
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formUrl, final List<PluginProperty> formFields) {
         this(kbAccountId, POST, formUrl, formFields);
     }
