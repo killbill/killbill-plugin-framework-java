@@ -114,7 +114,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                    kbPaymentTransactionId.toString(),
                                    transactionType.toString(),
                                    amount,
-                                   currency,
+                                   currency == null ? null : currency.name(),
                                    asString(additionalData),
                                    toTimestamp(utcNow),
                                    kbTenantId.toString())
