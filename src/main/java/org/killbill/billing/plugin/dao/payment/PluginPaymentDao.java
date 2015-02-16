@@ -160,7 +160,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
 
     public void addPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final boolean isDefault, final Map<String, String> properties, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
         final String ccNumber = getProperty(PluginPaymentPluginApi.PROPERTY_CC_NUMBER, properties);
-        final String ccLast4 = ccNumber == null ? null : ccNumber.substring(ccNumber.length() - 5, ccNumber.length() - 1);
+        final String ccLast4 = ccNumber == null ? null : ccNumber.substring(ccNumber.length() - 4, ccNumber.length());
 
         execute(dataSource.getConnection(),
                 new WithConnectionCallback<Void>() {
