@@ -56,8 +56,8 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
     public static final String PROPERTY_CC_TYPE = "ccType";
     public static final String PROPERTY_CC_EXPIRATION_MONTH = "ccExpirationMonth";
     public static final String PROPERTY_CC_EXPIRATION_YEAR = "ccExpirationYear";
-    public static final String PROPERTY_CC_START_MONTH = "ccExpirationMonth";
-    public static final String PROPERTY_CC_START_YEAR = "ccExpirationYear";
+    public static final String PROPERTY_CC_START_MONTH = "ccStartMonth";
+    public static final String PROPERTY_CC_START_YEAR = "ccStartYear";
     public static final String PROPERTY_CC_VERIFICATION_VALUE = "ccVerificationValue";
     public static final String PROPERTY_CC_ISSUE_NUMBER = "ccIssueNumber";
     public static final String PROPERTY_CC_FIRST_NAME = "ccFirstName";
