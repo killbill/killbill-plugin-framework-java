@@ -20,6 +20,7 @@ package org.killbill.billing.plugin.dao.payment;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -159,9 +160,57 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
     // Payment methods
 
     public void addPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final boolean isDefault, final Map<String, String> properties, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
-        final String ccNumber = getProperty(PluginPaymentPluginApi.PROPERTY_CC_NUMBER, properties);
+
+        /* Clone our properties, what we have been given might be unmodifiable */
+        final Map<String, String> clonedProperties = new HashMap<>(properties);
+
+        /* Extract known values from the properties map */
+        final String token               = getProperty(PluginPaymentPluginApi.PROPERTY_TOKEN,                 clonedProperties);
+        final String ccFirstName         = getProperty(PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME,         clonedProperties);
+        final String ccLastName          = getProperty(PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME,          clonedProperties);
+        final String ccType              = getProperty(PluginPaymentPluginApi.PROPERTY_CC_TYPE,               clonedProperties);
+        final String ccExpirationMonth   = getProperty(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH,   clonedProperties);
+        final String ccExpirationYear    = getProperty(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR,    clonedProperties);
+        final String ccNumber            = getProperty(PluginPaymentPluginApi.PROPERTY_CC_NUMBER,             clonedProperties);
+        final String ccStartMonth        = getProperty(PluginPaymentPluginApi.PROPERTY_CC_START_MONTH,        clonedProperties);
+        final String ccStartyear         = getProperty(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR,         clonedProperties);
+        final String ccIssueNumber       = getProperty(PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER,       clonedProperties);
+        final String ccVerificationValue = getProperty(PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE, clonedProperties);
+        final String ccTrackData         = getProperty(PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA,         clonedProperties);
+        final String address1            = getProperty(PluginPaymentPluginApi.PROPERTY_ADDRESS1,              clonedProperties);
+        final String address2            = getProperty(PluginPaymentPluginApi.PROPERTY_ADDRESS2,              clonedProperties);
+        final String city                = getProperty(PluginPaymentPluginApi.PROPERTY_CITY,                  clonedProperties);
+        final String state               = getProperty(PluginPaymentPluginApi.PROPERTY_STATE,                 clonedProperties);
+        final String zip                 = getProperty(PluginPaymentPluginApi.PROPERTY_ZIP,                   clonedProperties);
+        final String country             = getProperty(PluginPaymentPluginApi.PROPERTY_COUNTRY,               clonedProperties);
+
+        /* Remove the keys from the map that will become the "additional data" */
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_TOKEN);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_TYPE);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_NUMBER);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_MONTH);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ADDRESS1);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ADDRESS2);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CITY);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_STATE);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ZIP);
+        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_COUNTRY);
+
+        /* Calculate last 4 digits of the credit card number */
         final String ccLast4 = ccNumber == null ? null : ccNumber.substring(ccNumber.length() - 4, ccNumber.length());
 
+        /* Calculate the additional data to store */
+        final String additionalData = asString(clonedProperties);
+
+        /* Store computed data */
         execute(dataSource.getConnection(),
                 new WithConnectionCallback<Void>() {
                     @Override
@@ -197,28 +246,28 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                        DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID))
                            .values(kbAccountId.toString(),
                                    kbPaymentMethodId.toString(),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_TOKEN, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_TYPE, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR, properties),
+                                   token,
+                                   ccFirstName,
+                                   ccLastName,
+                                   ccType,
+                                   ccExpirationMonth,
+                                   ccExpirationYear,
                                    ccNumber,
                                    ccLast4,
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_START_MONTH, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_ADDRESS1, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_ADDRESS2, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_CITY, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_STATE, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_ZIP, properties),
-                                   getProperty(PluginPaymentPluginApi.PROPERTY_COUNTRY, properties),
+                                   ccStartMonth,
+                                   ccStartyear,
+                                   ccIssueNumber,
+                                   ccVerificationValue,
+                                   ccTrackData,
+                                   address1,
+                                   address2,
+                                   city,
+                                   state,
+                                   zip,
+                                   country,
                                    fromBoolean(isDefault),
                                    FALSE,
-                                   asString(properties),
+                                   additionalData,
                                    toTimestamp(utcNow),
                                    toTimestamp(utcNow),
                                    kbTenantId.toString())
