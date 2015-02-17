@@ -164,45 +164,25 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
         /* Clone our properties, what we have been given might be unmodifiable */
         final Map<String, String> clonedProperties = new HashMap<>(properties);
 
-        /* Extract known values from the properties map */
-        final String token               = getProperty(PluginPaymentPluginApi.PROPERTY_TOKEN,                 clonedProperties);
-        final String ccFirstName         = getProperty(PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME,         clonedProperties);
-        final String ccLastName          = getProperty(PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME,          clonedProperties);
-        final String ccType              = getProperty(PluginPaymentPluginApi.PROPERTY_CC_TYPE,               clonedProperties);
-        final String ccExpirationMonth   = getProperty(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH,   clonedProperties);
-        final String ccExpirationYear    = getProperty(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR,    clonedProperties);
-        final String ccNumber            = getProperty(PluginPaymentPluginApi.PROPERTY_CC_NUMBER,             clonedProperties);
-        final String ccStartMonth        = getProperty(PluginPaymentPluginApi.PROPERTY_CC_START_MONTH,        clonedProperties);
-        final String ccStartyear         = getProperty(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR,         clonedProperties);
-        final String ccIssueNumber       = getProperty(PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER,       clonedProperties);
-        final String ccVerificationValue = getProperty(PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE, clonedProperties);
-        final String ccTrackData         = getProperty(PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA,         clonedProperties);
-        final String address1            = getProperty(PluginPaymentPluginApi.PROPERTY_ADDRESS1,              clonedProperties);
-        final String address2            = getProperty(PluginPaymentPluginApi.PROPERTY_ADDRESS2,              clonedProperties);
-        final String city                = getProperty(PluginPaymentPluginApi.PROPERTY_CITY,                  clonedProperties);
-        final String state               = getProperty(PluginPaymentPluginApi.PROPERTY_STATE,                 clonedProperties);
-        final String zip                 = getProperty(PluginPaymentPluginApi.PROPERTY_ZIP,                   clonedProperties);
-        final String country             = getProperty(PluginPaymentPluginApi.PROPERTY_COUNTRY,               clonedProperties);
-
-        /* Remove the keys from the map that will become the "additional data" */
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_TOKEN);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_TYPE);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_NUMBER);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_MONTH);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ADDRESS1);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ADDRESS2);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CITY);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_STATE);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ZIP);
-        clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_COUNTRY);
+        /* Extract and remove known values from the properties map that will become "additional data" */
+        final String token               = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_TOKEN);
+        final String ccFirstName         = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME);
+        final String ccLastName          = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME);
+        final String ccType              = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_TYPE);
+        final String ccExpirationMonth   = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH);
+        final String ccExpirationYear    = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR);
+        final String ccNumber            = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_NUMBER);
+        final String ccStartMonth        = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_MONTH);
+        final String ccStartyear         = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR);
+        final String ccIssueNumber       = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER);
+        final String ccVerificationValue = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE);
+        final String ccTrackData         = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA);
+        final String address1            = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ADDRESS1);
+        final String address2            = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ADDRESS2);
+        final String city                = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CITY);
+        final String state               = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_STATE);
+        final String zip                 = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_ZIP);
+        final String country             = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_COUNTRY);
 
         /* Calculate last 4 digits of the credit card number */
         final String ccLast4 = ccNumber == null ? null : ccNumber.substring(ccNumber.length() - 4, ccNumber.length());
