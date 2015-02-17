@@ -21,8 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -42,6 +47,7 @@ import org.killbill.billing.payment.api.PaymentTransaction;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.api.TransactionStatus;
 import org.killbill.billing.payment.api.TransactionType;
+import org.killbill.billing.plugin.api.PluginProperties;
 import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillLogService;
@@ -51,12 +57,16 @@ import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 import com.google.common.io.InputSupplier;
 import com.google.common.io.Resources;
 
 public abstract class TestUtils {
+
+    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private static final Logger logger = LoggerFactory.getLogger(TestUtils.class);
 
@@ -181,5 +191,29 @@ public abstract class TestUtils {
         Mockito.when(paymentMethod.isActive()).thenReturn(true);
         Mockito.when(paymentMethod.getPluginName()).thenReturn(pluginName);
         return paymentMethod;
+    }
+
+    /* ====================================================================== */
+
+    public static final List<PluginProperty> toProperties(final Map<String, String> properties) {
+        final List<PluginProperty> list = new ArrayList<>();
+        for (Entry<String, String> entry: properties.entrySet()) {
+            list.add(new PluginProperty(entry.getKey(), entry.getValue(), false));
+        }
+        return list;
+    }
+
+    public static Map<String, String> buildPluginPropertiesMap(final String additionalData) {
+        if (additionalData == null) return Collections.emptyMap();
+        try {
+            return OBJECT_MAPPER.readValue(additionalData, new TypeReference<Map<String, ?>>(){});
+        } catch (IOException exception) {
+            throw new IllegalArgumentException("Malformed JSON: " + additionalData, exception);
+        }
+    }
+
+    public static List<PluginProperty> buildPluginProperties(@Nullable final String additionalData) {
+        if (additionalData == null) return Collections.emptyList();
+        return PluginProperties.buildPluginProperties(buildPluginPropertiesMap(additionalData));
     }
 }
