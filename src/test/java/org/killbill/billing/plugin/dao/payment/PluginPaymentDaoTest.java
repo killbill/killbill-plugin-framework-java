@@ -96,7 +96,7 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
         final TransactionType transactionType = TransactionType.AUTHORIZE;
         final BigDecimal amount = new BigDecimal("123.456");
         final Currency currency = Currency.JPY;
-        final Map<String, String> additionalData = new HashMap<>();
+        final Map<String, String> additionalData = new HashMap<String, String>();
         final DateTime timestamp = utcNow.minus(utcNow.getMillisOfSecond());
         final UUID kbTenantId = UUID.randomUUID();
 
@@ -206,16 +206,16 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
         final List<PluginProperty> methodProperties = TestUtils.toProperties(Collections.singletonMap(PROPERTY_CC_NUMBER, "The Wrong CC number"));
         final PaymentMethodPlugin method = new PluginPaymentMethodPlugin(null, null, false, methodProperties);
 
-        final Map<String, String> propertiesMap = new HashMap<>();
-        propertiesMap.put(PROPERTY_CC_FIRST_NAME,         "myCcFirstName");
-        propertiesMap.put(PROPERTY_CC_LAST_NAME,          "myCcLAstName");
-        propertiesMap.put(PROPERTY_CC_TYPE,               "myCcType");
-        propertiesMap.put(PROPERTY_CC_EXPIRATION_MONTH,   "myCcExpMonth");
-        propertiesMap.put(PROPERTY_CC_EXPIRATION_YEAR,    "myCcExpYear");
-        propertiesMap.put(PROPERTY_CC_NUMBER,             "01234567890ABCDEF");
-        propertiesMap.put(PROPERTY_CC_START_MONTH,        "myCcStartMonth");
-        propertiesMap.put(PROPERTY_CC_START_YEAR,         "myCcStartYear");
-        propertiesMap.put(PROPERTY_CC_ISSUE_NUMBER,       "myCcIssueNumber");
+        final Map<String, String> propertiesMap = new HashMap<String, String>();
+        propertiesMap.put(PROPERTY_CC_FIRST_NAME, "myCcFirstName");
+        propertiesMap.put(PROPERTY_CC_LAST_NAME, "myCcLAstName");
+        propertiesMap.put(PROPERTY_CC_TYPE, "myCcType");
+        propertiesMap.put(PROPERTY_CC_EXPIRATION_MONTH, "myCcExpMonth");
+        propertiesMap.put(PROPERTY_CC_EXPIRATION_YEAR, "myCcExpYear");
+        propertiesMap.put(PROPERTY_CC_NUMBER, "01234567890ABCDEF");
+        propertiesMap.put(PROPERTY_CC_START_MONTH, "myCcStartMonth");
+        propertiesMap.put(PROPERTY_CC_START_YEAR, "myCcStartYear");
+        propertiesMap.put(PROPERTY_CC_ISSUE_NUMBER, "myCcIssueNumber");
         propertiesMap.put(PROPERTY_CC_VERIFICATION_VALUE, "myCcVerificationVal");
         propertiesMap.put(PROPERTY_CC_TRACK_DATA,         "myCcTrackData");
         propertiesMap.put(PROPERTY_ADDRESS1,              "myAddress1");

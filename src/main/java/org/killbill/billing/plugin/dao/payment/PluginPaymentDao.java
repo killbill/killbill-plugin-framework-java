@@ -162,7 +162,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
     public void addPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final boolean isDefault, final Map<String, String> properties, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
 
         /* Clone our properties, what we have been given might be unmodifiable */
-        final Map<String, String> clonedProperties = new HashMap<>(properties);
+        final Map<String, String> clonedProperties = new HashMap<String, String>(properties);
 
         /* Extract and remove known values from the properties map that will become "additional data" */
         final String token               = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_TOKEN);

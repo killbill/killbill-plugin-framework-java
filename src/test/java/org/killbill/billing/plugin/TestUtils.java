@@ -196,8 +196,8 @@ public abstract class TestUtils {
     /* ====================================================================== */
 
     public static final List<PluginProperty> toProperties(final Map<String, String> properties) {
-        final List<PluginProperty> list = new ArrayList<>();
-        for (Entry<String, String> entry: properties.entrySet()) {
+        final List<PluginProperty> list = new ArrayList<PluginProperty>();
+        for (final Entry<String, String> entry: properties.entrySet()) {
             list.add(new PluginProperty(entry.getKey(), entry.getValue(), false));
         }
         return list;
