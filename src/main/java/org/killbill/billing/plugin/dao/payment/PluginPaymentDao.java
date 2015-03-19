@@ -160,7 +160,6 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
     // Payment methods
 
     public void addPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final boolean isDefault, final Map<String, String> properties, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
-
         /* Clone our properties, what we have been given might be unmodifiable */
         final Map<String, String> clonedProperties = new HashMap<String, String>(properties);
 
@@ -173,7 +172,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
         final String ccExpirationYear    = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR);
         final String ccNumber            = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_NUMBER);
         final String ccStartMonth        = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_MONTH);
-        final String ccStartyear         = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR);
+        final String ccStartYear         = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_START_YEAR);
         final String ccIssueNumber       = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER);
         final String ccVerificationValue = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE);
         final String ccTrackData         = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA);
@@ -235,7 +234,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                    ccNumber,
                                    ccLast4,
                                    ccStartMonth,
-                                   ccStartyear,
+                                   ccStartYear,
                                    ccIssueNumber,
                                    ccVerificationValue,
                                    ccTrackData,

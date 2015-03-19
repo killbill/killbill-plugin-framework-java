@@ -1,3 +1,20 @@
+/*
+ * Copyright 2015 Groupon, Inc
+ * Copyright 2015 The Billing Project, LLC
+ *
+ * The Billing Project licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.killbill.billing.plugin.dao.payment;
 
 import java.math.BigDecimal;
@@ -44,10 +61,10 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
     /* ====================================================================== */
 
     public TestPaymentPluginApi(final OSGIKillbillAPI killbillAPI,
-                                    final OSGIConfigPropertiesService configProperties,
-                                    final OSGIKillbillLogService logService,
-                                    final Clock clock,
-                                    final TestPluginPaymentDao dao) {
+                                final OSGIConfigPropertiesService configProperties,
+                                final OSGIKillbillLogService logService,
+                                final Clock clock,
+                                final TestPluginPaymentDao dao) {
         super(killbillAPI, configProperties, logService, clock, dao);
         this.dao = dao;
     }
@@ -58,7 +75,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
 
     /* Used by getPaymentInfo(...) */
     @Override
-    protected PaymentTransactionInfoPlugin buildPaymentTransactionInfoPlugin(TestResponsesRecord record) {
+    protected PaymentTransactionInfoPlugin buildPaymentTransactionInfoPlugin(final TestResponsesRecord record) {
 
         final DateTime createdDate = new DateTime(record.getCreatedDate(), DateTimeZone.UTC);
         final List<PluginProperty> properties = TestUtils.buildPluginProperties(record.getAdditionalData());
@@ -80,7 +97,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
 
     /* Used by getPaymentMethodDetail(...) */
     @Override
-    protected PaymentMethodPlugin buildPaymentMethodPlugin(TestPaymentMethodsRecord record) {
+    protected PaymentMethodPlugin buildPaymentMethodPlugin(final TestPaymentMethodsRecord record) {
         return new PluginPaymentMethodPlugin(UUID.fromString(record.getKbPaymentMethodId()),
                                              record.getToken(),
                                              record.getIsDefault() == PluginPaymentDao.TRUE,
@@ -89,7 +106,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
 
     /* Used by getPaymentMethods(...) */
     @Override
-    protected PaymentMethodInfoPlugin buildPaymentMethodInfoPlugin(TestPaymentMethodsRecord record) {
+    protected PaymentMethodInfoPlugin buildPaymentMethodInfoPlugin(final TestPaymentMethodsRecord record) {
         return new PluginPaymentMethodInfoPlugin(UUID.fromString(record.getKbAccountId()),
                                                  UUID.fromString(record.getKbPaymentMethodId()),
                                                  record.getIsDefault() == PluginPaymentDao.TRUE,
@@ -98,7 +115,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
 
     /* Used by resetPaymentMethods(...) */
     @Override
-    protected String getPaymentMethodId(TestPaymentMethodsRecord record) {
+    protected String getPaymentMethodId(final TestPaymentMethodsRecord record) {
         return record.getKbPaymentMethodId();
     }
 

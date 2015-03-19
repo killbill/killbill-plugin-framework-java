@@ -1,24 +1,21 @@
-package org.killbill.billing.plugin.dao.payment;
+/*
+ * Copyright 2015 Groupon, Inc
+ * Copyright 2015 The Billing Project, LLC
+ *
+ * The Billing Project licenses this file to you under the Apache License, version 2.0
+ * (the "License"); you may not use this file except in compliance with the
+ * License.  You may obtain a copy of the License at:
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 
-import static org.killbill.billing.payment.plugin.api.PaymentPluginStatus.UNDEFINED;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_ADDRESS1;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_ADDRESS2;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_NUMBER;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_START_MONTH;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_START_YEAR;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_TYPE;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CITY;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_COUNTRY;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_STATE;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_TOKEN;
-import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_ZIP;
+package org.killbill.billing.plugin.dao.payment;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -55,6 +52,26 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static org.killbill.billing.payment.plugin.api.PaymentPluginStatus.UNDEFINED;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_ADDRESS1;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_ADDRESS2;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_MONTH;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_EXPIRATION_YEAR;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_FIRST_NAME;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_ISSUE_NUMBER;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_LAST_NAME;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_NUMBER;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_START_MONTH;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_START_YEAR;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_TRACK_DATA;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_TYPE;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CC_VERIFICATION_VALUE;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_CITY;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_COUNTRY;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_STATE;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_TOKEN;
+import static org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi.PROPERTY_ZIP;
+
 public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
 
     private TestPluginPaymentDao dao;
@@ -86,8 +103,7 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
     }
 
     @Test(groups = "slow")
-    public void testInsertPaymentResult()
-    throws SQLException, IOException {
+    public void testInsertPaymentResult() throws SQLException, IOException {
         final DateTime utcNow = DateTime.now();
 
         final UUID kbAccountId = UUID.randomUUID();
@@ -119,34 +135,34 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
         Assert.assertEquals(records.size(), 1, "Invalid number of records returned");
 
         final TestResponsesRecord record = records.get(0);
-        Assert.assertEquals(record.getKbAccountId(),            kbAccountId.toString(),     "Wrong kbAccountId");
-        Assert.assertEquals(record.getKbPaymentId(),            kbPaymentId.toString(),     "Wrong kbAccountId");
+        Assert.assertEquals(record.getKbAccountId(), kbAccountId.toString(), "Wrong kbAccountId");
+        Assert.assertEquals(record.getKbPaymentId(), kbPaymentId.toString(), "Wrong kbAccountId");
         Assert.assertEquals(record.getKbPaymentTransactionId(), kbTransactionId.toString(), "Wrong kbPaymentTransactionId");
-        Assert.assertEquals(record.getTransactionType(),        transactionType.name(),     "Wrong transactionType");
-        Assert.assertEquals(record.getAmount().doubleValue(),   amount.doubleValue(),       "Wrong amount");
-        Assert.assertEquals(record.getCurrency(),               currency.name(),            "Wrong currency");
+        Assert.assertEquals(record.getTransactionType(), transactionType.name(), "Wrong transactionType");
+        Assert.assertEquals(record.getAmount().doubleValue(), amount.doubleValue(), "Wrong amount");
+        Assert.assertEquals(record.getCurrency(), currency.name(), "Wrong currency");
         Assert.assertEquals(TestUtils.buildPluginPropertiesMap(record.getAdditionalData()),
-                                                                additionalData,             "Wrong additionalData");
-        Assert.assertEquals(record.getCreatedDate().getTime(),  timestamp.getMillis(),      "Wrong createdDate");
-        Assert.assertEquals(record.getKbTenantId(),             kbTenantId.toString(),      "Wrong kbTenantId");
+                            additionalData, "Wrong additionalData");
+        Assert.assertEquals(record.getCreatedDate().getTime(), timestamp.getMillis(), "Wrong createdDate");
+        Assert.assertEquals(record.getKbTenantId(), kbTenantId.toString(), "Wrong kbTenantId");
 
         final PaymentTransactionInfoPlugin transaction = api.buildPaymentTransactionInfoPlugin(record);
-        Assert.assertEquals(transaction.getKbPaymentId(),               kbPaymentId,            "Wrong kbPaymentId");
-        Assert.assertEquals(transaction.getKbTransactionPaymentId(),    kbTransactionId,        "Wrong kbTransactionPaymentId");
-        Assert.assertEquals(transaction.getTransactionType(),           transactionType,        "Wrong transactionType");
-        Assert.assertEquals(transaction.getAmount().doubleValue(),      amount.doubleValue(),   "Wrong amount().doubleValue");
-        Assert.assertEquals(transaction.getCurrency(),                  currency,               "Wrong currency");
-        Assert.assertEquals(transaction.getStatus(),                    UNDEFINED,              "Wrong status");
-        Assert.assertEquals(transaction.getGatewayError(),              null,                   "Wrong gatewayError");
-        Assert.assertEquals(transaction.getGatewayErrorCode(),          null,                   "Wrong gatewayErrorCode");
-        Assert.assertEquals(transaction.getFirstPaymentReferenceId(),   null,                   "Wrong firstPaymentReferenceId");
-        Assert.assertEquals(transaction.getSecondPaymentReferenceId(),  null,                   "Wrong secondPaymentReferenceId");
-        Assert.assertEquals(transaction.getCreatedDate().getMillis(),   timestamp.getMillis(),  "Wrong createdDate().getMillis");
-        Assert.assertEquals(transaction.getEffectiveDate().getMillis(), timestamp.getMillis(),  "Wrong effectiveDate().getMillis");
+        Assert.assertEquals(transaction.getKbPaymentId(), kbPaymentId, "Wrong kbPaymentId");
+        Assert.assertEquals(transaction.getKbTransactionPaymentId(), kbTransactionId, "Wrong kbTransactionPaymentId");
+        Assert.assertEquals(transaction.getTransactionType(), transactionType, "Wrong transactionType");
+        Assert.assertEquals(transaction.getAmount().doubleValue(), amount.doubleValue(), "Wrong amount().doubleValue");
+        Assert.assertEquals(transaction.getCurrency(), currency, "Wrong currency");
+        Assert.assertEquals(transaction.getStatus(), UNDEFINED, "Wrong status");
+        Assert.assertEquals(transaction.getGatewayError(), null, "Wrong gatewayError");
+        Assert.assertEquals(transaction.getGatewayErrorCode(), null, "Wrong gatewayErrorCode");
+        Assert.assertEquals(transaction.getFirstPaymentReferenceId(), null, "Wrong firstPaymentReferenceId");
+        Assert.assertEquals(transaction.getSecondPaymentReferenceId(), null, "Wrong secondPaymentReferenceId");
+        Assert.assertEquals(transaction.getCreatedDate().getMillis(), timestamp.getMillis(), "Wrong createdDate().getMillis");
+        Assert.assertEquals(transaction.getEffectiveDate().getMillis(), timestamp.getMillis(), "Wrong effectiveDate().getMillis");
 
         final List<PluginProperty> properties = transaction.getProperties();
         Assert.assertEquals(properties.size(), additionalData.size(), "Wrong properties size");
-        for (Entry<String, String> entry: additionalData.entrySet()) {
+        for (final Entry<String, String> entry : additionalData.entrySet()) {
             final String value = PluginProperties.findPluginPropertyValue(entry.getKey(), properties);
             Assert.assertEquals(value, entry.getValue(), "Wrong property value for key " + entry.getKey());
         }
@@ -163,46 +179,45 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
 
         final TestPaymentMethodsRecord record = dao.getPaymentMethod(kbPaymentMethodId, context.getTenantId());
 
-        Assert.assertEquals(record.getKbPaymentMethodId(),     kbPaymentMethodId.toString(),     "Wrong kbPaymentMethodId");
-        Assert.assertEquals(record.getKbAccountId(),           account.getId().toString(),       "Wrong kbAccountId");
-        Assert.assertEquals(record.getKbTenantId(),            context.getTenantId().toString(), "Wrong kbTenantId");
-        Assert.assertEquals(record.getCcFirstName(),           null,                             "Wrong ccFirstName");
-        Assert.assertEquals(record.getCcLastName(),            null,                             "Wrong ccLastName");
-        Assert.assertEquals(record.getCcType(),                null,                             "Wrong ccType");
-        Assert.assertEquals(record.getCcExpMonth(),            null,                             "Wrong ccExpMonth");
-        Assert.assertEquals(record.getCcExpYear(),             null,                             "Wrong ccExpYear");
-        Assert.assertEquals(record.getCcNumber(),              null,                             "Wrong ccNumber");
-        Assert.assertEquals(record.getCcLast_4(),              null,                             "Wrong ccLast_4");
-        Assert.assertEquals(record.getCcStartMonth(),          null,                             "Wrong ccStartMonth");
-        Assert.assertEquals(record.getCcStartYear(),           null,                             "Wrong ccStartYear");
-        Assert.assertEquals(record.getCcIssueNumber(),         null,                             "Wrong ccIssueNumber");
-        Assert.assertEquals(record.getCcVerificationValue(),   null,                             "Wrong ccVerificationValue");
-        Assert.assertEquals(record.getCcTrackData(),           null,                             "Wrong ccTrackData");
-        Assert.assertEquals(record.getAddress1(),              null,                             "Wrong address1");
-        Assert.assertEquals(record.getAddress2(),              null,                             "Wrong address2");
-        Assert.assertEquals(record.getCity(),                  null,                             "Wrong city");
-        Assert.assertEquals(record.getState(),                 null,                             "Wrong state");
-        Assert.assertEquals(record.getZip(),                   null,                             "Wrong zip");
-        Assert.assertEquals(record.getCountry(),               null,                             "Wrong country");
-        Assert.assertEquals(record.getToken(),                 null,                             "Wrong token");
-        Assert.assertEquals(record.getAdditionalData(),        null,                             "Wrong additionalData");
-        Assert.assertEquals(record.getIsDefault().byteValue(), PluginPaymentDao.TRUE,            "Wrong isDefault");
-        Assert.assertEquals(record.getIsDeleted().byteValue(), PluginPaymentDao.FALSE,           "Wrong isDeleted");
+        Assert.assertEquals(record.getKbPaymentMethodId(), kbPaymentMethodId.toString(), "Wrong kbPaymentMethodId");
+        Assert.assertEquals(record.getKbAccountId(), account.getId().toString(), "Wrong kbAccountId");
+        Assert.assertEquals(record.getKbTenantId(), context.getTenantId().toString(), "Wrong kbTenantId");
+        Assert.assertEquals(record.getCcFirstName(), null, "Wrong ccFirstName");
+        Assert.assertEquals(record.getCcLastName(), null, "Wrong ccLastName");
+        Assert.assertEquals(record.getCcType(), null, "Wrong ccType");
+        Assert.assertEquals(record.getCcExpMonth(), null, "Wrong ccExpMonth");
+        Assert.assertEquals(record.getCcExpYear(), null, "Wrong ccExpYear");
+        Assert.assertEquals(record.getCcNumber(), null, "Wrong ccNumber");
+        Assert.assertEquals(record.getCcLast_4(), null, "Wrong ccLast_4");
+        Assert.assertEquals(record.getCcStartMonth(), null, "Wrong ccStartMonth");
+        Assert.assertEquals(record.getCcStartYear(), null, "Wrong ccStartYear");
+        Assert.assertEquals(record.getCcIssueNumber(), null, "Wrong ccIssueNumber");
+        Assert.assertEquals(record.getCcVerificationValue(), null, "Wrong ccVerificationValue");
+        Assert.assertEquals(record.getCcTrackData(), null, "Wrong ccTrackData");
+        Assert.assertEquals(record.getAddress1(), null, "Wrong address1");
+        Assert.assertEquals(record.getAddress2(), null, "Wrong address2");
+        Assert.assertEquals(record.getCity(), null, "Wrong city");
+        Assert.assertEquals(record.getState(), null, "Wrong state");
+        Assert.assertEquals(record.getZip(), null, "Wrong zip");
+        Assert.assertEquals(record.getCountry(), null, "Wrong country");
+        Assert.assertEquals(record.getToken(), null, "Wrong token");
+        Assert.assertEquals(record.getAdditionalData(), null, "Wrong additionalData");
+        Assert.assertEquals(record.getIsDefault().byteValue(), PluginPaymentDao.TRUE, "Wrong isDefault");
+        Assert.assertEquals(record.getIsDeleted().byteValue(), PluginPaymentDao.FALSE, "Wrong isDeleted");
 
         Assert.assertNotNull(record.getCreatedDate(), "Wrong createdDate");
         Assert.assertNotNull(record.getUpdatedDate(), "Wrong updatedDate");
 
         final PaymentMethodPlugin plugin = api.buildPaymentMethodPlugin(record);
-        Assert.assertEquals(plugin.getKbPaymentMethodId(),       kbPaymentMethodId, "Wrong kbPaymentMethodId");
-        Assert.assertEquals(plugin.getExternalPaymentMethodId(), null,              "Wrong externalPaymentMethodId");
-        Assert.assertEquals(plugin.isDefaultPaymentMethod(),     true,              "Wrong defaultPaymentMethod");
-        Assert.assertNotNull(plugin.getProperties(),                                "Wrong properties");
-        Assert.assertEquals(plugin.getProperties().size(),       0,                 "Wrong properties size");
+        Assert.assertEquals(plugin.getKbPaymentMethodId(), kbPaymentMethodId, "Wrong kbPaymentMethodId");
+        Assert.assertEquals(plugin.getExternalPaymentMethodId(), null, "Wrong externalPaymentMethodId");
+        Assert.assertEquals(plugin.isDefaultPaymentMethod(), true, "Wrong defaultPaymentMethod");
+        Assert.assertNotNull(plugin.getProperties(), "Wrong properties");
+        Assert.assertEquals(plugin.getProperties().size(), 0, "Wrong properties size");
     }
 
     @Test(groups = "slow")
     public void testNormalPaymentMethod() throws Exception {
-
         final List<PluginProperty> methodProperties = TestUtils.toProperties(Collections.singletonMap(PROPERTY_CC_NUMBER, "The Wrong CC number"));
         final PaymentMethodPlugin method = new PluginPaymentMethodPlugin(null, null, false, methodProperties);
 
@@ -217,58 +232,58 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
         propertiesMap.put(PROPERTY_CC_START_YEAR, "myCcStartYear");
         propertiesMap.put(PROPERTY_CC_ISSUE_NUMBER, "myCcIssueNumber");
         propertiesMap.put(PROPERTY_CC_VERIFICATION_VALUE, "myCcVerificationVal");
-        propertiesMap.put(PROPERTY_CC_TRACK_DATA,         "myCcTrackData");
-        propertiesMap.put(PROPERTY_ADDRESS1,              "myAddress1");
-        propertiesMap.put(PROPERTY_ADDRESS2,              "myAddress2");
-        propertiesMap.put(PROPERTY_CITY,                  "myCity");
-        propertiesMap.put(PROPERTY_STATE,                 "myState");
-        propertiesMap.put(PROPERTY_ZIP,                   "myZip");
-        propertiesMap.put(PROPERTY_COUNTRY,               "myCountry");
-        propertiesMap.put(PROPERTY_TOKEN,                 "myToken");
+        propertiesMap.put(PROPERTY_CC_TRACK_DATA, "myCcTrackData");
+        propertiesMap.put(PROPERTY_ADDRESS1, "myAddress1");
+        propertiesMap.put(PROPERTY_ADDRESS2, "myAddress2");
+        propertiesMap.put(PROPERTY_CITY, "myCity");
+        propertiesMap.put(PROPERTY_STATE, "myState");
+        propertiesMap.put(PROPERTY_ZIP, "myZip");
+        propertiesMap.put(PROPERTY_COUNTRY, "myCountry");
+        propertiesMap.put(PROPERTY_TOKEN, "myToken");
 
-        propertiesMap.put("Foo",                          "myFooXX");
-        propertiesMap.put("Bar",                          "myBarYY");
-        propertiesMap.put("Baz",                          "myBazZZ");
+        propertiesMap.put("Foo", "myFooXX");
+        propertiesMap.put("Bar", "myBarYY");
+        propertiesMap.put("Baz", "myBazZZ");
 
         final UUID kbPaymentMethodId = UUID.randomUUID();
         api.addPaymentMethod(account.getId(), kbPaymentMethodId, method, true, TestUtils.toProperties(propertiesMap), context);
 
         final TestPaymentMethodsRecord record = dao.getPaymentMethod(kbPaymentMethodId, context.getTenantId());
 
-        Assert.assertEquals(record.getKbPaymentMethodId(),     kbPaymentMethodId.toString(),     "Wrong kbPaymentMethodId");
-        Assert.assertEquals(record.getKbAccountId(),           account.getId().toString(),       "Wrong kbAccountId");
-        Assert.assertEquals(record.getKbTenantId(),            context.getTenantId().toString(), "Wrong kbTenantId");
-        Assert.assertEquals(record.getCcFirstName(),           "myCcFirstName",                  "Wrong ccFirstName");
-        Assert.assertEquals(record.getCcLastName(),            "myCcLAstName",                   "Wrong ccLastName");
-        Assert.assertEquals(record.getCcType(),                "myCcType",                       "Wrong ccType");
-        Assert.assertEquals(record.getCcExpMonth(),            "myCcExpMonth",                   "Wrong ccExpMonth");
-        Assert.assertEquals(record.getCcExpYear(),             "myCcExpYear",                    "Wrong ccExpYear");
-        Assert.assertEquals(record.getCcNumber(),              "01234567890ABCDEF",              "Wrong ccNumber");
-        Assert.assertEquals(record.getCcLast_4(),              "CDEF",                           "Wrong ccLast_4");
-        Assert.assertEquals(record.getCcStartMonth(),          "myCcStartMonth",                 "Wrong ccStartMonth");
-        Assert.assertEquals(record.getCcStartYear(),           "myCcStartYear",                  "Wrong ccStartYear");
-        Assert.assertEquals(record.getCcIssueNumber(),         "myCcIssueNumber",                "Wrong ccIssueNumber");
-        Assert.assertEquals(record.getCcVerificationValue(),   "myCcVerificationVal",            "Wrong ccVerificationValue");
-        Assert.assertEquals(record.getCcTrackData(),           "myCcTrackData",                  "Wrong ccTrackData");
-        Assert.assertEquals(record.getAddress1(),              "myAddress1",                     "Wrong address1");
-        Assert.assertEquals(record.getAddress2(),              "myAddress2",                     "Wrong address2");
-        Assert.assertEquals(record.getCity(),                  "myCity",                         "Wrong city");
-        Assert.assertEquals(record.getState(),                 "myState",                        "Wrong state");
-        Assert.assertEquals(record.getZip(),                   "myZip",                          "Wrong zip");
-        Assert.assertEquals(record.getCountry(),               "myCountry",                      "Wrong country");
-        Assert.assertEquals(record.getToken(),                 "myToken",                        "Wrong token");
-        Assert.assertEquals(record.getIsDefault().byteValue(), PluginPaymentDao.TRUE,            "Wrong isDefault");
-        Assert.assertEquals(record.getIsDeleted().byteValue(), PluginPaymentDao.FALSE,           "Wrong isDeleted");
+        Assert.assertEquals(record.getKbPaymentMethodId(), kbPaymentMethodId.toString(), "Wrong kbPaymentMethodId");
+        Assert.assertEquals(record.getKbAccountId(), account.getId().toString(), "Wrong kbAccountId");
+        Assert.assertEquals(record.getKbTenantId(), context.getTenantId().toString(), "Wrong kbTenantId");
+        Assert.assertEquals(record.getCcFirstName(), "myCcFirstName", "Wrong ccFirstName");
+        Assert.assertEquals(record.getCcLastName(), "myCcLAstName", "Wrong ccLastName");
+        Assert.assertEquals(record.getCcType(), "myCcType", "Wrong ccType");
+        Assert.assertEquals(record.getCcExpMonth(), "myCcExpMonth", "Wrong ccExpMonth");
+        Assert.assertEquals(record.getCcExpYear(), "myCcExpYear", "Wrong ccExpYear");
+        Assert.assertEquals(record.getCcNumber(), "01234567890ABCDEF", "Wrong ccNumber");
+        Assert.assertEquals(record.getCcLast_4(), "CDEF", "Wrong ccLast_4");
+        Assert.assertEquals(record.getCcStartMonth(), "myCcStartMonth", "Wrong ccStartMonth");
+        Assert.assertEquals(record.getCcStartYear(), "myCcStartYear", "Wrong ccStartYear");
+        Assert.assertEquals(record.getCcIssueNumber(), "myCcIssueNumber", "Wrong ccIssueNumber");
+        Assert.assertEquals(record.getCcVerificationValue(), "myCcVerificationVal", "Wrong ccVerificationValue");
+        Assert.assertEquals(record.getCcTrackData(), "myCcTrackData", "Wrong ccTrackData");
+        Assert.assertEquals(record.getAddress1(), "myAddress1", "Wrong address1");
+        Assert.assertEquals(record.getAddress2(), "myAddress2", "Wrong address2");
+        Assert.assertEquals(record.getCity(), "myCity", "Wrong city");
+        Assert.assertEquals(record.getState(), "myState", "Wrong state");
+        Assert.assertEquals(record.getZip(), "myZip", "Wrong zip");
+        Assert.assertEquals(record.getCountry(), "myCountry", "Wrong country");
+        Assert.assertEquals(record.getToken(), "myToken", "Wrong token");
+        Assert.assertEquals(record.getIsDefault().byteValue(), PluginPaymentDao.TRUE, "Wrong isDefault");
+        Assert.assertEquals(record.getIsDeleted().byteValue(), PluginPaymentDao.FALSE, "Wrong isDeleted");
 
         Assert.assertNotNull(record.getAdditionalData(), "Wrong additionalData");
-        Assert.assertNotNull(record.getCreatedDate(),    "Wrong createdDate");
-        Assert.assertNotNull(record.getUpdatedDate(),    "Wrong updatedDate");
+        Assert.assertNotNull(record.getCreatedDate(), "Wrong createdDate");
+        Assert.assertNotNull(record.getUpdatedDate(), "Wrong updatedDate");
 
         final PaymentMethodPlugin plugin = api.buildPaymentMethodPlugin(record);
-        Assert.assertEquals(plugin.getKbPaymentMethodId(),       kbPaymentMethodId, "Wrong kbPaymentMethodId");
-        Assert.assertEquals(plugin.getExternalPaymentMethodId(), "myToken",         "Wrong externalPaymentMethodId");
-        Assert.assertEquals(plugin.isDefaultPaymentMethod(),     true,              "Wrong defaultPaymentMethod");
-        Assert.assertNotNull(plugin.getProperties(),                                "Wrong properties");
+        Assert.assertEquals(plugin.getKbPaymentMethodId(), kbPaymentMethodId, "Wrong kbPaymentMethodId");
+        Assert.assertEquals(plugin.getExternalPaymentMethodId(), "myToken", "Wrong externalPaymentMethodId");
+        Assert.assertEquals(plugin.isDefaultPaymentMethod(), true, "Wrong defaultPaymentMethod");
+        Assert.assertNotNull(plugin.getProperties(), "Wrong properties");
 
         final List<PluginProperty> pluginProperties = plugin.getProperties();
         Assert.assertEquals(pluginProperties.size(), 3, "Wrong properties size");
@@ -276,5 +291,4 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
         Assert.assertEquals(PluginProperties.getValue("Bar", null, pluginProperties), "myBarYY", "Wrong extra property Bar");
         Assert.assertEquals(PluginProperties.getValue("Baz", null, pluginProperties), "myBazZZ", "Wrong extra property Baz");
     }
-
 }
