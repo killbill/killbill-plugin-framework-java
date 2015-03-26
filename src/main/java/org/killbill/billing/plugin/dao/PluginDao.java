@@ -20,6 +20,7 @@ package org.killbill.billing.plugin.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Map;
 
 import javax.annotation.Nullable;
@@ -75,6 +76,10 @@ public class PluginDao {
 
     protected static Timestamp toTimestamp(@Nullable final DateTime dateTime) {
         return dateTime == null ? null : new Timestamp(dateTime.getMillis());
+    }
+
+    protected static Timestamp toTimestamp(@Nullable final Date date) {
+        return date == null ? null : new Timestamp(date.getTime());
     }
 
     protected String getProperty(final String key, final Map additionalData) {

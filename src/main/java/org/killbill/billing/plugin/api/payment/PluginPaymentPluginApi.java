@@ -121,7 +121,7 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
     @Override
     public void addPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final PaymentMethodPlugin paymentMethodProps, final boolean setDefault, final Iterable<PluginProperty> properties, final CallContext context) throws PaymentPluginApiException {
         // Note: query parameters have precedence by convention
-        final Map<String, String> mergedProperties = PluginProperties.toMap(paymentMethodProps.getProperties(), properties);
+        final Map<String, String> mergedProperties = PluginProperties.toStringMap(paymentMethodProps.getProperties(), properties);
 
         final DateTime utcNow = clock.getUTCNow();
         try {
@@ -207,7 +207,7 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
         for (final PaymentMethodInfoPlugin existingPaymentMethod : paymentMethods) {
             if (!existingPaymentMethodIds.contains(existingPaymentMethod.getPaymentMethodId())) {
                 try {
-                    dao.addPaymentMethod(kbAccountId, existingPaymentMethod.getPaymentMethodId(), existingPaymentMethod.isDefault(), PluginProperties.toMap(properties), utcNow, context.getTenantId());
+                    dao.addPaymentMethod(kbAccountId, existingPaymentMethod.getPaymentMethodId(), existingPaymentMethod.isDefault(), PluginProperties.toStringMap(properties), utcNow, context.getTenantId());
                 } catch (final SQLException e) {
                     throw new PaymentPluginApiException("Unable to add payment method for kbPaymentMethodId " + existingPaymentMethod.getPaymentMethodId(), e);
                 }

@@ -35,10 +35,14 @@ import javax.annotation.Nullable;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
 import org.killbill.billing.account.api.Account;
 import org.killbill.billing.account.api.AccountApiException;
 import org.killbill.billing.account.api.AccountUserApi;
 import org.killbill.billing.catalog.api.Currency;
+import org.killbill.billing.invoice.api.Invoice;
+import org.killbill.billing.invoice.api.InvoiceItem;
+import org.killbill.billing.invoice.api.InvoiceItemType;
 import org.killbill.billing.payment.api.Payment;
 import org.killbill.billing.payment.api.PaymentApi;
 import org.killbill.billing.payment.api.PaymentApiException;
@@ -127,6 +131,10 @@ public abstract class TestUtils {
     }
 
     public static Account buildAccount(final Currency currency, final String country) {
+        return buildAccount(currency, UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString(), UUID.randomUUID().toString().substring(0, 16), country);
+    }
+
+    public static Account buildAccount(final Currency currency, final String address1, final String address2, final String city, final String stateOrProvince, final String postalCode, final String country) {
         final Account account = Mockito.mock(Account.class);
         Mockito.when(account.getId()).thenReturn(UUID.randomUUID());
         Mockito.when(account.getExternalKey()).thenReturn(UUID.randomUUID().toString());
@@ -139,12 +147,12 @@ public abstract class TestUtils {
         Mockito.when(account.getTimeZone()).thenReturn(DateTimeZone.getDefault());
         // Return language tag to be able to use Locale.forLanguageTag
         Mockito.when(account.getLocale()).thenReturn(Locale.US.toLanguageTag());
-        Mockito.when(account.getAddress1()).thenReturn(UUID.randomUUID().toString());
-        Mockito.when(account.getAddress2()).thenReturn(UUID.randomUUID().toString());
+        Mockito.when(account.getAddress1()).thenReturn(address1);
+        Mockito.when(account.getAddress2()).thenReturn(address2);
         Mockito.when(account.getCompanyName()).thenReturn(UUID.randomUUID().toString());
-        Mockito.when(account.getCity()).thenReturn(UUID.randomUUID().toString());
-        Mockito.when(account.getStateOrProvince()).thenReturn(UUID.randomUUID().toString());
-        Mockito.when(account.getPostalCode()).thenReturn(UUID.randomUUID().toString().substring(0, 16));
+        Mockito.when(account.getCity()).thenReturn(city);
+        Mockito.when(account.getStateOrProvince()).thenReturn(stateOrProvince);
+        Mockito.when(account.getPostalCode()).thenReturn(postalCode);
         Mockito.when(account.getCountry()).thenReturn(country);
         Mockito.when(account.getPhone()).thenReturn(UUID.randomUUID().toString().substring(0, 25));
         Mockito.when(account.isMigrated()).thenReturn(true);
@@ -193,18 +201,55 @@ public abstract class TestUtils {
         return paymentMethod;
     }
 
+    public static Invoice buildInvoice(final Account account) {
+        final Invoice invoice = Mockito.mock(Invoice.class);
+        Mockito.when(invoice.getId()).thenReturn(UUID.randomUUID());
+        // To work-around org.mockito.exceptions.misusing.UnfinishedStubbingException
+        final UUID accountId = account.getId();
+        final Currency currency = account.getCurrency();
+        Mockito.when(invoice.getAccountId()).thenReturn(accountId);
+        Mockito.when(invoice.getInvoiceDate()).thenReturn(new LocalDate());
+        Mockito.when(invoice.getCurrency()).thenReturn(currency);
+        Mockito.when(invoice.getInvoiceItems()).thenReturn(new LinkedList<InvoiceItem>());
+        return invoice;
+    }
+
+    public static InvoiceItem buildInvoiceItem(final Invoice invoice, final InvoiceItemType invoiceItemType, final BigDecimal amount, @Nullable final UUID linkedItemID) {
+        final InvoiceItem invoiceItem = Mockito.mock(InvoiceItem.class);
+        Mockito.when(invoiceItem.getId()).thenReturn(UUID.randomUUID());
+        Mockito.when(invoiceItem.getInvoiceItemType()).thenReturn(invoiceItemType);
+        // To work-around org.mockito.exceptions.misusing.UnfinishedStubbingException
+        final UUID accountId = invoice.getAccountId();
+        final UUID invoiceId = invoice.getId();
+        final Currency currency = invoice.getCurrency();
+        Mockito.when(invoiceItem.getAccountId()).thenReturn(accountId);
+        Mockito.when(invoiceItem.getInvoiceId()).thenReturn(invoiceId);
+        Mockito.when(invoiceItem.getLinkedItemId()).thenReturn(linkedItemID);
+        Mockito.when(invoiceItem.getBundleId()).thenReturn(UUID.randomUUID());
+        Mockito.when(invoiceItem.getSubscriptionId()).thenReturn(UUID.randomUUID());
+        Mockito.when(invoiceItem.getPlanName()).thenReturn(UUID.randomUUID().toString());
+        Mockito.when(invoiceItem.getPhaseName()).thenReturn(UUID.randomUUID().toString());
+        Mockito.when(invoiceItem.getUsageName()).thenReturn(UUID.randomUUID().toString());
+        Mockito.when(invoiceItem.getAmount()).thenReturn(amount);
+        Mockito.when(invoiceItem.getCurrency()).thenReturn(currency);
+
+        return invoiceItem;
+    }
+
     /* ====================================================================== */
 
     public static final List<PluginProperty> toProperties(final Map<String, String> properties) {
         final List<PluginProperty> list = new ArrayList<PluginProperty>();
-        for (final Entry<String, String> entry: properties.entrySet()) {
+        for (final Entry<String, String> entry : properties.entrySet()) {
             list.add(new PluginProperty(entry.getKey(), entry.getValue(), false));
         }
         return list;
     }
 
     public static Map<String, String> buildPluginPropertiesMap(final String additionalData) {
-        if (additionalData == null) return Collections.emptyMap();
+        if (additionalData == null) {
+            return Collections.emptyMap();
+        }
         try {
             return OBJECT_MAPPER.readValue(additionalData, new TypeReference<Map<String, ?>>(){});
         } catch (final IOException exception) {
@@ -213,7 +258,9 @@ public abstract class TestUtils {
     }
 
     public static List<PluginProperty> buildPluginProperties(@Nullable final String additionalData) {
-        if (additionalData == null) return Collections.emptyList();
+        if (additionalData == null) {
+            return Collections.emptyList();
+        }
         return PluginProperties.buildPluginProperties(buildPluginPropertiesMap(additionalData));
     }
 }

@@ -26,10 +26,12 @@ import javax.annotation.Nullable;
 
 import org.killbill.billing.payment.api.PluginProperty;
 
+import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 
 public abstract class PluginProperties {
 
@@ -39,16 +41,28 @@ public abstract class PluginProperties {
     }
 
     // Last one has precedence
-    public static Map<String, String> toMap(final Iterable<PluginProperty>... propertiesLists) {
-        final Map<String, String> mergedProperties = new HashMap<String, String>();
+    public static Map<String, Object> toMap(final Iterable<PluginProperty>... propertiesLists) {
+        final Map<String, Object> mergedProperties = new HashMap<String, Object>();
         for (final Iterable<PluginProperty> propertiesList : propertiesLists) {
             for (final PluginProperty pluginProperty : propertiesList) {
                 if (pluginProperty.getKey() != null && pluginProperty.getValue() != null) {
-                    mergedProperties.put(pluginProperty.getKey(), String.valueOf(pluginProperty.getValue()));
+                    mergedProperties.put(pluginProperty.getKey(), pluginProperty.getValue());
                 }
             }
         }
         return mergedProperties;
+    }
+
+    // Last one has precedence
+    public static Map<String, String> toStringMap(final Iterable<PluginProperty>... propertiesLists) {
+        return Maps.transformValues(toMap(propertiesLists),
+                                    new Function<Object, String>() {
+                                        @Nullable
+                                        @Override
+                                        public String apply(@Nullable final Object input) {
+                                            return input == null ? null : input.toString();
+                                        }
+                                    });
     }
 
     // Return the value from the plugin properties if it exists, or the fallback otherwise
@@ -75,6 +89,20 @@ public abstract class PluginProperties {
         }
         final String pluginPropertyString = String.valueOf(pluginProperty.getValue());
         return Strings.isNullOrEmpty(pluginPropertyString) ? null : pluginPropertyString;
+    }
+
+    public static Iterable<PluginProperty> findPluginProperties(final String key, @Nullable final Iterable<PluginProperty> properties) {
+        if (properties == null) {
+            return null;
+        }
+
+        return Iterables.filter(properties,
+                                new Predicate<PluginProperty>() {
+                                    @Override
+                                    public boolean apply(final PluginProperty input) {
+                                        return key.equals(input.getKey());
+                                    }
+                                });
     }
 
     public static Iterable<PluginProperty> findPluginProperties(final Pattern keyPattern, @Nullable final Iterable<PluginProperty> properties) {
