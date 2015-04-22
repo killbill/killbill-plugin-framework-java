@@ -17,6 +17,7 @@
 
 package org.killbill.billing.plugin.util.http;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -42,7 +43,7 @@ import com.ning.http.client.ProxyServer;
 import com.ning.http.client.Realm;
 import com.ning.http.client.Response;
 
-public class HttpClient {
+public class HttpClient implements Closeable {
 
     protected static final String APPLICATION_JSON = "application/json";
     protected static final String APPLICATION_XML = "application/xml";
@@ -87,6 +88,11 @@ public class HttpClient {
         }
         this.httpClient = new AsyncHttpClient(cfg.build());
         this.mapper = createObjectMapper();
+    }
+
+    @Override
+    public void close() throws IOException {
+        httpClient.close();
     }
 
     protected ObjectMapper createObjectMapper() {

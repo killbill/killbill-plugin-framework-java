@@ -17,6 +17,8 @@
 
 package org.killbill.billing.plugin.api.notification;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.UUID;
 
 import org.testng.Assert;
@@ -44,5 +46,61 @@ public class TestPluginTenantConfigurable {
         testTenantConfigurable.put(kbTenantIdA, "A");
         Assert.assertEquals(testTenantConfigurable.get(kbTenantIdA), "A");
         Assert.assertEquals(testTenantConfigurable.get(kbTenantIdB), "B");
+    }
+
+    @Test(groups = "fast")
+    public void testCloseable() throws Exception {
+        final UUID kbTenantIdA = UUID.randomUUID();
+        final UUID kbTenantIdB = UUID.randomUUID();
+
+        final CloseableTest defaultCloseableTest = new CloseableTest();
+        final PluginTenantConfigurable<CloseableTest> testTenantConfigurable = new PluginTenantConfigurable<CloseableTest>(defaultCloseableTest);
+
+        testTenantConfigurable.put(kbTenantIdA, null);
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+
+        final CloseableTest closeableTestA1 = new CloseableTest();
+        testTenantConfigurable.put(kbTenantIdA, closeableTestA1);
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+        Assert.assertFalse(closeableTestA1.isClosed());
+
+        final CloseableTest closeableTestA2 = new CloseableTest();
+        testTenantConfigurable.put(kbTenantIdA, closeableTestA2);
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+        Assert.assertTrue(closeableTestA1.isClosed());
+        Assert.assertFalse(closeableTestA2.isClosed());
+
+        final CloseableTest closeableTestB = new CloseableTest();
+        testTenantConfigurable.put(kbTenantIdB, closeableTestB);
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+        Assert.assertTrue(closeableTestA1.isClosed());
+        Assert.assertFalse(closeableTestA2.isClosed());
+        Assert.assertFalse(closeableTestB.isClosed());
+
+        testTenantConfigurable.put(kbTenantIdA, null);
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+        Assert.assertTrue(closeableTestA1.isClosed());
+        Assert.assertTrue(closeableTestA2.isClosed());
+        Assert.assertFalse(closeableTestB.isClosed());
+
+        testTenantConfigurable.put(kbTenantIdA, defaultCloseableTest);
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+        Assert.assertTrue(closeableTestA1.isClosed());
+        Assert.assertTrue(closeableTestA2.isClosed());
+        Assert.assertFalse(closeableTestB.isClosed());
+    }
+
+    private static final class CloseableTest implements Closeable {
+
+        private boolean isClosed = false;
+
+        public boolean isClosed() {
+            return isClosed;
+        }
+
+        @Override
+        public void close() throws IOException {
+            isClosed = true;
+        }
     }
 }

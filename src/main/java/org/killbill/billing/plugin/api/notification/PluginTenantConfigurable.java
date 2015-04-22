@@ -17,6 +17,8 @@
 
 package org.killbill.billing.plugin.api.notification;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,7 +60,15 @@ public class PluginTenantConfigurable<C> {
 
     public void put(@Nullable final UUID kbTenantId, @Nullable final C configurableForTenant) {
         final String key = getKey(kbTenantId);
-        perTenantConfigurable.put(key, Objects.firstNonNull(configurableForTenant, defaultConfigurable));
+        final C oldConfigurable = perTenantConfigurable.put(key, Objects.firstNonNull(configurableForTenant, defaultConfigurable));
+
+        // Cleanup the old value
+        if (oldConfigurable != null && oldConfigurable instanceof Closeable && oldConfigurable != defaultConfigurable) {
+            try {
+                ((Closeable) oldConfigurable).close();
+            } catch (final IOException ignored) {
+            }
+        }
     }
 
     private String getKey(@Nullable final UUID kbTenantId) {
