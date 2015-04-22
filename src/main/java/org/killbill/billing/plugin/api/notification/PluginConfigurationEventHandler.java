@@ -23,17 +23,19 @@ import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillEventDispatcher;
 
 public class PluginConfigurationEventHandler implements OSGIKillbillEventDispatcher.OSGIKillbillEventHandler {
 
-    private final PluginConfigurationHandler pluginConfigurationHandler;
+    private final PluginConfigurationHandler[] pluginConfigurationHandlers;
 
-    public PluginConfigurationEventHandler(final PluginConfigurationHandler pluginConfigurationHandler) {
-        this.pluginConfigurationHandler = pluginConfigurationHandler;
+    public PluginConfigurationEventHandler(final PluginConfigurationHandler... pluginConfigurationHandlers) {
+        this.pluginConfigurationHandlers = pluginConfigurationHandlers;
     }
 
     @Override
     public void handleKillbillEvent(final ExtBusEvent extBusEvent) {
         if (ExtBusEventType.TENANT_CONFIG_CHANGE.equals(extBusEvent.getEventType()) ||
             ExtBusEventType.TENANT_CONFIG_DELETION.equals(extBusEvent.getEventType())) {
-            pluginConfigurationHandler.configure(extBusEvent.getMetaData(), extBusEvent.getTenantId());
+            for (final PluginConfigurationHandler pluginConfigurationHandler : pluginConfigurationHandlers) {
+                pluginConfigurationHandler.configure(extBusEvent.getMetaData(), extBusEvent.getTenantId());
+            }
         }
     }
 }
