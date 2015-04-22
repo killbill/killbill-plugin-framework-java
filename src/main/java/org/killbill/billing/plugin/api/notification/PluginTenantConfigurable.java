@@ -23,6 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
+import com.google.common.base.Objects;
+
 public class PluginTenantConfigurable<C> {
 
     private static final String MONO_TENANT = "MONO_TENANT";
@@ -51,12 +53,12 @@ public class PluginTenantConfigurable<C> {
     public C get(@Nullable final UUID kbTenantId) {
         final String key = getKey(kbTenantId);
         final C configurableForTenant = perTenantConfigurable.get(key);
-        return configurableForTenant == null ? defaultConfigurable : configurableForTenant;
+        return Objects.firstNonNull(configurableForTenant, defaultConfigurable);
     }
 
-    public void put(@Nullable final UUID kbTenantId, final C c) {
+    public void put(@Nullable final UUID kbTenantId, @Nullable final C configurableForTenant) {
         final String key = getKey(kbTenantId);
-        perTenantConfigurable.put(key, c);
+        perTenantConfigurable.put(key, Objects.firstNonNull(configurableForTenant, defaultConfigurable));
     }
 
     private String getKey(@Nullable final UUID kbTenantId) {
