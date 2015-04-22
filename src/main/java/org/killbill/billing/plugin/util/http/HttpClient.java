@@ -211,6 +211,10 @@ public class HttpClient implements Closeable {
     }
 
     private String getUrl(final String location, final String uri) throws URISyntaxException {
+        if (uri == null) {
+            throw new URISyntaxException("(null)", "HttpClient URL misconfigured");
+        }
+
         final URI u = new URI(uri);
         if (u.isAbsolute()) {
             return uri;
