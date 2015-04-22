@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 Groupon, Inc
- * Copyright 2014 The Billing Project, LLC
+ * Copyright 2014-2015 Groupon, Inc
+ * Copyright 2014-2015 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -25,7 +25,7 @@ public class PluginTenantContext implements TenantContext {
 
     protected final UUID tenantId;
 
-    public PluginTenantContext(UUID tenantId) {
+    public PluginTenantContext(final UUID tenantId) {
         this.tenantId = tenantId;
     }
 
@@ -43,7 +43,7 @@ public class PluginTenantContext implements TenantContext {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -51,7 +51,7 @@ public class PluginTenantContext implements TenantContext {
             return false;
         }
 
-        PluginTenantContext that = (PluginTenantContext) o;
+        final PluginTenantContext that = (PluginTenantContext) o;
 
         if (tenantId != null ? !tenantId.equals(that.tenantId) : that.tenantId != null) {
             return false;
