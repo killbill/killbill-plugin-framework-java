@@ -31,7 +31,7 @@ public class PluginTenantContext implements TenantContext {
 
     @Override
     public UUID getTenantId() {
-        return null;
+        return tenantId;
     }
 
     @Override
