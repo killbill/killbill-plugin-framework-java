@@ -1,5 +1,8 @@
 0.1.0
     Initial release for Kill Bill 0.14.x
+    Add utilities for multi-tenancy configuration
+    Support for Tax plugins
+    Update to killbill-oss-parent 0.11
 
 0.0.3
     https://github.com/killbill/killbill-plugin-framework-java/issues/1
