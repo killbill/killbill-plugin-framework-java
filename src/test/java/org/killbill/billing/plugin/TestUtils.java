@@ -64,8 +64,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Resources;
 
 public abstract class TestUtils {
@@ -102,14 +101,12 @@ public abstract class TestUtils {
     }
 
     public static String toString(final String resourceName) throws IOException {
-        final InputStream stream = Resources.getResource(resourceName).openStream();
-        final InputSupplier<InputStream> inputSupplier = new InputSupplier<InputStream>() {
-            @Override
-            public InputStream getInput() throws IOException {
-                return stream;
-            }
-        };
-        return CharStreams.toString(CharStreams.newReaderSupplier(inputSupplier, Charsets.UTF_8));
+        final InputStream inputStream = Resources.getResource(resourceName).openStream();
+        try {
+            return new String(ByteStreams.toByteArray(inputStream), Charsets.UTF_8);
+        } finally {
+            inputStream.close();
+        }
     }
 
     public static OSGIKillbillAPI buildOSGIKillbillAPI(final Account account, final Payment payment, @Nullable final PaymentMethod paymentMethod) throws AccountApiException, PaymentApiException {

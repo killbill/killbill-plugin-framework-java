@@ -19,7 +19,6 @@ package org.killbill.billing.plugin.core;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,8 +37,7 @@ import org.killbill.billing.tenant.api.Tenant;
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
-import com.google.common.io.CharStreams;
-import com.google.common.io.InputSupplier;
+import com.google.common.io.ByteStreams;
 import com.google.common.net.HttpHeaders;
 
 public class PluginServlet extends HttpServlet {
@@ -86,14 +84,12 @@ public class PluginServlet extends HttpServlet {
     }
 
     protected String getRequestData(final ServletRequest req) throws IOException {
-        final InputStream input = req.getInputStream();
-        final InputSupplier<InputStream> inputStreamInputSupplier = new InputSupplier<InputStream>() {
-            public InputStream getInput() throws IOException {
-                return input;
-            }
-        };
-        final InputSupplier<InputStreamReader> inputSupplier = CharStreams.newReaderSupplier(inputStreamInputSupplier, Charsets.UTF_8);
-        return CharStreams.toString(inputSupplier);
+        final InputStream inputStream = req.getInputStream();
+        try {
+            return new String(ByteStreams.toByteArray(inputStream), Charsets.UTF_8);
+        } finally {
+            inputStream.close();
+        }
     }
 
     protected void setTextContentType(final ServletResponse resp) {
