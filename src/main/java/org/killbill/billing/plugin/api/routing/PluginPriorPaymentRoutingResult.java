@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 Groupon, Inc
- * Copyright 2014 The Billing Project, LLC
+ * Copyright 2014-2015 Groupon, Inc
+ * Copyright 2014-2015 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.killbill.billing.catalog.api.Currency;
+import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.routing.plugin.api.PaymentRoutingContext;
 import org.killbill.billing.routing.plugin.api.PriorPaymentRoutingResult;
 
@@ -30,20 +31,30 @@ public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResul
     private final BigDecimal adjustedAmount;
     private final Currency adjustedCurrency;
     private final UUID adjustedPaymentMethodId;
+    private final Iterable<PluginProperty> adjustedPluginProperties;
 
     public PluginPriorPaymentRoutingResult(final PaymentRoutingContext context) {
         this(false, context);
     }
 
     public PluginPriorPaymentRoutingResult(final boolean isAborted, final PaymentRoutingContext context) {
-        this(isAborted, context.getAmount(), context.getCurrency(), context.getPaymentMethodId());
+        this(isAborted, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), context.getPluginProperties());
     }
 
-    public PluginPriorPaymentRoutingResult(final boolean isAborted, final BigDecimal adjustedAmount, final Currency adjustedCurrency, final UUID adjustedPaymentMethodId) {
+    public PluginPriorPaymentRoutingResult(final Iterable<PluginProperty> adjustedPluginProperties, final PaymentRoutingContext context) {
+        this(false, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), adjustedPluginProperties);
+    }
+
+    public PluginPriorPaymentRoutingResult(final boolean isAborted,
+                                           final BigDecimal adjustedAmount,
+                                           final Currency adjustedCurrency,
+                                           final UUID adjustedPaymentMethodId,
+                                           final Iterable<PluginProperty> adjustedPluginProperties) {
         this.isAborted = isAborted;
         this.adjustedAmount = adjustedAmount;
         this.adjustedCurrency = adjustedCurrency;
         this.adjustedPaymentMethodId = adjustedPaymentMethodId;
+        this.adjustedPluginProperties = adjustedPluginProperties;
     }
 
     @Override
@@ -67,12 +78,18 @@ public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResul
     }
 
     @Override
+    public Iterable<PluginProperty> getAdjustedPluginProperties() {
+        return adjustedPluginProperties;
+    }
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("PluginPriorPaymentRoutingResult{");
         sb.append("isAborted=").append(isAborted);
         sb.append(", adjustedAmount=").append(adjustedAmount);
         sb.append(", adjustedCurrency=").append(adjustedCurrency);
         sb.append(", adjustedPaymentMethodId=").append(adjustedPaymentMethodId);
+        sb.append(", adjustedPluginProperties=").append(adjustedPluginProperties);
         sb.append('}');
         return sb.toString();
     }
@@ -100,8 +117,8 @@ public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResul
         if (adjustedPaymentMethodId != null ? !adjustedPaymentMethodId.equals(that.adjustedPaymentMethodId) : that.adjustedPaymentMethodId != null) {
             return false;
         }
+        return !(adjustedPluginProperties != null ? !adjustedPluginProperties.equals(that.adjustedPluginProperties) : that.adjustedPluginProperties != null);
 
-        return true;
     }
 
     @Override
@@ -110,6 +127,7 @@ public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResul
         result = 31 * result + (adjustedAmount != null ? adjustedAmount.hashCode() : 0);
         result = 31 * result + (adjustedCurrency != null ? adjustedCurrency.hashCode() : 0);
         result = 31 * result + (adjustedPaymentMethodId != null ? adjustedPaymentMethodId.hashCode() : 0);
+        result = 31 * result + (adjustedPluginProperties != null ? adjustedPluginProperties.hashCode() : 0);
         return result;
     }
 }
