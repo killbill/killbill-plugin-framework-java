@@ -15,17 +15,17 @@
  * under the License.
  */
 
-package org.killbill.billing.plugin.api.routing;
+package org.killbill.billing.plugin.api.control;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.killbill.billing.catalog.api.Currency;
+import org.killbill.billing.control.plugin.api.PaymentControlContext;
+import org.killbill.billing.control.plugin.api.PriorPaymentControlResult;
 import org.killbill.billing.payment.api.PluginProperty;
-import org.killbill.billing.routing.plugin.api.PaymentRoutingContext;
-import org.killbill.billing.routing.plugin.api.PriorPaymentRoutingResult;
 
-public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResult {
+public class PluginPriorPaymentControlResult implements PriorPaymentControlResult {
 
     private final boolean isAborted;
     private final BigDecimal adjustedAmount;
@@ -33,19 +33,19 @@ public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResul
     private final UUID adjustedPaymentMethodId;
     private final Iterable<PluginProperty> adjustedPluginProperties;
 
-    public PluginPriorPaymentRoutingResult(final PaymentRoutingContext context) {
+    public PluginPriorPaymentControlResult(final PaymentControlContext context) {
         this(false, context);
     }
 
-    public PluginPriorPaymentRoutingResult(final boolean isAborted, final PaymentRoutingContext context) {
-        this(isAborted, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), context.getPluginProperties());
+    public PluginPriorPaymentControlResult(final boolean isAborted, final PaymentControlContext context) {
+        this(isAborted, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), null);
     }
 
-    public PluginPriorPaymentRoutingResult(final Iterable<PluginProperty> adjustedPluginProperties, final PaymentRoutingContext context) {
+    public PluginPriorPaymentControlResult(final Iterable<PluginProperty> adjustedPluginProperties, final PaymentControlContext context) {
         this(false, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), adjustedPluginProperties);
     }
 
-    public PluginPriorPaymentRoutingResult(final boolean isAborted,
+    public PluginPriorPaymentControlResult(final boolean isAborted,
                                            final BigDecimal adjustedAmount,
                                            final Currency adjustedCurrency,
                                            final UUID adjustedPaymentMethodId,
@@ -84,7 +84,7 @@ public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResul
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginPriorPaymentRoutingResult{");
+        final StringBuilder sb = new StringBuilder("PluginPriorPaymentControlResult{");
         sb.append("isAborted=").append(isAborted);
         sb.append(", adjustedAmount=").append(adjustedAmount);
         sb.append(", adjustedCurrency=").append(adjustedCurrency);
@@ -103,7 +103,7 @@ public class PluginPriorPaymentRoutingResult implements PriorPaymentRoutingResul
             return false;
         }
 
-        PluginPriorPaymentRoutingResult that = (PluginPriorPaymentRoutingResult) o;
+        PluginPriorPaymentControlResult that = (PluginPriorPaymentControlResult) o;
 
         if (isAborted != that.isAborted) {
             return false;

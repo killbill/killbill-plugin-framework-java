@@ -1,5 +1,5 @@
 0.2.0
-    Update to killbill-oss-parent 0.13
+    Update to killbill-oss-parent 0.31 (routing -> control renaming)
 
 0.1.0
     Initial release for Kill Bill 0.14.x
