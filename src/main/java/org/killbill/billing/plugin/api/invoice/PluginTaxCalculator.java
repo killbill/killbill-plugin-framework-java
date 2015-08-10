@@ -42,7 +42,7 @@ public abstract class PluginTaxCalculator {
     /**
      * Compute tax items (positive or negative, for adjustments) for a given invoice. Implementation is expected to be idempotent,
      * i.e. subsequent calls with the same input should yield an empty list.
-     * <p/>
+     *
      * Note that <b>taxable</b> here means <i>what could be taxed</i>. The business will dictate whether the item(s)
      * should actually be taxed (and whether on the whole amount or a subset).
      *
