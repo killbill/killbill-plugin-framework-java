@@ -152,6 +152,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                          .and(DSL.field(responsesTable.getName() + "." + TRANSACTION_TYPE).equal(TransactionType.AUTHORIZE.toString()))
                                          .and(DSL.field(responsesTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
                                          .orderBy(DSL.field(responsesTable.getName() + "." + RECORD_ID).desc())
+                                         .limit(1)
                                          .fetchOne();
                            }
                        });
