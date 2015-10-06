@@ -143,7 +143,7 @@ public abstract class TestUtils {
         Mockito.when(account.getPaymentMethodId()).thenReturn(UUID.randomUUID());
         Mockito.when(account.getTimeZone()).thenReturn(DateTimeZone.getDefault());
         // Return language tag to be able to use Locale.forLanguageTag
-        Mockito.when(account.getLocale()).thenReturn(Locale.US.toLanguageTag());
+        Mockito.when(account.getLocale()).thenReturn("en-US");
         Mockito.when(account.getAddress1()).thenReturn(address1);
         Mockito.when(account.getAddress2()).thenReturn(address2);
         Mockito.when(account.getCompanyName()).thenReturn(UUID.randomUUID().toString());
