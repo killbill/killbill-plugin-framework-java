@@ -1,6 +1,7 @@
 0.2.1
     Add missing limit in PluginPaymentDao query
     Fix Java 1.6 compilation
+    Update to killbill-oss-parent 0.49
 
 0.2.0
     Update to killbill-oss-parent 0.31 (routing -> control renaming)

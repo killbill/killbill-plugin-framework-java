@@ -59,7 +59,7 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
     }
 
     @Override
-    public List<InvoiceItem> getAdditionalInvoiceItems(final Invoice invoice, final Iterable<PluginProperty> properties, final CallContext context) {
+    public List<InvoiceItem> getAdditionalInvoiceItems(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final CallContext context) {
         return ImmutableList.<InvoiceItem>of();
     }
 
