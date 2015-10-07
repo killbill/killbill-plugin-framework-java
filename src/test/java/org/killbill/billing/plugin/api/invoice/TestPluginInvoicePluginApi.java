@@ -104,6 +104,7 @@ public class TestPluginInvoicePluginApi {
                                              final Invoice calculatorInvoice,
                                              final Map<UUID, InvoiceItem> taxableItems,
                                              final Map<UUID, Collection<InvoiceItem>> adjustmentItems,
+                                             final boolean dryRun,
                                              final Iterable<PluginProperty> calculatorPluginProperties,
                                              final UUID kbTenantId) {
                 Assert.assertEquals(calculatorAccount.getId(), account.getId());
@@ -143,6 +144,7 @@ public class TestPluginInvoicePluginApi {
                                                             account,
                                                             allInvoices,
                                                             invoice2,
+                                                            false,
                                                             pluginProperties,
                                                             context);
         Assert.assertEquals(invoicesSeen.get(), 2);

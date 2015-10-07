@@ -51,6 +51,7 @@ public abstract class PluginTaxCalculator {
      * @param invoice          Kill Bill historical invoice associated with the taxable items
      * @param taxableItems     taxable invoice items associated with that historical invoice
      * @param adjustmentItems  invoice item adjustments per taxable item (across all invoices), if any
+     * @param dryRun           if true, the invoice won't be persisted
      * @param pluginProperties Kill Bill plugin properties
      * @param kbTenantId       Kill Bill tenant
      */
@@ -59,6 +60,7 @@ public abstract class PluginTaxCalculator {
                                               Invoice invoice,
                                               Map<UUID, InvoiceItem> taxableItems,
                                               Map<UUID, Collection<InvoiceItem>> adjustmentItems,
+                                              boolean dryRun,
                                               Iterable<PluginProperty> pluginProperties,
                                               UUID kbTenantId);
 

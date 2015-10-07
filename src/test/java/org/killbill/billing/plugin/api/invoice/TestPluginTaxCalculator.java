@@ -50,6 +50,7 @@ public class TestPluginTaxCalculator {
                                          final Invoice invoice,
                                          final Map<UUID, InvoiceItem> taxableItems,
                                          final Map<UUID, Collection<InvoiceItem>> adjustmentItems,
+                                         final boolean dryRun,
                                          final Iterable<PluginProperty> pluginProperties,
                                          final UUID kbTenantId) {
             return null;

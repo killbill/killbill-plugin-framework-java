@@ -69,17 +69,19 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
      *
      * @param taxCalculator tax calculator implementation
      * @param newInvoice    Kill Bill invoice being created (latest one, may not be on disk yet)
+     * @param dryRun        if true, the invoice won't be persisted
      * @param properties    Kill Bill plugin properties
      * @param context       Kill Bill context
      * @return all tax items that need to be created
      */
     protected List<InvoiceItem> getAdditionalTaxInvoiceItems(final PluginTaxCalculator taxCalculator,
                                                              final Invoice newInvoice,
+                                                             final boolean dryRun,
                                                              final Iterable<PluginProperty> properties,
                                                              final TenantContext context) {
         final Account account = getAccount(newInvoice.getAccountId(), context);
         final Collection<Invoice> allInvoices = new LinkedList<Invoice>(getInvoicesByAccountId(newInvoice.getAccountId(), context));
-        return getAdditionalTaxInvoiceItems(taxCalculator, account, allInvoices, newInvoice, properties, context);
+        return getAdditionalTaxInvoiceItems(taxCalculator, account, allInvoices, newInvoice, dryRun, properties, context);
     }
 
     @VisibleForTesting
@@ -87,6 +89,7 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
                                                              final Account account,
                                                              final Collection<Invoice> allInvoices,
                                                              final Invoice newInvoice,
+                                                             final boolean dryRun,
                                                              final Iterable<PluginProperty> properties,
                                                              final TenantContext context) {
         // Workaround for https://github.com/killbill/killbill/issues/265
@@ -138,6 +141,7 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
                                                                             invoice,
                                                                             taxableItems,
                                                                             adjustmentItems,
+                                                                            dryRun,
                                                                             properties,
                                                                             context.getTenantId());
             additionalTaxInvoiceItems.addAll(taxInvoiceItems);
