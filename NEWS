@@ -1,3 +1,6 @@
+0.2.3
+    Fix issue with new invoices in PluginInvoicePluginApi#getAdditionalTaxInvoiceItems
+
 0.2.2
     Add support for dryRun option in PluginInvoicePluginApi
 

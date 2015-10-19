@@ -42,7 +42,6 @@ import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillLogService;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
 public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginApi {
@@ -87,22 +86,20 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
     @VisibleForTesting
     protected List<InvoiceItem> getAdditionalTaxInvoiceItems(final PluginTaxCalculator taxCalculator,
                                                              final Account account,
-                                                             final Collection<Invoice> allInvoices,
+                                                             final Collection<Invoice> allInvoicesOnDisk,
                                                              final Invoice newInvoice,
                                                              final boolean dryRun,
                                                              final Iterable<PluginProperty> properties,
                                                              final TenantContext context) {
-        // Workaround for https://github.com/killbill/killbill/issues/265
-        if (Iterables.<Invoice>tryFind(allInvoices,
-                                       new Predicate<Invoice>() {
-                                           @Override
-                                           public boolean apply(final Invoice invoice) {
-                                               return invoice.getId().equals(newInvoice.getId());
-                                           }
-                                       })
-                     .orNull() == null) {
-            allInvoices.add(newInvoice);
+        // Make sure to get the latest state for the new invoice (some items may not be on disk yet)
+        // See also https://github.com/killbill/killbill/issues/265
+        final Collection<Invoice> allInvoices = new LinkedList<Invoice>();
+        for (final Invoice invoice : allInvoicesOnDisk) {
+            if (!invoice.getId().equals(newInvoice.getId())) {
+                allInvoices.add(invoice);
+            }
         }
+        allInvoices.add(newInvoice);
 
         final Map<UUID, InvoiceItem> allTaxableItems = new HashMap<UUID, InvoiceItem>();
         final Map<UUID, Collection<InvoiceItem>> existingAdjustmentItems = new HashMap<UUID, Collection<InvoiceItem>>();
