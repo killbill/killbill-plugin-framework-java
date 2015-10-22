@@ -1,5 +1,6 @@
 0.2.3
     Fix issue with new invoices in PluginInvoicePluginApi#getAdditionalTaxInvoiceItems
+    Update to killbill-oss-parent 0.56
 
 0.2.2
     Add support for dryRun option in PluginInvoicePluginApi
