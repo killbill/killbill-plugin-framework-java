@@ -282,6 +282,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                return DSL.using(conn, dialect, settings)
                                          .selectFrom(paymentMethodsTable)
                                          .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
+                                         .and(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED).equal(FALSE))
                                          .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
                                          .orderBy(DSL.field(paymentMethodsTable.getName() + "." + RECORD_ID).desc())
                                          .fetchOne();
@@ -328,6 +329,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                return DSL.using(conn, dialect, settings)
                                          .selectFrom(paymentMethodsTable)
                                          .where(DSL.field(paymentMethodsTable.getName() + "." + KB_ACCOUNT_ID).equal(kbAccountId.toString()))
+                                         .and(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED).equal(FALSE))
                                          .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
                                          .orderBy(DSL.field(paymentMethodsTable.getName() + "." + RECORD_ID).asc())
                                          .fetch();
