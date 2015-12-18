@@ -1,3 +1,8 @@
+0.3.0
+    Initial release for Kill Bill 0.16.x
+    Fix payment method queries
+    Update to killbill-oss-parent 0.76
+
 0.2.3
     Fix issue with new invoices in PluginInvoicePluginApi#getAdditionalTaxInvoiceItems
     Update to killbill-oss-parent 0.56
