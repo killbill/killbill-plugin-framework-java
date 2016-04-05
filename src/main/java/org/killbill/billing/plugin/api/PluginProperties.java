@@ -93,8 +93,8 @@ public abstract class PluginProperties {
     }
 
     public static String findAndDecodePluginPropertyValue(final String pluginPropertyName, @Nullable final Iterable<PluginProperty> properties) {
-        String undecodedValue = findPluginPropertyValue(pluginPropertyName, properties);
-        return Strings.isNullOrEmpty(undecodedValue) ? null : UTF8UrlDecoder.decode(undecodedValue).toString();
+        final String undecodedValue = findPluginPropertyValue(pluginPropertyName, properties);
+        return undecodedValue == null ? null : UTF8UrlDecoder.decode(undecodedValue).toString();
     }
 
     public static Iterable<PluginProperty> findPluginProperties(final String key, @Nullable final Iterable<PluginProperty> properties) {
