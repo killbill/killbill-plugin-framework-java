@@ -86,7 +86,11 @@ public class TestPluginProperties {
         Assert.assertEquals(PluginProperties.findPluginPropertyValue("baz", pluginProperties1), "12");
         Assert.assertEquals(PluginProperties.findPluginPropertyValue("foo", pluginProperties1), "bar");
         Assert.assertNull(PluginProperties.findPluginPropertyValue("baz2", pluginProperties1));
-        Assert.assertEquals(PluginProperties.findPluginPropertyValue("foo", pluginProperties3), decodedPropertyValue);
+    }
+
+    @Test(groups = "fast")
+    public void testFindAndDecodePluginPropertyValue() throws Exception {
+        Assert.assertEquals(PluginProperties.findAndDecodePluginPropertyValue("foo", pluginProperties3), decodedPropertyValue);
     }
 
     @Test(groups = "fast")

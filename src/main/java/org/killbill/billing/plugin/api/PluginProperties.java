@@ -89,7 +89,12 @@ public abstract class PluginProperties {
             return null;
         }
         final String pluginPropertyString = String.valueOf(pluginProperty.getValue());
-        return Strings.isNullOrEmpty(pluginPropertyString) ? null : UTF8UrlDecoder.decode(pluginPropertyString).toString();
+        return Strings.isNullOrEmpty(pluginPropertyString) ? null : pluginPropertyString;
+    }
+
+    public static String findAndDecodePluginPropertyValue(final String pluginPropertyName, @Nullable final Iterable<PluginProperty> properties) {
+        String undecodedValue = findPluginPropertyValue(pluginPropertyName, properties);
+        return Strings.isNullOrEmpty(undecodedValue) ? null : UTF8UrlDecoder.decode(undecodedValue).toString();
     }
 
     public static Iterable<PluginProperty> findPluginProperties(final String key, @Nullable final Iterable<PluginProperty> properties) {
