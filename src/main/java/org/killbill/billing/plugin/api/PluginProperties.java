@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 import org.killbill.billing.payment.api.PluginProperty;
+import org.killbill.billing.plugin.util.http.UTF8UrlDecoder;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -88,7 +89,7 @@ public abstract class PluginProperties {
             return null;
         }
         final String pluginPropertyString = String.valueOf(pluginProperty.getValue());
-        return Strings.isNullOrEmpty(pluginPropertyString) ? null : pluginPropertyString;
+        return Strings.isNullOrEmpty(pluginPropertyString) ? null : UTF8UrlDecoder.decode(pluginPropertyString).toString();
     }
 
     public static Iterable<PluginProperty> findPluginProperties(final String key, @Nullable final Iterable<PluginProperty> properties) {
