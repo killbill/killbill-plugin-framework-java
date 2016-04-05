@@ -36,7 +36,9 @@ public class TestPluginProperties {
                                                                                                                   "baz", 12L));
     private final List<PluginProperty> pluginProperties2 = PluginProperties.buildPluginProperties(ImmutableMap.of("foo", "override",
                                                                                                                   "baz2", "something else"));
-
+    private final String encodedPropertyValue = "%7B%22eventType%22%3A%22voidEvent%22%2C%22transactionType%22%3A%22void%22%2C%22contractType%22%3A%22temp%22%7D";
+    private final String decodedPropertyValue = "{\"eventType\":\"voidEvent\",\"transactionType\":\"void\",\"contractType\":\"temp\"}";
+    private final List<PluginProperty> pluginProperties3 = PluginProperties.buildPluginProperties(ImmutableMap.of("foo", encodedPropertyValue));
 
     @Test(groups = "fast")
     public void testMerge() throws Exception {
@@ -84,6 +86,11 @@ public class TestPluginProperties {
         Assert.assertEquals(PluginProperties.findPluginPropertyValue("baz", pluginProperties1), "12");
         Assert.assertEquals(PluginProperties.findPluginPropertyValue("foo", pluginProperties1), "bar");
         Assert.assertNull(PluginProperties.findPluginPropertyValue("baz2", pluginProperties1));
+    }
+
+    @Test(groups = "fast")
+    public void testFindAndDecodePluginPropertyValue() throws Exception {
+        Assert.assertEquals(PluginProperties.findAndDecodePluginPropertyValue("foo", pluginProperties3), decodedPropertyValue);
     }
 
     @Test(groups = "fast")
