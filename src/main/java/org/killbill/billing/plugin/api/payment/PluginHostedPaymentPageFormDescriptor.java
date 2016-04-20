@@ -32,8 +32,8 @@ import com.google.common.collect.ImmutableList;
 
 public class PluginHostedPaymentPageFormDescriptor implements HostedPaymentPageFormDescriptor {
 
-    protected static final String GET = "GET";
-    protected static final String POST = "POST";
+    public static final String GET = "GET";
+    public static final String POST = "POST";
 
     private final UUID kbAccountId;
     private final String formMethod;
