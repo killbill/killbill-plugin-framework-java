@@ -1,3 +1,8 @@
+0.3.3
+    Additional PluginProperties#merge signature
+    Enhance test utilities
+    Update to killbill-oss-parent 0.93
+
 0.3.2
     Constants in PluginHostedPaymentPageFormDescriptor are now public
     Add utility functions for money calculations
