@@ -56,6 +56,18 @@ public class TestPluginProperties {
         Assert.assertEquals(pluginProperties.get(2).getKey(), "foo");
         Assert.assertEquals(pluginProperties.get(2).getValue(), "override");
         Assert.assertFalse(pluginProperties.get(2).getIsUpdatable());
+
+        final List<PluginProperty> pluginPropertiesRaw2 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge(PluginProperties.toMap(pluginProperties1), pluginProperties2));
+        Assert.assertEquals(sort(pluginPropertiesRaw2), pluginProperties);
+
+        final List<PluginProperty> pluginPropertiesRaw3 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge(PluginProperties.toMap(pluginProperties1), pluginProperties1, pluginProperties2));
+        Assert.assertEquals(sort(pluginPropertiesRaw3), pluginProperties);
+
+        final List<PluginProperty> pluginPropertiesRaw4 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge(ImmutableMap.<String, Object>of(), pluginProperties1, pluginProperties2));
+        Assert.assertEquals(sort(pluginPropertiesRaw4), pluginProperties);
+
+        final List<PluginProperty> pluginPropertiesRaw5 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge((Map) null, pluginProperties1, pluginProperties2));
+        Assert.assertEquals(sort(pluginPropertiesRaw5), pluginProperties);
     }
 
     @Test(groups = "fast")

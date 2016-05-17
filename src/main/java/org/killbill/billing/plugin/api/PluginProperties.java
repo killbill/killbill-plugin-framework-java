@@ -42,6 +42,11 @@ public abstract class PluginProperties {
     }
 
     // Last one has precedence
+    public static Iterable<PluginProperty> merge(@Nullable final Map data, final Iterable<PluginProperty>... propertiesLists) {
+        return merge(buildPluginProperties(data), merge(propertiesLists));
+    }
+
+    // Last one has precedence
     public static Map<String, Object> toMap(final Iterable<PluginProperty>... propertiesLists) {
         final Map<String, Object> mergedProperties = new HashMap<String, Object>();
         for (final Iterable<PluginProperty> propertiesList : propertiesLists) {
