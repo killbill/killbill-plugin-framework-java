@@ -1,6 +1,6 @@
 /*
- * Copyright 2015 Groupon, Inc
- * Copyright 2015 The Billing Project, LLC
+ * Copyright 2015-2016 Groupon, Inc
+ * Copyright 2015-2016 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -94,12 +94,13 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
 
         account = TestUtils.buildAccount(Currency.JPY, "JP");
 
-        final Payment payment = TestUtils.buildPayment(account.getId(), account.getPaymentMethodId(), account.getCurrency());
-        final OSGIKillbillAPI killbillApi = TestUtils.buildOSGIKillbillAPI(account, payment, null);
+        final OSGIKillbillAPI killbillApi = TestUtils.buildOSGIKillbillAPI(account);
+        final Payment payment = TestUtils.buildPayment(account.getId(), account.getPaymentMethodId(), account.getCurrency(), killbillApi);
         final OSGIKillbillLogService logService = TestUtils.buildLogService();
         final OSGIConfigPropertiesService configPropertiesService = Mockito.mock(OSGIConfigPropertiesService.class);
 
         api = new TestPaymentPluginApi(killbillApi, configPropertiesService, logService, clock, dao);
+        TestUtils.updateOSGIKillbillAPI(killbillApi, api);
     }
 
     @Test(groups = "slow")

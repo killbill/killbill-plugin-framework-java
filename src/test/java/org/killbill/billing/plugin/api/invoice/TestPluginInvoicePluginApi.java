@@ -1,6 +1,6 @@
 /*
- * Copyright 2015 Groupon, Inc
- * Copyright 2015 The Billing Project, LLC
+ * Copyright 2015-2016 Groupon, Inc
+ * Copyright 2015-2016 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -73,7 +73,7 @@ public class TestPluginInvoicePluginApi {
     public void setUp() throws Exception {
         account = TestUtils.buildAccount(Currency.BTC, "US");
 
-        final OSGIKillbillAPI killbillAPI = TestUtils.buildOSGIKillbillAPI(account, TestUtils.buildPayment(account.getId(), account.getPaymentMethodId(), account.getCurrency()), null);
+        final OSGIKillbillAPI killbillAPI = TestUtils.buildOSGIKillbillAPI(account);
         final OSGIConfigPropertiesService configPropertiesService = Mockito.mock(OSGIConfigPropertiesService.class);
         final OSGIKillbillLogService logService = TestUtils.buildLogService();
         pluginInvoicePluginApi = new PluginInvoicePluginApiTest(killbillAPI, configPropertiesService, logService, clock);

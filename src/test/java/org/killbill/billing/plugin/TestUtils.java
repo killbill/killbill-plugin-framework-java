@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2015 Groupon, Inc
- * Copyright 2014-2015 The Billing Project, LLC
+ * Copyright 2014-2016 Groupon, Inc
+ * Copyright 2014-2016 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -43,6 +42,7 @@ import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.invoice.api.Invoice;
 import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.api.InvoiceItemType;
+import org.killbill.billing.osgi.api.OSGIKillbill;
 import org.killbill.billing.payment.api.Payment;
 import org.killbill.billing.payment.api.PaymentApi;
 import org.killbill.billing.payment.api.PaymentApiException;
@@ -51,7 +51,11 @@ import org.killbill.billing.payment.api.PaymentTransaction;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.api.TransactionStatus;
 import org.killbill.billing.payment.api.TransactionType;
+import org.killbill.billing.payment.plugin.api.PaymentPluginApi;
+import org.killbill.billing.payment.plugin.api.PaymentPluginStatus;
+import org.killbill.billing.payment.plugin.api.PaymentTransactionInfoPlugin;
 import org.killbill.billing.plugin.api.PluginProperties;
+import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillLogService;
@@ -60,10 +64,13 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Charsets;
+import com.google.common.base.MoreObjects;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Resources;
 
@@ -109,7 +116,7 @@ public abstract class TestUtils {
         }
     }
 
-    public static OSGIKillbillAPI buildOSGIKillbillAPI(final Account account, final Payment payment, @Nullable final PaymentMethod paymentMethod) throws AccountApiException, PaymentApiException {
+    public static OSGIKillbillAPI buildOSGIKillbillAPI(final Account account) throws AccountApiException, PaymentApiException {
         final OSGIKillbillAPI killbillApi = Mockito.mock(OSGIKillbillAPI.class);
 
         final AccountUserApi accountUserApi = Mockito.mock(AccountUserApi.class);
@@ -117,14 +124,226 @@ public abstract class TestUtils {
         Mockito.when(killbillApi.getAccountUserApi()).thenReturn(accountUserApi);
 
         final PaymentApi paymentApi = Mockito.mock(PaymentApi.class);
-        Mockito.when(paymentApi.getPayment(Mockito.eq(payment.getId()), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payment);
+        Mockito.when(paymentApi.notifyPendingTransactionOfStateChanged(Mockito.eq(account),
+                                                                       Mockito.<UUID>any(),
+                                                                       Mockito.anyBoolean(),
+                                                                       Mockito.<CallContext>any()))
+               .thenAnswer(new Answer<Payment>() {
+                   @Override
+                   public Payment answer(final InvocationOnMock invocation) throws Throwable {
+                       Payment payment = null;
+                       PaymentTransaction paymentTransaction = null;
+
+                       final UUID kbPaymentTransactionId = (UUID) invocation.getArguments()[1];
+                       for (final Payment p : paymentApi.getAccountPayments(account.getId(), false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[3])) {
+                           for (final PaymentTransaction t : p.getTransactions()) {
+                               if (kbPaymentTransactionId.equals(t.getId())) {
+                                   payment = p;
+                                   paymentTransaction = t;
+                                   break;
+                               }
+                           }
+                       }
+                       Assert.assertNotNull(payment);
+                       Assert.assertNotNull(paymentTransaction);
+                       Assert.assertEquals(paymentTransaction.getTransactionStatus(), TransactionStatus.PENDING);
+
+                       final Boolean success = (Boolean) invocation.getArguments()[2];
+                       Mockito.when(paymentTransaction.getTransactionStatus()).thenReturn(success ? TransactionStatus.SUCCESS : TransactionStatus.PAYMENT_FAILURE);
+
+                       final PaymentTransactionInfoPlugin paymentInfoPlugin = Mockito.mockingDetails(paymentTransaction.getPaymentInfoPlugin()).isMock() ? paymentTransaction.getPaymentInfoPlugin() : Mockito.spy(paymentTransaction.getPaymentInfoPlugin());
+                       Mockito.when(paymentInfoPlugin.getStatus()).thenReturn(success ? PaymentPluginStatus.PROCESSED : PaymentPluginStatus.ERROR);
+                       Mockito.when(paymentTransaction.getPaymentInfoPlugin()).thenReturn(paymentInfoPlugin);
+
+                       return payment;
+                   }
+               });
+        Mockito.when(paymentApi.createChargeback(Mockito.eq(account),
+                                                 Mockito.<UUID>any(),
+                                                 Mockito.<BigDecimal>any(),
+                                                 Mockito.<Currency>any(),
+                                                 Mockito.<String>any(),
+                                                 Mockito.<CallContext>any()))
+               .then(new Answer<Payment>() {
+                   @Override
+                   public Payment answer(final InvocationOnMock invocation) throws Throwable {
+                       final List<Payment> payments = paymentApi.getAccountPayments(account.getId(), false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[5]);
+                       final Payment payment;
+                       if (payments == null || payments.isEmpty()) {
+                           payment = buildPayment(account.getId(), account.getPaymentMethodId(), (Currency) invocation.getArguments()[3], killbillApi);
+                       } else {
+                           payment = payments.get(payments.size() - 1);
+                       }
+                       final PaymentTransaction chargeback = buildPaymentTransaction(payment, TransactionType.CHARGEBACK, (Currency) invocation.getArguments()[3]);
+                       Mockito.when(chargeback.getTransactionStatus()).thenReturn(TransactionStatus.SUCCESS);
+
+                       return payment;
+                   }
+               });
         Mockito.when(killbillApi.getPaymentApi()).thenReturn(paymentApi);
 
-        if (paymentMethod != null) {
-            Mockito.when(paymentApi.getPaymentMethodById(Mockito.eq(paymentMethod.getId()), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(paymentMethod);
-        }
-
         return killbillApi;
+    }
+
+    public static void updateOSGIKillbillAPI(final OSGIKillbill killbillApi, final PaymentPluginApi paymentPluginApi) throws PaymentApiException {
+        Mockito.when(killbillApi.getPaymentApi().createAuthorization(Mockito.<Account>any(),
+                                                                     Mockito.<UUID>any(),
+                                                                     Mockito.<UUID>any(),
+                                                                     Mockito.<BigDecimal>any(),
+                                                                     Mockito.<Currency>any(),
+                                                                     Mockito.<String>any(),
+                                                                     Mockito.<String>any(),
+                                                                     Mockito.<Iterable<PluginProperty>>any(),
+                                                                     Mockito.<CallContext>any()))
+               .then(new Answer<Payment>() {
+                   @Override
+                   public Payment answer(final InvocationOnMock invocation) throws Throwable {
+                       final UUID accountId = ((Account) invocation.getArguments()[0]).getId();
+                       final UUID paymentMethodId = (UUID) invocation.getArguments()[1];
+                       final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
+                       final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
+                       final Currency currency = (Currency) invocation.getArguments()[4];
+                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[5], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], paymentExternalKey);
+
+                       final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
+                       final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.AUTHORIZE, TransactionStatus.UNKNOWN, amount, currency);
+
+                       final PaymentTransactionInfoPlugin transactionInfoPlugin = paymentPluginApi.authorizePayment(payment.getAccountId(),
+                                                                                                                    payment.getId(),
+                                                                                                                    paymentTransaction.getId(),
+                                                                                                                    payment.getPaymentMethodId(),
+                                                                                                                    paymentTransaction.getAmount(),
+                                                                                                                    paymentTransaction.getCurrency(),
+                                                                                                                    (Iterable<PluginProperty>) invocation.getArguments()[invocation.getArguments().length - 2],
+                                                                                                                    (CallContext) invocation.getArguments()[invocation.getArguments().length - 1]);
+                       updatePaymentTransaction(paymentTransaction, transactionInfoPlugin);
+
+                       return payment;
+                   }
+               });
+        Mockito.when(killbillApi.getPaymentApi().createPurchase(Mockito.<Account>any(),
+                                                                Mockito.<UUID>any(),
+                                                                Mockito.<UUID>any(),
+                                                                Mockito.<BigDecimal>any(),
+                                                                Mockito.<Currency>any(),
+                                                                Mockito.<String>any(),
+                                                                Mockito.<String>any(),
+                                                                Mockito.<Iterable<PluginProperty>>any(),
+                                                                Mockito.<CallContext>any()))
+               .then(new Answer<Payment>() {
+                   @Override
+                   public Payment answer(final InvocationOnMock invocation) throws Throwable {
+                       final UUID accountId = ((Account) invocation.getArguments()[0]).getId();
+                       final UUID paymentMethodId = (UUID) invocation.getArguments()[1];
+                       final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
+                       final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
+                       final Currency currency = (Currency) invocation.getArguments()[4];
+                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[5], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], paymentExternalKey);
+
+                       final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
+                       final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.PURCHASE, TransactionStatus.UNKNOWN, amount, currency);
+
+                       final PaymentTransactionInfoPlugin transactionInfoPlugin = paymentPluginApi.purchasePayment(payment.getAccountId(),
+                                                                                                                   payment.getId(),
+                                                                                                                   paymentTransaction.getId(),
+                                                                                                                   payment.getPaymentMethodId(),
+                                                                                                                   paymentTransaction.getAmount(),
+                                                                                                                   paymentTransaction.getCurrency(),
+                                                                                                                   (Iterable<PluginProperty>) invocation.getArguments()[invocation.getArguments().length - 2],
+                                                                                                                   (CallContext) invocation.getArguments()[invocation.getArguments().length - 1]);
+                       updatePaymentTransaction(paymentTransaction, transactionInfoPlugin);
+
+                       return payment;
+                   }
+               });
+        Mockito.when(killbillApi.getPaymentApi().createCredit(Mockito.<Account>any(),
+                                                              Mockito.<UUID>any(),
+                                                              Mockito.<UUID>any(),
+                                                              Mockito.<BigDecimal>any(),
+                                                              Mockito.<Currency>any(),
+                                                              Mockito.<String>any(),
+                                                              Mockito.<String>any(),
+                                                              Mockito.<Iterable<PluginProperty>>any(),
+                                                              Mockito.<CallContext>any()))
+               .then(new Answer<Payment>() {
+                   @Override
+                   public Payment answer(final InvocationOnMock invocation) throws Throwable {
+                       final UUID accountId = ((Account) invocation.getArguments()[0]).getId();
+                       final UUID paymentMethodId = (UUID) invocation.getArguments()[1];
+                       final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
+                       final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
+                       final Currency currency = (Currency) invocation.getArguments()[4];
+                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[5], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], paymentExternalKey);
+
+                       final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
+                       final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.CREDIT, TransactionStatus.UNKNOWN, amount, currency);
+
+                       final PaymentTransactionInfoPlugin transactionInfoPlugin = paymentPluginApi.creditPayment(payment.getAccountId(),
+                                                                                                                 payment.getId(),
+                                                                                                                 paymentTransaction.getId(),
+                                                                                                                 payment.getPaymentMethodId(),
+                                                                                                                 paymentTransaction.getAmount(),
+                                                                                                                 paymentTransaction.getCurrency(),
+                                                                                                                 (Iterable<PluginProperty>) invocation.getArguments()[invocation.getArguments().length - 2],
+                                                                                                                 (CallContext) invocation.getArguments()[invocation.getArguments().length - 1]);
+                       updatePaymentTransaction(paymentTransaction, transactionInfoPlugin);
+
+                       return payment;
+                   }
+               });
+    }
+
+    public static void updatePaymentTransaction(final PaymentTransaction paymentTransaction, final PaymentTransactionInfoPlugin paymentTransactionInfoPlugin) {
+        Mockito.when(paymentTransaction.getPaymentInfoPlugin()).thenReturn(paymentTransactionInfoPlugin);
+        Mockito.when(paymentTransaction.getTransactionType()).thenReturn(paymentTransactionInfoPlugin.getTransactionType());
+        Mockito.when(paymentTransaction.getTransactionStatus()).thenReturn(toTransactionStatus(paymentTransactionInfoPlugin));
+    }
+
+    public static TransactionStatus toTransactionStatus(final PaymentTransactionInfoPlugin transactionInfoPlugin) {
+        final TransactionStatus transactionStatus;
+        switch (transactionInfoPlugin.getStatus()) {
+            case PROCESSED:
+                transactionStatus = TransactionStatus.SUCCESS;
+                break;
+            case PENDING:
+                transactionStatus = TransactionStatus.PENDING;
+                break;
+            case ERROR:
+                transactionStatus = TransactionStatus.PAYMENT_FAILURE;
+                break;
+            case CANCELED:
+                transactionStatus = TransactionStatus.PLUGIN_FAILURE;
+                break;
+            default:
+                transactionStatus = TransactionStatus.UNKNOWN;
+                break;
+        }
+        return transactionStatus;
+    }
+
+    public static PaymentPluginStatus toPaymentPluginStatus(final TransactionStatus transactionStatus) {
+        final PaymentPluginStatus paymentPluginStatus;
+        switch (transactionStatus) {
+            case SUCCESS:
+                paymentPluginStatus = PaymentPluginStatus.PROCESSED;
+                break;
+            case PENDING:
+                paymentPluginStatus = PaymentPluginStatus.PENDING;
+                break;
+            case PAYMENT_FAILURE:
+                paymentPluginStatus = PaymentPluginStatus.ERROR;
+                break;
+            case PLUGIN_FAILURE:
+                paymentPluginStatus = PaymentPluginStatus.CANCELED;
+                break;
+            default:
+                paymentPluginStatus = PaymentPluginStatus.UNDEFINED;
+                break;
+        }
+        return paymentPluginStatus;
     }
 
     public static Account buildAccount(final Currency currency, final String country) {
@@ -159,10 +378,18 @@ public abstract class TestUtils {
         return account;
     }
 
-    public static Payment buildPayment(final UUID accountId, final UUID paymentMethodId, final Currency currency) {
+    public static Payment buildPayment(final UUID accountId, final UUID paymentMethodId, final Currency currency) throws PaymentApiException {
+        return buildPayment(accountId, paymentMethodId, currency, null);
+    }
+
+    public static Payment buildPayment(final UUID accountId, final UUID paymentMethodId, final Currency currency, @Nullable final OSGIKillbill killbillApi) throws PaymentApiException {
+        return buildPayment(accountId, paymentMethodId, UUID.randomUUID(), currency, UUID.randomUUID().toString(), killbillApi);
+    }
+
+    public static Payment buildPayment(final UUID accountId, final UUID paymentMethodId, final UUID paymentId, final Currency currency, final String paymentExternalKey, @Nullable final OSGIKillbill killbillApi) throws PaymentApiException {
         final Payment payment = Mockito.mock(Payment.class);
-        Mockito.when(payment.getId()).thenReturn(UUID.randomUUID());
-        Mockito.when(payment.getExternalKey()).thenReturn(UUID.randomUUID().toString());
+        Mockito.when(payment.getId()).thenReturn(paymentId);
+        Mockito.when(payment.getExternalKey()).thenReturn(paymentExternalKey);
         Mockito.when(payment.getAccountId()).thenReturn(accountId);
         Mockito.when(payment.getPaymentMethodId()).thenReturn(paymentMethodId);
         Mockito.when(payment.getPaymentNumber()).thenReturn(1);
@@ -171,30 +398,67 @@ public abstract class TestUtils {
         Mockito.when(payment.getCurrency()).thenReturn(currency);
         Mockito.when(payment.getTransactions()).thenReturn(new LinkedList<PaymentTransaction>());
         Mockito.when(payment.getCreatedDate()).thenReturn(new DateTime(2016, 1, 22, 10, 56, 56, DateTimeZone.UTC));
+
+        if (killbillApi != null) {
+            Mockito.when(killbillApi.getPaymentApi().getPayment(Mockito.eq(payment.getId()), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payment);
+
+            final List<Payment> payments = MoreObjects.firstNonNull(killbillApi.getPaymentApi().getAccountPayments(accountId, false, ImmutableList.<PluginProperty>of(), Mockito.mock(TenantContext.class)), new LinkedList<Payment>());
+            payments.add(payment);
+
+            Mockito.when(killbillApi.getPaymentApi().getAccountPayments(Mockito.eq(accountId), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payments);
+        }
+
         return payment;
     }
 
     public static PaymentTransaction buildPaymentTransaction(final Payment payment, final TransactionType transactionType, final Currency currency) {
+        return buildPaymentTransaction(payment, transactionType, new BigDecimal("199999"), currency);
+    }
+
+    public static PaymentTransaction buildPaymentTransaction(final Payment payment, final TransactionType transactionType, final BigDecimal amount, final Currency currency) {
+        return buildPaymentTransaction(payment, transactionType, TransactionStatus.SUCCESS, amount, currency);
+    }
+
+    public static PaymentTransaction buildPaymentTransaction(final Payment payment, final TransactionType transactionType, final TransactionStatus transactionStatus, final BigDecimal amount, final Currency currency) {
+        return buildPaymentTransaction(payment, UUID.randomUUID().toString(), transactionType, transactionStatus, amount, currency);
+    }
+
+    public static PaymentTransaction buildPaymentTransaction(final Payment payment, final String transactionExternalKey, final TransactionType transactionType, final TransactionStatus transactionStatus, final BigDecimal amount, final Currency currency) {
         final PaymentTransaction paymentTransaction = Mockito.mock(PaymentTransaction.class);
         Mockito.when(paymentTransaction.getId()).thenReturn(UUID.randomUUID());
         Mockito.when(paymentTransaction.getTransactionType()).thenReturn(transactionType);
-        Mockito.when(paymentTransaction.getAmount()).thenReturn(new BigDecimal("199999"));
+        Mockito.when(paymentTransaction.getAmount()).thenReturn(amount);
         Mockito.when(paymentTransaction.getCurrency()).thenReturn(currency);
         Mockito.when(paymentTransaction.getEffectiveDate()).thenReturn(new DateTime(2016, 1, 22, 10, 56, 56, DateTimeZone.UTC));
-        Mockito.when(paymentTransaction.getExternalKey()).thenReturn(UUID.randomUUID().toString());
-        Mockito.when(paymentTransaction.getTransactionStatus()).thenReturn(TransactionStatus.SUCCESS);
+        Mockito.when(paymentTransaction.getExternalKey()).thenReturn(transactionExternalKey);
+        Mockito.when(paymentTransaction.getTransactionStatus()).thenReturn(transactionStatus);
+
+        final PaymentTransactionInfoPlugin paymentTransactionInfoPlugin = Mockito.mock(PaymentTransactionInfoPlugin.class);
+        final PaymentPluginStatus paymentPluginStatus = toPaymentPluginStatus(paymentTransaction.getTransactionStatus());
+        Mockito.when(paymentTransactionInfoPlugin.getStatus()).thenReturn(paymentPluginStatus);
+        Mockito.when(paymentTransaction.getPaymentInfoPlugin()).thenReturn(paymentTransactionInfoPlugin);
 
         payment.getTransactions().add(paymentTransaction);
 
         return paymentTransaction;
     }
 
-    public static PaymentMethod buildPaymentMethod(final UUID accountId, final UUID paymentMethodId, final String pluginName) {
+    public static PaymentMethod buildPaymentMethod(final UUID accountId, final UUID paymentMethodId, final String pluginName) throws PaymentApiException {
+        return buildPaymentMethod(accountId, paymentMethodId, pluginName, null);
+    }
+
+    public static PaymentMethod buildPaymentMethod(final UUID accountId, final UUID paymentMethodId, final String pluginName, @Nullable final OSGIKillbill killbillApi) throws PaymentApiException {
         final PaymentMethod paymentMethod = Mockito.mock(PaymentMethod.class);
         Mockito.when(paymentMethod.getId()).thenReturn(paymentMethodId);
         Mockito.when(paymentMethod.getExternalKey()).thenReturn(UUID.randomUUID().toString());
         Mockito.when(paymentMethod.isActive()).thenReturn(true);
         Mockito.when(paymentMethod.getPluginName()).thenReturn(pluginName);
+
+        if (killbillApi != null) {
+            Mockito.when(killbillApi.getPaymentApi().getAccountPaymentMethods(Mockito.eq(accountId), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(ImmutableList.<PaymentMethod>of(paymentMethod));
+            Mockito.when(killbillApi.getPaymentApi().getPaymentMethodById(Mockito.eq(paymentMethod.getId()), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(paymentMethod);
+        }
+
         return paymentMethod;
     }
 

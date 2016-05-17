@@ -48,7 +48,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
         tenantUserApi = Mockito.mock(TenantUserApi.class);
 
         final Account account = TestUtils.buildAccount(Currency.BTC, "US");
-        final OSGIKillbillAPI killbillAPI = TestUtils.buildOSGIKillbillAPI(account, TestUtils.buildPayment(account.getId(), account.getPaymentMethodId(), account.getCurrency()), null);
+        final OSGIKillbillAPI killbillAPI = TestUtils.buildOSGIKillbillAPI(account);
         Mockito.when(killbillAPI.getTenantUserApi()).thenReturn(tenantUserApi);
         final OSGIKillbillLogService logService = TestUtils.buildLogService();
 
