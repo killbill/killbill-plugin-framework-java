@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 Groupon, Inc
- * Copyright 2014 The Billing Project, LLC
+ * Copyright 2014-2016 Groupon, Inc
+ * Copyright 2014-2016 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -43,6 +43,10 @@ import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.api.InvoicePayment;
 import org.killbill.billing.invoice.api.InvoicePaymentApi;
 import org.killbill.billing.invoice.api.InvoiceUserApi;
+import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
+import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
+import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
+import org.killbill.billing.osgi.libs.killbill.OSGIServiceNotAvailable;
 import org.killbill.billing.payment.api.Payment;
 import org.killbill.billing.payment.api.PaymentApi;
 import org.killbill.billing.payment.api.PaymentApiException;
@@ -62,10 +66,6 @@ import org.killbill.billing.util.customfield.CustomField;
 import org.killbill.billing.util.tag.Tag;
 import org.killbill.billing.util.tag.TagDefinition;
 import org.killbill.clock.Clock;
-import org.killbill.killbill.osgi.libs.killbill.OSGIConfigPropertiesService;
-import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.killbill.osgi.libs.killbill.OSGIKillbillLogService;
-import org.killbill.killbill.osgi.libs.killbill.OSGIServiceNotAvailable;
 import org.osgi.service.log.LogService;
 
 import com.google.common.base.Function;
@@ -305,7 +305,7 @@ public abstract class PluginApi {
 
     protected Collection<Invoice> getInvoicesByAccountId(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {
         final InvoiceUserApi invoiceUserApi = getInvoiceUserApi();
-        return invoiceUserApi.getInvoicesByAccount(accountId, context);
+        return invoiceUserApi.getInvoicesByAccount(accountId, false, context);
     }
 
     protected BigDecimal getAccountBalance(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {
