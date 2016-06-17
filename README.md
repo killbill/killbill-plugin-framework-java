@@ -1,6 +1,14 @@
 killbill-plugin-framework-java
 ==============================
 
+-------------------------------------------------
+| Plugin Framework version | Kill Bill version   |
+| -----------------------: | ------------------: |
+| 0.x.y                    | 0.16.z              |
+| -----------------------: | ------------------: |
+| 1.x.y                    | 0.18.z (and 0.17.x) |
+
+
 Convenience library to help write Kill Bill plugins.
 
 Here are some examples to get you started:
