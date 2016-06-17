@@ -1,3 +1,6 @@
+1.0.0
+    Release version 1.0.0 for KB 0.17.x
+
 0.3.3
     Additional PluginProperties#merge signature
     Enhance test utilities
