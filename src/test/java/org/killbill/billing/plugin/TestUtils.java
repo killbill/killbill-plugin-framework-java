@@ -135,7 +135,7 @@ public abstract class TestUtils {
                        PaymentTransaction paymentTransaction = null;
 
                        final UUID kbPaymentTransactionId = (UUID) invocation.getArguments()[1];
-                       for (final Payment p : paymentApi.getAccountPayments(account.getId(), false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[3])) {
+                       for (final Payment p : paymentApi.getAccountPayments(account.getId(), false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[3])) {
                            for (final PaymentTransaction t : p.getTransactions()) {
                                if (kbPaymentTransactionId.equals(t.getId())) {
                                    payment = p;
@@ -167,7 +167,7 @@ public abstract class TestUtils {
                .then(new Answer<Payment>() {
                    @Override
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
-                       final List<Payment> payments = paymentApi.getAccountPayments(account.getId(), false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[5]);
+                       final List<Payment> payments = paymentApi.getAccountPayments(account.getId(), false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[5]);
                        final Payment payment;
                        if (payments == null || payments.isEmpty()) {
                            payment = buildPayment(account.getId(), account.getPaymentMethodId(), (Currency) invocation.getArguments()[3], killbillApi);
@@ -400,12 +400,12 @@ public abstract class TestUtils {
         Mockito.when(payment.getCreatedDate()).thenReturn(new DateTime(2016, 1, 22, 10, 56, 56, DateTimeZone.UTC));
 
         if (killbillApi != null) {
-            Mockito.when(killbillApi.getPaymentApi().getPayment(Mockito.eq(payment.getId()), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payment);
+            Mockito.when(killbillApi.getPaymentApi().getPayment(Mockito.eq(payment.getId()), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payment);
 
-            final List<Payment> payments = MoreObjects.firstNonNull(killbillApi.getPaymentApi().getAccountPayments(accountId, false, ImmutableList.<PluginProperty>of(), Mockito.mock(TenantContext.class)), new LinkedList<Payment>());
+            final List<Payment> payments = MoreObjects.firstNonNull(killbillApi.getPaymentApi().getAccountPayments(accountId, false, false, ImmutableList.<PluginProperty>of(), Mockito.mock(TenantContext.class)), new LinkedList<Payment>());
             payments.add(payment);
 
-            Mockito.when(killbillApi.getPaymentApi().getAccountPayments(Mockito.eq(accountId), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payments);
+            Mockito.when(killbillApi.getPaymentApi().getAccountPayments(Mockito.eq(accountId), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payments);
         }
 
         return payment;

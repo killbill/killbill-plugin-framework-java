@@ -388,7 +388,7 @@ public abstract class PluginApi {
     protected Collection<Payment> getPaymentsWithPluginInfoByAccountId(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {
         final PaymentApi paymentApi = getPaymentUserApi();
         try {
-            return paymentApi.getAccountPayments(accountId, true, PLUGIN_PROPERTIES, context);
+            return paymentApi.getAccountPayments(accountId, true, false, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
             logService.log(LogService.LOG_WARNING, "Error retrieving payments for account id " + accountId, e);
             throw new OSGIServiceNotAvailable(e);
@@ -434,7 +434,7 @@ public abstract class PluginApi {
     protected PaymentTransaction getPaymentTransaction(final UUID kbPaymentId, final UUID kbTransactionId, final TenantContext context) throws OSGIServiceNotAvailable {
         final Payment payment;
         try {
-            payment = getPaymentUserApi().getPayment(kbPaymentId, false, PLUGIN_PROPERTIES, context);
+            payment = getPaymentUserApi().getPayment(kbPaymentId, false, false, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
             logService.log(LogService.LOG_INFO, "Error retrieving payment for paymentId " + kbPaymentId + ": " + e.getMessage());
             throw new OSGIServiceNotAvailable(e);

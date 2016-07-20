@@ -32,6 +32,7 @@ public class PluginInvoiceItem implements InvoiceItem {
     protected final InvoiceItemType invoiceItemType;
     protected final UUID invoiceId;
     protected final UUID accountId;
+    protected final UUID childAccountId;
     protected final LocalDate startDate;
     protected final LocalDate endDate;
     protected final BigDecimal amount;
@@ -76,6 +77,7 @@ public class PluginInvoiceItem implements InvoiceItem {
                                      invoiceItemType,
                                      invoiceId,
                                      model.getAccountId(),
+                                     model.getChildAccountId(),
                                      startDate,
                                      endDate,
                                      amount,
@@ -96,6 +98,7 @@ public class PluginInvoiceItem implements InvoiceItem {
                              final InvoiceItemType invoiceItemType,
                              final UUID invoiceId,
                              final UUID accountId,
+                             final UUID childAccountId,
                              final LocalDate startDate,
                              final LocalDate endDate,
                              final BigDecimal amount,
@@ -114,6 +117,7 @@ public class PluginInvoiceItem implements InvoiceItem {
         this.invoiceItemType = invoiceItemType;
         this.invoiceId = invoiceId;
         this.accountId = accountId;
+        this.childAccountId = childAccountId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.amount = amount;
@@ -148,6 +152,11 @@ public class PluginInvoiceItem implements InvoiceItem {
     @Override
     public UUID getAccountId() {
         return accountId;
+    }
+
+    @Override
+    public UUID getChildAccountId() {
+        return childAccountId;
     }
 
     @Override
@@ -234,6 +243,9 @@ public class PluginInvoiceItem implements InvoiceItem {
         if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) {
             return false;
         }
+        if (childAccountId != null ? !childAccountId.equals(that.childAccountId) : that.childAccountId != null) {
+            return false;
+        }
         if (bundleId != null ? !bundleId.equals(that.bundleId) : that.bundleId != null) {
             return false;
         }
@@ -289,6 +301,7 @@ public class PluginInvoiceItem implements InvoiceItem {
         sb.append(", invoiceItemType=").append(invoiceItemType);
         sb.append(", invoiceId=").append(invoiceId);
         sb.append(", accountId=").append(accountId);
+        sb.append(", childAccountId=").append(childAccountId);
         sb.append(", startDate=").append(startDate);
         sb.append(", endDate=").append(endDate);
         sb.append(", amount=").append(amount);
@@ -349,6 +362,7 @@ public class PluginInvoiceItem implements InvoiceItem {
         result = 31 * result + (invoiceItemType != null ? invoiceItemType.hashCode() : 0);
         result = 31 * result + (invoiceId != null ? invoiceId.hashCode() : 0);
         result = 31 * result + (accountId != null ? accountId.hashCode() : 0);
+        result = 31 * result + (childAccountId != null ? childAccountId.hashCode() : 0);
         result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
         result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
         result = 31 * result + (amount != null ? amount.hashCode() : 0);
