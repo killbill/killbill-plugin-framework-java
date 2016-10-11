@@ -426,6 +426,7 @@ public abstract class TestUtils {
     public static PaymentTransaction buildPaymentTransaction(final Payment payment, final String transactionExternalKey, final TransactionType transactionType, final TransactionStatus transactionStatus, final BigDecimal amount, final Currency currency) {
         final PaymentTransaction paymentTransaction = Mockito.mock(PaymentTransaction.class);
         Mockito.when(paymentTransaction.getId()).thenReturn(UUID.randomUUID());
+        Mockito.when(paymentTransaction.getPaymentId()).thenReturn(payment.getId());
         Mockito.when(paymentTransaction.getTransactionType()).thenReturn(transactionType);
         Mockito.when(paymentTransaction.getAmount()).thenReturn(amount);
         Mockito.when(paymentTransaction.getCurrency()).thenReturn(currency);
