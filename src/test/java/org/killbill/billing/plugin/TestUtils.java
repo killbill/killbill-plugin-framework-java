@@ -45,6 +45,7 @@ import org.killbill.billing.invoice.api.InvoiceItemType;
 import org.killbill.billing.osgi.api.OSGIKillbill;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
+import org.killbill.billing.payment.api.AdminPaymentApi;
 import org.killbill.billing.payment.api.Payment;
 import org.killbill.billing.payment.api.PaymentApi;
 import org.killbill.billing.payment.api.PaymentApiException;
@@ -180,7 +181,52 @@ public abstract class TestUtils {
                        return payment;
                    }
                });
+        Mockito.when(paymentApi.createChargebackReversal(Mockito.<Account>any(),
+                                                         Mockito.<UUID>any(),
+                                                         Mockito.<String>any(),
+                                                         Mockito.<CallContext>any()))
+               .then(new Answer<Payment>() {
+                   @Override
+                   public Payment answer(final InvocationOnMock invocation) throws Throwable {
+                       final UUID kbPaymentId = (UUID) invocation.getArguments()[1];
+                       final Payment payment = paymentApi.getPayment(kbPaymentId, false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[3]);
+                       Assert.assertNotNull(payment);
+
+                       final String kbPaymentTransactionExternalKey = (String) invocation.getArguments()[2];
+                       PaymentTransaction paymentTransaction = null;
+                       for (final PaymentTransaction t : payment.getTransactions()) {
+                           if (kbPaymentTransactionExternalKey.equals(t.getExternalKey())) {
+                               paymentTransaction = t;
+                               break;
+                           }
+                       }
+                       Assert.assertNotNull(paymentTransaction);
+                       Assert.assertEquals(paymentTransaction.getTransactionStatus(), TransactionStatus.SUCCESS);
+
+                       Mockito.when(paymentTransaction.getTransactionStatus()).thenReturn(TransactionStatus.PAYMENT_FAILURE);
+
+                       return payment;
+                   }
+               });
         Mockito.when(killbillApi.getPaymentApi()).thenReturn(paymentApi);
+
+        final AdminPaymentApi adminPaymentApi = Mockito.mock(AdminPaymentApi.class);
+        Mockito.doAnswer(new Answer<Void>() {
+            @Override
+            public Void answer(final InvocationOnMock invocation) throws Throwable {
+                final PaymentTransaction paymentTransaction = (PaymentTransaction) invocation.getArguments()[1];
+                final TransactionStatus transactionStatus = (TransactionStatus) invocation.getArguments()[2];
+                Mockito.when(paymentTransaction.getTransactionStatus()).thenReturn(transactionStatus);
+                return null;
+            }
+        }).when(adminPaymentApi).fixPaymentTransactionState(Mockito.<Payment>any(),
+                                                            Mockito.<PaymentTransaction>any(),
+                                                            Mockito.<TransactionStatus>any(),
+                                                            Mockito.<String>any(),
+                                                            Mockito.<String>any(),
+                                                            Mockito.<Iterable<PluginProperty>>any(),
+                                                            Mockito.<CallContext>any());
+        Mockito.when(killbillApi.getAdminPaymentApi()).thenReturn(adminPaymentApi);
 
         return killbillApi;
     }
