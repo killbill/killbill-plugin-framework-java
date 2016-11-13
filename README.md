@@ -1,20 +1,21 @@
 killbill-plugin-framework-java
 ==============================
 
--------------------------------------------------
-| Plugin Framework version | Kill Bill version   |
-| -----------------------: | ------------------: |
-| 0.x.y                    | 0.16.z              |
-| -----------------------: | ------------------: |
-| 1.x.y                    | 0.18.z (and 0.17.x) |
-
-
 Convenience library to help write Kill Bill plugins.
 
 Here are some examples to get you started:
 
 * Payment plugin: https://github.com/killbill/killbill-adyen-plugin
 * Routing plugin: https://github.com/killbill/killbill-accertify-plugin
+
+Kill Bill compatibility
+-----------------------
+
+| Framework version | Kill Bill version |
+| ----------------: | ----------------: |
+| 0.3.y             | 0.16.z            |
+| 1.1.y             | 0.18.z            |
+| 1.2.y             | 0.19.z            |
 
 Usage
 -----
