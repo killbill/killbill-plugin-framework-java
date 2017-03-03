@@ -1,6 +1,7 @@
 1.1.1
     Make UTF8UrlDecoder support UTF-8 multi-byte characters
     Make PluginTenantConfigurableConfigurationHandler#getConfigurable thread-safe
+    Update to killbill-oss-parent 0.140.13
 
 1.1.0
     Initial release for KB 0.18.x
