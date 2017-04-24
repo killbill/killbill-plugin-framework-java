@@ -119,7 +119,7 @@ public class PluginHostedPaymentPageFormDescriptor implements HostedPaymentPageF
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -127,7 +127,7 @@ public class PluginHostedPaymentPageFormDescriptor implements HostedPaymentPageF
             return false;
         }
 
-        PluginHostedPaymentPageFormDescriptor that = (PluginHostedPaymentPageFormDescriptor) o;
+        final PluginHostedPaymentPageFormDescriptor that = (PluginHostedPaymentPageFormDescriptor) o;
 
         if (formFields != null ? !formFields.equals(that.formFields) : that.formFields != null) {
             return false;

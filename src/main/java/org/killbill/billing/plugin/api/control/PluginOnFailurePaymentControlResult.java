@@ -60,7 +60,7 @@ public class PluginOnFailurePaymentControlResult implements OnFailurePaymentCont
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -68,7 +68,7 @@ public class PluginOnFailurePaymentControlResult implements OnFailurePaymentCont
             return false;
         }
 
-        PluginOnFailurePaymentControlResult that = (PluginOnFailurePaymentControlResult) o;
+        final PluginOnFailurePaymentControlResult that = (PluginOnFailurePaymentControlResult) o;
 
         if (nextRetryDate != null ? !nextRetryDate.equals(that.nextRetryDate) : that.nextRetryDate != null) {
             return false;

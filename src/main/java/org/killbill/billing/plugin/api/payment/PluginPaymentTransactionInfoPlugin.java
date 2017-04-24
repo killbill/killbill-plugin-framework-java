@@ -158,7 +158,7 @@ public class PluginPaymentTransactionInfoPlugin implements PaymentTransactionInf
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -166,7 +166,7 @@ public class PluginPaymentTransactionInfoPlugin implements PaymentTransactionInf
             return false;
         }
 
-        PluginPaymentTransactionInfoPlugin that = (PluginPaymentTransactionInfoPlugin) o;
+        final PluginPaymentTransactionInfoPlugin that = (PluginPaymentTransactionInfoPlugin) o;
 
         if (amount != null ? !amount.equals(that.amount) : that.amount != null) {
             return false;

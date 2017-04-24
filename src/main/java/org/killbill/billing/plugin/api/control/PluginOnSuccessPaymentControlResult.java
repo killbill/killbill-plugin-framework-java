@@ -48,7 +48,7 @@ public class PluginOnSuccessPaymentControlResult implements OnSuccessPaymentCont
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -56,7 +56,7 @@ public class PluginOnSuccessPaymentControlResult implements OnSuccessPaymentCont
             return false;
         }
 
-        PluginOnSuccessPaymentControlResult that = (PluginOnSuccessPaymentControlResult) o;
+        final PluginOnSuccessPaymentControlResult that = (PluginOnSuccessPaymentControlResult) o;
 
         return !(adjustedPluginProperties != null ? !adjustedPluginProperties.equals(that.adjustedPluginProperties) : that.adjustedPluginProperties != null);
 

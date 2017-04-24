@@ -27,7 +27,7 @@ public class URIUtils {
                                   final String path,
                                   final String query,
                                   final String fragment) {
-        final StringBuffer sb = new StringBuffer();
+        final StringBuilder sb = new StringBuilder();
         if (scheme != null) {
             sb.append(scheme);
             sb.append(':');

@@ -29,7 +29,7 @@ import org.killbill.billing.plugin.dao.payment.gen.tables.records.TestResponsesR
 
 public class TestPluginPaymentDao extends PluginPaymentDao<TestResponsesRecord, TestResponses, TestPaymentMethodsRecord, TestPaymentMethods> {
 
-    public TestPluginPaymentDao(DataSource dataSource)
+    public TestPluginPaymentDao(final DataSource dataSource)
             throws SQLException {
         super(Tables.TEST_RESPONSES,
               Tables.TEST_PAYMENT_METHODS,

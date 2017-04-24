@@ -95,7 +95,7 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -103,7 +103,7 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
             return false;
         }
 
-        PluginPriorPaymentControlResult that = (PluginPriorPaymentControlResult) o;
+        final PluginPriorPaymentControlResult that = (PluginPriorPaymentControlResult) o;
 
         if (isAborted != that.isAborted) {
             return false;
