@@ -35,7 +35,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.killbill.billing.tenant.api.Tenant;
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.HttpHeaders;
@@ -67,7 +67,7 @@ public class PluginServlet extends HttpServlet {
     }
 
     protected String getCreatedBy(final HttpServletRequest req) {
-        return Objects.firstNonNull(req.getHeader(HDR_CREATED_BY), req.getRemoteAddr());
+        return MoreObjects.firstNonNull(req.getHeader(HDR_CREATED_BY), req.getRemoteAddr());
     }
 
     protected String getReason(final HttpServletRequest req) {
@@ -75,7 +75,7 @@ public class PluginServlet extends HttpServlet {
     }
 
     protected String getComment(final HttpServletRequest req) {
-        return Objects.firstNonNull(req.getHeader(HDR_COMMENT), req.getRequestURI());
+        return MoreObjects.firstNonNull(req.getHeader(HDR_COMMENT), req.getRequestURI());
     }
 
     protected Tenant getTenant(final ServletRequest req) {

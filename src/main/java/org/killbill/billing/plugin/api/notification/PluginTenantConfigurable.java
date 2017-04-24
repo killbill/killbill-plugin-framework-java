@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 public class PluginTenantConfigurable<C> {
 
@@ -55,12 +55,12 @@ public class PluginTenantConfigurable<C> {
     public C get(@Nullable final UUID kbTenantId) {
         final String key = getKey(kbTenantId);
         final C configurableForTenant = perTenantConfigurable.get(key);
-        return Objects.firstNonNull(configurableForTenant, defaultConfigurable);
+        return MoreObjects.firstNonNull(configurableForTenant, defaultConfigurable);
     }
 
     public void put(@Nullable final UUID kbTenantId, @Nullable final C configurableForTenant) {
         final String key = getKey(kbTenantId);
-        final C oldConfigurable = perTenantConfigurable.put(key, Objects.firstNonNull(configurableForTenant, defaultConfigurable));
+        final C oldConfigurable = perTenantConfigurable.put(key, MoreObjects.firstNonNull(configurableForTenant, defaultConfigurable));
 
         // Cleanup the old value
         if (oldConfigurable != null && oldConfigurable instanceof Closeable && oldConfigurable != defaultConfigurable) {
