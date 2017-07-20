@@ -43,6 +43,10 @@ public interface Healthcheck {
             return new HealthStatus(true, Collections.EMPTY_MAP);
         }
 
+        public static HealthStatus healthy(final String message) {
+            return new HealthStatus(true, Collections.singletonMap("message", message));
+        }
+
         public static HealthStatus unHealthy(final String message) {
             return new HealthStatus(false, Collections.singletonMap("message", message));
         }
