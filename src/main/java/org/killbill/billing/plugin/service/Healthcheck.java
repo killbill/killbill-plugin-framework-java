@@ -27,7 +27,7 @@ import org.killbill.billing.tenant.api.Tenant;
 
 public interface Healthcheck {
 
-    public HealthStatus getHealthStatus(@Nullable final Tenant tenant, @Nullable final Dictionary properties);
+    public HealthStatus getHealthStatus(@Nullable final Tenant tenant, @Nullable final Map properties);
 
     public class HealthStatus {
 

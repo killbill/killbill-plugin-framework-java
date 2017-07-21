@@ -17,7 +17,7 @@
 
 package org.killbill.billing.plugin.core.resources;
 
-import java.util.Dictionary;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -37,7 +37,7 @@ public abstract class PluginHealthcheck {
     private static final String CACHE_CONTROL = "Cache-Control";
     private static final String DEFAULT_CACHE_CONTROL = "private, no-cache, no-store, no-transform, must-revalidate";
 
-    protected Result check(final Healthcheck healthcheck, @Nullable final Tenant tenant, @Nullable final Dictionary properties) {
+    protected Result check(final Healthcheck healthcheck, @Nullable final Tenant tenant, @Nullable final Map properties) {
         final HealthStatus healthStatus = healthcheck.getHealthStatus(tenant, properties);
         return buildHealthcheckResponse(healthStatus);
     }
