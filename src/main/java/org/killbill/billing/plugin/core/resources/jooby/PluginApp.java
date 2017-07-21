@@ -27,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PluginApp extends Jooby {
 
+    public PluginApp() {}
+
     public PluginApp(final ObjectMapper objectMapper,
                      final Iterable<Object> services,
                      final Iterable<Class> routeClasses) {
