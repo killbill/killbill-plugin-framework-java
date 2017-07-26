@@ -1,3 +1,9 @@
+1.2.0
+    jdk1.8+ only
+    Support for servlets backed by jooby
+    Support for plugin healthchecks
+    Support for multi-regions configuration
+
 1.1.2
     Update to killbill-oss-parent 0.140.24
 
