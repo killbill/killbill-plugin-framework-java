@@ -1,6 +1,6 @@
 /*
- * Copyright 2015 Groupon, Inc
- * Copyright 2015 The Billing Project, LLC
+ * Copyright 2017 Groupon, Inc
+ * Copyright 2017 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -29,12 +29,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.net.HttpHeaders;
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
@@ -42,6 +36,13 @@ import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.ProxyServer;
 import com.ning.http.client.Realm;
 import com.ning.http.client.Response;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.net.HttpHeaders;
 
 public class HttpClient implements Closeable {
 
@@ -59,7 +60,9 @@ public class HttpClient implements Closeable {
     protected static final String USER_AGENT = "KillBill/1.0";
 
     protected static final ImmutableMap<String, String> DEFAULT_OPTIONS = ImmutableMap.<String, String>of();
-    protected static final int DEFAULT_HTTP_TIMEOUT_SEC = 10;
+    protected static final int DEFAULT_HTTP_TIMEOUT_SEC = 70;
+    private static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 5;
+    private static final int DEFAULT_HTTP_READ_TIMEOUT = 60;
 
     protected final String username;
     protected final String password;
@@ -80,14 +83,37 @@ public class HttpClient implements Closeable {
         this.password = password;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
+        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT);
+        this.mapper = createObjectMapper();
+    }
 
-        final AsyncHttpClientConfig.Builder cfg = new AsyncHttpClientConfig.Builder();
-        cfg.setUserAgent(USER_AGENT);
+    public HttpClient(final String url,
+                      final String username,
+                      final String password,
+                      final String proxyHost,
+                      final Integer proxyPort,
+                      final Boolean strictSSL,
+                      final int connectTimeout,
+                      final int readTimeout) throws GeneralSecurityException {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        this.httpClient = buildAsyncHttpClient(strictSSL, readTimeout, connectTimeout);
+        this.mapper = createObjectMapper();
+    }
+
+    private AsyncHttpClient buildAsyncHttpClient(final Boolean strictSSL, final int readTimeout, final int connectTimeout)
+            throws GeneralSecurityException {
+        AsyncHttpClientConfig.Builder cfg = new AsyncHttpClientConfig.Builder();
+        cfg.setUserAgent(USER_AGENT)
+           .setConnectTimeout(connectTimeout)
+           .setReadTimeout(readTimeout);
         if (!strictSSL) {
             cfg.setSSLContext(SslUtils.getInstance().getSSLContext(!strictSSL));
         }
-        this.httpClient = new AsyncHttpClient(cfg.build());
-        this.mapper = createObjectMapper();
+        return new AsyncHttpClient(cfg.build());
     }
 
     @Override
