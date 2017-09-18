@@ -156,6 +156,17 @@ public class HttpClient implements Closeable {
         return executeAndWait(builder, DEFAULT_HTTP_TIMEOUT_SEC, clazz, ResponseFormat.JSON);
     }
 
+    protected String doCallAndReturnTextResponse(final String verb, final String uri, final String body,
+                                                 final Map<String, String> queryParams,
+                                                 final Map<String, String> headers) throws InvalidRequest,
+                                                                                           InterruptedException,
+                                                                                           ExecutionException,
+                                                                                           IOException,
+                                                                                           TimeoutException,
+                                                                                           URISyntaxException {
+        return doCall(verb, uri, body, headers, queryParams, String.class, ResponseFormat.TEXT);
+    }
+
     protected <T> T doCall(final String verb, final String uri, final String body, final Map<String, String> queryParams,
                            final Map<String, String> headers, final Class<T> clazz, final ResponseFormat format)
             throws InterruptedException, ExecutionException, TimeoutException, IOException, URISyntaxException, InvalidRequest {
@@ -210,7 +221,7 @@ public class HttpClient implements Closeable {
 
     @Deprecated
     protected AsyncHttpClient.BoundRequestBuilder getBuilderWithHeaderAndQuery(final String verb, final String url, final Map<String, String> immutableOptions) {
-        final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb);
+        final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb, url);
 
         final Map<String, String> options = new HashMap<String, String>(immutableOptions);
 
@@ -239,7 +250,7 @@ public class HttpClient implements Closeable {
     protected AsyncHttpClient.BoundRequestBuilder getBuilderWithHeaderAndQuery(final String verb,
                                                                                final Map<String, String> headers,
                                                                                final Map<String, String> queryParams) {
-        final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb);
+        final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb, url);
         addHeadsOrParams(headers, (key, value) -> builder.addHeader(key, value));
         addHeadsOrParams(queryParams, (key, value) -> builder.addQueryParam(key, value));
         return builder;
@@ -251,7 +262,7 @@ public class HttpClient implements Closeable {
         }
     }
 
-    private BoundRequestBuilder prepareBuilder(final String verb) {
+    private BoundRequestBuilder prepareBuilder(final String verb, final String url) {
         final AsyncHttpClient.BoundRequestBuilder builder;
         if (GET.equals(verb)) {
             builder = httpClient.prepareGet(url);
