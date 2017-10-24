@@ -60,8 +60,13 @@ public abstract class PluginTenantConfigurableConfigurationHandler<C> extends Pl
     public C getConfigurable(@Nullable final UUID kbTenantId) {
         // Initial configuration
         if (kbTenantId != null && !configuredTenants.contains(kbTenantId)) {
-            configure(kbTenantId);
-            configuredTenants.add(kbTenantId);
+            // Make sure to initialize the value for the tenant once
+            synchronized (configuredTenants) {
+                if (!configuredTenants.contains(kbTenantId)) {
+                    configure(kbTenantId);
+                    configuredTenants.add(kbTenantId);
+                }
+            }
         }
         return pluginTenantConfigurable.get(kbTenantId);
     }

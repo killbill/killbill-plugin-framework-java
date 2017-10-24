@@ -17,64 +17,64 @@
 
 package org.killbill.billing.plugin.util.http;
 
+import java.io.UnsupportedEncodingException;
+
 public final class UTF8UrlDecoder {
 
     private UTF8UrlDecoder() {
-    }
-
-    private static StringBuilder initSb(final StringBuilder sb, final String s, final int i, final int offset, final int length) {
-        if (sb != null) {
-            return sb;
-        } else {
-            final int initialSbLength = length > 500 ? length / 2 : length;
-            return new StringBuilder(initialSbLength).append(s, offset, i);
-        }
-    }
-
-    private static int hexaDigit(final char c) {
-        return Character.digit(c, 16);
     }
 
     public static CharSequence decode(final String s) {
         return decode(s, 0, s.length());
     }
 
-    public static CharSequence decode(final String s, final int offset, final int length) {
-
-        StringBuilder sb = null;
+    static CharSequence decode(final String s, final int offset, final int length) {
+        final int initialSbLength = length > 500 ? length / 2 : length;
+        final StringBuilder sb = new StringBuilder(initialSbLength);
         int i = offset;
         final int end = length + offset;
 
+        byte[] bytes = null;
         while (i < end) {
-            final char c = s.charAt(i);
+            char c = s.charAt(i);
             if (c == '+') {
-                sb = initSb(sb, s, i, offset, length);
                 sb.append(' ');
                 i++;
-
             } else if (c == '%') {
-                if (end - i < 3) // We expect 3 chars. 0 based i vs. 1 based length!
-                {
+                // (numChars-i)/3 is an upper bound for the number of remaining bytes
+                if (bytes == null) {
+                    bytes = new byte[(end - i) / 3];
+                }
+                int pos = 0;
+
+                while (i + 2 < end && c == '%') {
+                    final int v = Integer.parseInt(s.substring(i + 1, i + 3), 16);
+                    if (v < 0) {
+                        throw new IllegalArgumentException("UTF8UrlDecoder: Illegal hex characters in escape (%) pattern - negative value");
+                    }
+                    bytes[pos++] = (byte) v;
+                    i += 3;
+                    if (i < end) {
+                        c = s.charAt(i);
+                    }
+                }
+
+                // A trailing, incomplete, byte encoding such as "%x" will cause an exception to be thrown
+                if (i < end && c == '%') {
                     throw new IllegalArgumentException("UTF8UrlDecoder: Incomplete trailing escape (%) pattern");
                 }
 
-                final int x;
-                final int y;
-                if ((x = hexaDigit(s.charAt(i + 1))) == -1 || (y = hexaDigit(s.charAt(i + 2))) == -1) {
-                    throw new IllegalArgumentException("UTF8UrlDecoder: Malformed");
+                try {
+                    sb.append(new String(bytes, 0, pos, "UTF-8"));
+                } catch (final UnsupportedEncodingException e) {
+                    throw new IllegalArgumentException(e);
                 }
-
-                sb = initSb(sb, s, i, offset, length);
-                sb.append((char) (x * 16 + y));
-                i += 3;
             } else {
-                if (sb != null) {
-                    sb.append(c);
-                }
+                sb.append(c);
                 i++;
             }
         }
 
-        return sb != null ? sb.toString() : new StringCharSequence(s, offset, length);
+        return sb.toString();
     }
 }

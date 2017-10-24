@@ -79,6 +79,14 @@ public class TestPluginProperties {
     }
 
     @Test(groups = "fast")
+    public void testToMapWithNull() throws Exception {
+        final Map<String, Object> properties = PluginProperties.toMap(null, pluginProperties2);
+        Assert.assertNull(properties.get("baz"));
+        Assert.assertEquals(properties.get("baz2"), "something else");
+        Assert.assertEquals(properties.get("foo"), "override");
+    }
+
+    @Test(groups = "fast")
     public void testToStringMap() throws Exception {
         final Map<String, String> properties = PluginProperties.toStringMap(pluginProperties1, pluginProperties2);
         Assert.assertEquals(properties.get("baz"), "12");

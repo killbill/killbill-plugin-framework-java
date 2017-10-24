@@ -1,3 +1,17 @@
+1.2.0
+    jdk1.8+ only
+    Support for servlets backed by jooby
+    Support for plugin healthchecks
+    Support for multi-regions configuration
+
+1.1.2
+    Update to killbill-oss-parent 0.140.24
+
+1.1.1
+    Make UTF8UrlDecoder support UTF-8 multi-byte characters
+    Make PluginTenantConfigurableConfigurationHandler#getConfigurable thread-safe
+    Update to killbill-oss-parent 0.140.13
+
 1.1.0
     Initial release for KB 0.18.x
     Update to killbill-oss-parent 0.140

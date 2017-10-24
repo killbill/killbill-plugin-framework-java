@@ -33,7 +33,7 @@ import org.killbill.billing.invoice.api.Invoice;
 import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.payment.api.PluginProperty;
 
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 
 // This calculator implicitly assumes that tax items are not adjusted, only the taxable items are
 // (tax adjustments show up as negative TAX items, linked to the original taxable item).
@@ -81,7 +81,7 @@ public abstract class PluginTaxCalculator {
         if (amount == null || BigDecimal.ZERO.compareTo(amount) == 0) {
             return null;
         } else {
-            return PluginInvoiceItem.createTaxItem(originalItem, invoiceId, date, null, amount, Objects.firstNonNull(description, "Tax"));
+            return PluginInvoiceItem.createTaxItem(originalItem, invoiceId, date, null, amount, MoreObjects.firstNonNull(description, "Tax"));
         }
     }
 

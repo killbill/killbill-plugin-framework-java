@@ -41,7 +41,7 @@ public class SslUtils {
         }
     }
 
-    private SSLContext looseTrustManagerSSLContext = looseTrustManagerSSLContext();
+    private final SSLContext looseTrustManagerSSLContext = looseTrustManagerSSLContext();
 
     private SSLContext looseTrustManagerSSLContext() {
         try {
