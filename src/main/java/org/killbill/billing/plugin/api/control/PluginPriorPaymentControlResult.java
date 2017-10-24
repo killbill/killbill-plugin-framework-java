@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2015 Groupon, Inc
- * Copyright 2014-2015 The Billing Project, LLC
+ * Copyright 2014-2017 Groupon, Inc
+ * Copyright 2014-2017 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -31,6 +31,7 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
     private final BigDecimal adjustedAmount;
     private final Currency adjustedCurrency;
     private final UUID adjustedPaymentMethodId;
+    private final String adjustedPluginName;
     private final Iterable<PluginProperty> adjustedPluginProperties;
 
     public PluginPriorPaymentControlResult(final PaymentControlContext context) {
@@ -38,22 +39,24 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
     }
 
     public PluginPriorPaymentControlResult(final boolean isAborted, final PaymentControlContext context) {
-        this(isAborted, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), null);
+        this(isAborted, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), null, null);
     }
 
     public PluginPriorPaymentControlResult(final Iterable<PluginProperty> adjustedPluginProperties, final PaymentControlContext context) {
-        this(false, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), adjustedPluginProperties);
+        this(false, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), null, adjustedPluginProperties);
     }
 
     public PluginPriorPaymentControlResult(final boolean isAborted,
                                            final BigDecimal adjustedAmount,
                                            final Currency adjustedCurrency,
                                            final UUID adjustedPaymentMethodId,
+                                           final String adjustedPluginName,
                                            final Iterable<PluginProperty> adjustedPluginProperties) {
         this.isAborted = isAborted;
         this.adjustedAmount = adjustedAmount;
         this.adjustedCurrency = adjustedCurrency;
         this.adjustedPaymentMethodId = adjustedPaymentMethodId;
+        this.adjustedPluginName = adjustedPluginName;
         this.adjustedPluginProperties = adjustedPluginProperties;
     }
 
@@ -78,6 +81,11 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
     }
 
     @Override
+    public String getAdjustedPluginName() {
+        return adjustedPluginName;
+    }
+
+    @Override
     public Iterable<PluginProperty> getAdjustedPluginProperties() {
         return adjustedPluginProperties;
     }
@@ -89,6 +97,7 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
         sb.append(", adjustedAmount=").append(adjustedAmount);
         sb.append(", adjustedCurrency=").append(adjustedCurrency);
         sb.append(", adjustedPaymentMethodId=").append(adjustedPaymentMethodId);
+        sb.append(", adjustedPluginName='").append(adjustedPluginName).append('\'');
         sb.append(", adjustedPluginProperties=").append(adjustedPluginProperties);
         sb.append('}');
         return sb.toString();
@@ -108,7 +117,7 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
         if (isAborted != that.isAborted) {
             return false;
         }
-        if (adjustedAmount != null ? !adjustedAmount.equals(that.adjustedAmount) : that.adjustedAmount != null) {
+        if (adjustedAmount != null ? adjustedAmount.compareTo(that.adjustedAmount) != 0 : that.adjustedAmount != null) {
             return false;
         }
         if (adjustedCurrency != that.adjustedCurrency) {
@@ -117,8 +126,10 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
         if (adjustedPaymentMethodId != null ? !adjustedPaymentMethodId.equals(that.adjustedPaymentMethodId) : that.adjustedPaymentMethodId != null) {
             return false;
         }
-        return !(adjustedPluginProperties != null ? !adjustedPluginProperties.equals(that.adjustedPluginProperties) : that.adjustedPluginProperties != null);
-
+        if (adjustedPluginName != null ? !adjustedPluginName.equals(that.adjustedPluginName) : that.adjustedPluginName != null) {
+            return false;
+        }
+        return adjustedPluginProperties != null ? adjustedPluginProperties.equals(that.adjustedPluginProperties) : that.adjustedPluginProperties == null;
     }
 
     @Override
@@ -127,6 +138,7 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
         result = 31 * result + (adjustedAmount != null ? adjustedAmount.hashCode() : 0);
         result = 31 * result + (adjustedCurrency != null ? adjustedCurrency.hashCode() : 0);
         result = 31 * result + (adjustedPaymentMethodId != null ? adjustedPaymentMethodId.hashCode() : 0);
+        result = 31 * result + (adjustedPluginName != null ? adjustedPluginName.hashCode() : 0);
         result = 31 * result + (adjustedPluginProperties != null ? adjustedPluginProperties.hashCode() : 0);
         return result;
     }

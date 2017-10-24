@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2016 Groupon, Inc
- * Copyright 2014-2016 The Billing Project, LLC
+ * Copyright 2014-2017 Groupon, Inc
+ * Copyright 2014-2017 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -401,7 +401,7 @@ public abstract class PluginApi {
         try {
             // Try to get all payment methods, with plugin information
             // TODO this will not return deleted payment methods
-            return paymentApi.getAccountPaymentMethods(accountId, true, PLUGIN_PROPERTIES, context);
+            return paymentApi.getAccountPaymentMethods(accountId, false, true, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
             logService.log(LogService.LOG_INFO, "Error retrieving payment methods for accountId " + accountId + ": " + e.getMessage());
             throw new OSGIServiceNotAvailable(e);

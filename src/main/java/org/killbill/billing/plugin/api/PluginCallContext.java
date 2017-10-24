@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 Groupon, Inc
- * Copyright 2014 The Billing Project, LLC
+ * Copyright 2014-2017 Groupon, Inc
+ * Copyright 2014-2017 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -34,9 +34,10 @@ public class PluginCallContext implements CallContext {
     protected final String comments;
     protected final DateTime createdDate;
     protected final DateTime updatedDate;
+    protected final UUID accountId;
     protected final UUID tenantId;
 
-    public PluginCallContext(final String pluginName, final DateTime utcNow, final UUID tenantId) {
+    public PluginCallContext(final String pluginName, final DateTime utcNow, final UUID accountId, final UUID tenantId) {
         this(UUID.randomUUID(),
              pluginName,
              CallOrigin.EXTERNAL,
@@ -45,6 +46,7 @@ public class PluginCallContext implements CallContext {
              null,
              utcNow,
              utcNow,
+             accountId,
              tenantId);
     }
 
@@ -56,6 +58,7 @@ public class PluginCallContext implements CallContext {
                              final String comments,
                              final DateTime createdDate,
                              final DateTime updatedDate,
+                             final UUID accountId,
                              final UUID tenantId) {
         this.userToken = userToken;
         this.userName = userName;
@@ -65,6 +68,7 @@ public class PluginCallContext implements CallContext {
         this.comments = comments;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
+        this.accountId = accountId;
         this.tenantId = tenantId;
     }
 
@@ -109,6 +113,11 @@ public class PluginCallContext implements CallContext {
     }
 
     @Override
+    public UUID getAccountId() {
+        return accountId;
+    }
+
+    @Override
     public UUID getTenantId() {
         return tenantId;
     }
@@ -124,6 +133,7 @@ public class PluginCallContext implements CallContext {
         sb.append(", comments='").append(comments).append('\'');
         sb.append(", createdDate=").append(createdDate);
         sb.append(", updatedDate=").append(updatedDate);
+        sb.append(", accountId=").append(accountId);
         sb.append(", tenantId=").append(tenantId);
         sb.append('}');
         return sb.toString();
@@ -140,35 +150,34 @@ public class PluginCallContext implements CallContext {
 
         final PluginCallContext that = (PluginCallContext) o;
 
-        if (callOrigin != that.callOrigin) {
-            return false;
-        }
-        if (comments != null ? !comments.equals(that.comments) : that.comments != null) {
-            return false;
-        }
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) {
-            return false;
-        }
-        if (reasonCode != null ? !reasonCode.equals(that.reasonCode) : that.reasonCode != null) {
-            return false;
-        }
-        if (tenantId != null ? !tenantId.equals(that.tenantId) : that.tenantId != null) {
-            return false;
-        }
-        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) {
+        if (userToken != null ? !userToken.equals(that.userToken) : that.userToken != null) {
             return false;
         }
         if (userName != null ? !userName.equals(that.userName) : that.userName != null) {
             return false;
         }
-        if (userToken != null ? !userToken.equals(that.userToken) : that.userToken != null) {
+        if (callOrigin != that.callOrigin) {
             return false;
         }
         if (userType != that.userType) {
             return false;
         }
-
-        return true;
+        if (reasonCode != null ? !reasonCode.equals(that.reasonCode) : that.reasonCode != null) {
+            return false;
+        }
+        if (comments != null ? !comments.equals(that.comments) : that.comments != null) {
+            return false;
+        }
+        if (createdDate != null ? createdDate.compareTo(that.createdDate) != 0 : that.createdDate != null) {
+            return false;
+        }
+        if (updatedDate != null ? updatedDate.compareTo(that.updatedDate) != 0 : that.updatedDate != null) {
+            return false;
+        }
+        if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) {
+            return false;
+        }
+        return tenantId != null ? tenantId.equals(that.tenantId) : that.tenantId == null;
     }
 
     @Override
@@ -181,6 +190,7 @@ public class PluginCallContext implements CallContext {
         result = 31 * result + (comments != null ? comments.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (accountId != null ? accountId.hashCode() : 0);
         result = 31 * result + (tenantId != null ? tenantId.hashCode() : 0);
         return result;
     }

@@ -80,7 +80,7 @@ public abstract class PluginConfigurationHandler {
             return null;
         }
 
-        final TenantContext context = new PluginTenantContext(kbTenantId);
+        final TenantContext context = new PluginTenantContext(null, kbTenantId);
         try {
             final List<String> values = tenantUserApi.getTenantValuesForKey(configKeyName, context);
             return !values.isEmpty() ? values.get(0) : null;

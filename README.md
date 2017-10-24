@@ -14,8 +14,8 @@ Kill Bill compatibility
 | Framework version | Kill Bill version |
 | ----------------: | ----------------: |
 | 0.3.y             | 0.16.z            |
-| 1.x.y             | 0.18.z            |
-| 2.x.y             | 0.19.z            |
+| 1.2.y             | 0.18.z            |
+| 2.0.y             | 0.19.z            |
 
 Usage
 -----

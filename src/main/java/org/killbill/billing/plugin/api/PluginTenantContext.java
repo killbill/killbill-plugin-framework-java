@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2015 Groupon, Inc
- * Copyright 2014-2015 The Billing Project, LLC
+ * Copyright 2014-2017 Groupon, Inc
+ * Copyright 2014-2017 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -19,14 +19,23 @@ package org.killbill.billing.plugin.api;
 
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import org.killbill.billing.util.callcontext.TenantContext;
 
 public class PluginTenantContext implements TenantContext {
 
+    protected final UUID accountId;
     protected final UUID tenantId;
 
-    public PluginTenantContext(final UUID tenantId) {
+    public PluginTenantContext(@Nullable final UUID accountId, final UUID tenantId) {
+        this.accountId = accountId;
         this.tenantId = tenantId;
+    }
+
+    @Override
+    public UUID getAccountId() {
+        return accountId;
     }
 
     @Override
@@ -37,7 +46,8 @@ public class PluginTenantContext implements TenantContext {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("PluginTenantContext{");
-        sb.append("tenantId=").append(tenantId);
+        sb.append("accountId=").append(accountId);
+        sb.append(", tenantId=").append(tenantId);
         sb.append('}');
         return sb.toString();
     }
@@ -53,15 +63,16 @@ public class PluginTenantContext implements TenantContext {
 
         final PluginTenantContext that = (PluginTenantContext) o;
 
-        if (tenantId != null ? !tenantId.equals(that.tenantId) : that.tenantId != null) {
+        if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) {
             return false;
         }
-
-        return true;
+        return tenantId != null ? tenantId.equals(that.tenantId) : that.tenantId == null;
     }
 
     @Override
     public int hashCode() {
-        return tenantId != null ? tenantId.hashCode() : 0;
+        int result = accountId != null ? accountId.hashCode() : 0;
+        result = 31 * result + (tenantId != null ? tenantId.hashCode() : 0);
+        return result;
     }
 }
