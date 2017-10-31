@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -85,8 +84,6 @@ public abstract class YAMLPluginTenantConfigurationHandler<T> extends PluginConf
             }
         }
     }
-
-    protected abstract T createConfigurable(final Properties properties);
 
     protected abstract T createConfigurable(final Map<String, ?> configObject);
 
