@@ -31,7 +31,8 @@ import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.plugin.api.notification.PluginConfigurationHandler;
 import org.killbill.billing.plugin.api.notification.PluginTenantConfigurable;
-import org.osgi.service.log.LogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -39,27 +40,26 @@ import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-public abstract class PaymentPluginTenantConfigurationHandler<T> extends PluginConfigurationHandler {
+public abstract class YAMLPluginTenantConfigurationHandler<T> extends PluginConfigurationHandler {
 
-    private static ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory());
+    private static final Logger logger = LoggerFactory.getLogger(YAMLPluginTenantConfigurationHandler.class);
+
+    private static final ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory());
 
     private final Collection<UUID> configuredTenants = new HashSet<>();
     private final PluginTenantConfigurable<T> pluginTenantConfigurable = new PluginTenantConfigurable<>();
 
     private final ObjectReader yamlObjectReader;
     private final String configurationKey;
-    private LogService osgiKillbillLogService;
 
-    public PaymentPluginTenantConfigurationHandler(final String pluginName,
-                                                   final OSGIKillbillAPI osgiKillbillAPI,
-                                                   final OSGIKillbillLogService osgiKillbillLogService,
-                                                   final String configurationKey) {
+    public YAMLPluginTenantConfigurationHandler(final String pluginName,
+                                                final OSGIKillbillAPI osgiKillbillAPI,
+                                                final OSGIKillbillLogService osgiKillbillLogService,
+                                                final String configurationKey) {
         super(pluginName, osgiKillbillAPI, osgiKillbillLogService);
-        this.osgiKillbillLogService = osgiKillbillLogService;
 
         this.configurationKey = configurationKey;
-        final MapType mapType = TypeFactory
-                .defaultInstance().constructMapType(Map.class, String.class, Map.class);
+        final MapType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Map.class);
         this.yamlObjectReader = yamlObjectMapper.readerFor(mapType);
     }
 
@@ -78,17 +78,10 @@ public abstract class PaymentPluginTenantConfigurationHandler<T> extends PluginC
         if (rawConfiguration != null) {
             try {
                 final Map<String, Map<String, Object>> configObject = yamlObjectReader.readValue(rawConfiguration);
-                final T configurable = createConfigurable(configObject.getOrDefault(configurationKey, Collections
-                        .emptyMap()));
+                final T configurable = createConfigurable(configObject.getOrDefault(configurationKey, Collections.emptyMap()));
                 pluginTenantConfigurable.put(kbTenantId, configurable);
-            } catch (IOException e) {
-                osgiKillbillLogService.log(LogService.LOG_INFO, "Error while parsing YAML configuration, falling back to parsing Properties", e);
-
-                final Properties properties = getTenantConfigurationAsProperties(kbTenantId);
-                if (properties != null) {
-                    final T configurable = createConfigurable(properties);
-                    pluginTenantConfigurable.put(kbTenantId, configurable);
-                }
+            } catch (final IOException e) {
+                logger.warn("Error while parsing YAML configuration", e);
             }
         }
     }

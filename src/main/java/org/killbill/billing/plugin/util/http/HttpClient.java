@@ -88,7 +88,7 @@ public class HttpClient implements Closeable {
         this.password = password;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
-        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_CONNECT_TIMEOUT, DEFAULT_HTTP_READ_TIMEOUT);
+        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_READ_TIMEOUT, DEFAULT_HTTP_CONNECT_TIMEOUT);
         this.mapper = createObjectMapper();
     }
 
