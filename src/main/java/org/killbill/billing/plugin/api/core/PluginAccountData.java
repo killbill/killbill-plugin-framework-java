@@ -17,6 +17,7 @@
 
 package org.killbill.billing.plugin.api.core;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import org.joda.time.DateTimeZone;
@@ -47,6 +48,10 @@ public class PluginAccountData implements AccountData {
     protected final String notes;
     protected final Boolean isMigrated;
     protected final Boolean isNotifiedForInvoices;
+
+    public PluginAccountData(final String externalKey) {
+        this(externalKey, Currency.USD, DateTimeZone.UTC, Locale.US.toString(), "US");
+    }
 
     public PluginAccountData(final String externalKey,
                              final Currency currency,
