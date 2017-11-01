@@ -20,8 +20,10 @@ package org.killbill.billing.plugin.core.config;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -99,5 +101,16 @@ public abstract class YAMLPluginTenantConfigurationHandler<T> extends PluginConf
             }
         }
         return pluginTenantConfigurable.get(kbTenantId);
+    }
+
+    protected static Map<String, ?> propertiesToMap(final Properties properties, @Nullable final String prefix) {
+        final int trimLength = prefix == null ? 0 : prefix.length();
+        final Map<String, String> map = new HashMap<>();
+        for (final String name : properties.stringPropertyNames()) {
+            if (prefix == null || name.startsWith(prefix)) {
+                map.put(name.substring(trimLength), properties.getProperty(name));
+            }
+        }
+        return map;
     }
 }
