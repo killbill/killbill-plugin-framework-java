@@ -1,3 +1,6 @@
+1.2.2
+    Add KillBillContext utility class to retrieve X-Request-Id
+
 1.2.1
     Make httpclient timeouts configurable
     Add support for YAML config
