@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 
 import org.joda.time.DateTime;
 import org.jooq.Configuration;
+import org.jooq.SQLDialect;
 import org.jooq.Table;
 import org.jooq.TransactionalRunnable;
 import org.jooq.UpdatableRecord;
@@ -79,6 +80,24 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
     protected final PM_T paymentMethodsTable;
 
     private final String recordIdFieldName;
+
+    public PluginPaymentDao(final RESP_T responsesTable,
+                            final PM_T paymentMethodsTable,
+                            final DataSource dataSource,
+                            final SQLDialect dialect) throws SQLException {
+        this(responsesTable, paymentMethodsTable, dataSource, dialect, RECORD_ID);
+    }
+
+    public PluginPaymentDao(final RESP_T responsesTable,
+                            final PM_T paymentMethodsTable,
+                            final DataSource dataSource,
+                            final SQLDialect dialect,
+                            final String recordIdFieldName) throws SQLException {
+        super(dataSource, dialect);
+        this.responsesTable = responsesTable;
+        this.paymentMethodsTable = paymentMethodsTable;
+        this.recordIdFieldName = recordIdFieldName;
+    }
 
     public PluginPaymentDao(final RESP_T responsesTable,
                             final PM_T paymentMethodsTable,
