@@ -18,10 +18,12 @@
 package org.killbill.billing.plugin.api.core;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.catalog.api.PlanPhasePriceOverride;
 import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
+import org.killbill.billing.catalog.api.UsagePriceOverride;
 
 public class PluginPlanPhasePriceOverride implements PlanPhasePriceOverride {
 
@@ -30,23 +32,26 @@ public class PluginPlanPhasePriceOverride implements PlanPhasePriceOverride {
     private final Currency currency;
     private final BigDecimal fixedPrice;
     private final BigDecimal recurringPrice;
+    private final List<UsagePriceOverride> usagePriceOverrides;
 
     public PluginPlanPhasePriceOverride(final String phaseName,
                                         final BigDecimal recurringPrice,
                                         final Currency currency) {
-        this(phaseName, null, currency, null, recurringPrice);
+        this(phaseName, null, currency, null, recurringPrice, null);
     }
 
     public PluginPlanPhasePriceOverride(final String phaseName,
                                         final PlanPhaseSpecifier planPhaseSpecifier,
                                         final Currency currency,
                                         final BigDecimal fixedPrice,
-                                        final BigDecimal recurringPrice) {
+                                        final BigDecimal recurringPrice,
+                                        final List<UsagePriceOverride> usagePriceOverrides) {
         this.phaseName = phaseName;
         this.planPhaseSpecifier = planPhaseSpecifier;
         this.currency = currency;
         this.fixedPrice = fixedPrice;
         this.recurringPrice = recurringPrice;
+        this.usagePriceOverrides = usagePriceOverrides;
     }
 
     @Override
@@ -75,6 +80,11 @@ public class PluginPlanPhasePriceOverride implements PlanPhasePriceOverride {
     }
 
     @Override
+    public List<UsagePriceOverride> getUsagePriceOverrides() {
+        return usagePriceOverrides;
+    }
+
+    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("PluginPlanPhasePriceOverride{");
         sb.append("phaseName='").append(phaseName).append('\'');
@@ -82,6 +92,7 @@ public class PluginPlanPhasePriceOverride implements PlanPhasePriceOverride {
         sb.append(", currency=").append(currency);
         sb.append(", fixedPrice=").append(fixedPrice);
         sb.append(", recurringPrice=").append(recurringPrice);
+        sb.append(", usagePriceOverrides=").append(usagePriceOverrides);
         sb.append('}');
         return sb.toString();
     }
@@ -109,7 +120,10 @@ public class PluginPlanPhasePriceOverride implements PlanPhasePriceOverride {
         if (fixedPrice != null ? fixedPrice.compareTo(that.fixedPrice) != 0 : that.fixedPrice != null) {
             return false;
         }
-        return recurringPrice != null ? recurringPrice.compareTo(that.recurringPrice) == 0 : that.recurringPrice == null;
+        if (recurringPrice != null ? recurringPrice.compareTo(that.recurringPrice) != 0 : that.recurringPrice != null) {
+            return false;
+        }
+        return usagePriceOverrides != null ? usagePriceOverrides.equals(that.usagePriceOverrides) : that.usagePriceOverrides == null;
     }
 
     @Override
@@ -119,6 +133,7 @@ public class PluginPlanPhasePriceOverride implements PlanPhasePriceOverride {
         result = 31 * result + (currency != null ? currency.hashCode() : 0);
         result = 31 * result + (fixedPrice != null ? fixedPrice.hashCode() : 0);
         result = 31 * result + (recurringPrice != null ? recurringPrice.hashCode() : 0);
+        result = 31 * result + (usagePriceOverrides != null ? usagePriceOverrides.hashCode() : 0);
         return result;
     }
 }

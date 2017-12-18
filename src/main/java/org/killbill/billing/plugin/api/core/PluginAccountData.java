@@ -20,6 +20,7 @@ package org.killbill.billing.plugin.api.core;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.killbill.billing.account.api.AccountData;
 import org.killbill.billing.catalog.api.Currency;
@@ -35,6 +36,7 @@ public class PluginAccountData implements AccountData {
     protected final Boolean isPaymentDelegatedToParent;
     protected final Integer billCycleDayLocal;
     protected final UUID paymentMethodId;
+    protected final DateTime referenceTime;
     protected final DateTimeZone timeZone;
     protected final String locale;
     protected final String address1;
@@ -67,6 +69,7 @@ public class PluginAccountData implements AccountData {
              null,
              null,
              null,
+             null,
              timeZone,
              locale,
              null,
@@ -91,6 +94,7 @@ public class PluginAccountData implements AccountData {
                              final Boolean isPaymentDelegatedToParent,
                              final Integer billCycleDayLocal,
                              final UUID paymentMethodId,
+                             final DateTime referenceTime,
                              final DateTimeZone timeZone,
                              final String locale,
                              final String address1,
@@ -113,6 +117,7 @@ public class PluginAccountData implements AccountData {
         this.isPaymentDelegatedToParent = isPaymentDelegatedToParent;
         this.billCycleDayLocal = billCycleDayLocal;
         this.paymentMethodId = paymentMethodId;
+        this.referenceTime = referenceTime;
         this.timeZone = timeZone;
         this.locale = locale;
         this.address1 = address1;
@@ -171,6 +176,11 @@ public class PluginAccountData implements AccountData {
     @Override
     public UUID getPaymentMethodId() {
         return paymentMethodId;
+    }
+
+    @Override
+    public DateTime getReferenceTime() {
+        return referenceTime;
     }
 
     @Override
