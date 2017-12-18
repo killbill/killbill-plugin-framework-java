@@ -19,6 +19,8 @@ package org.killbill.billing.plugin.core.config;
 
 import java.util.Properties;
 
+import com.google.common.base.Strings;
+
 public class PluginEnvironmentConfig {
 
     public static final String KILL_BILL_NAMESPACE = "org.killbill.";
@@ -26,5 +28,15 @@ public class PluginEnvironmentConfig {
     public static String getRegion(final Properties properties) {
         // See KillbillServerConfig
         return properties.getProperty(KILL_BILL_NAMESPACE + "server.region");
+    }
+
+    public static String getPerRegionOrGlobalProperty(final Properties properties, final String property) {
+        final String region = getRegion(properties);
+        final String localProperty = properties.getProperty(region + "." + property);
+        if (Strings.isNullOrEmpty(localProperty)) {
+            return properties.getProperty(property);
+        } else {
+            return localProperty;
+        }
     }
 }

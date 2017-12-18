@@ -1,6 +1,6 @@
 /*
- * Copyright 2015 Groupon, Inc
- * Copyright 2015 The Billing Project, LLC
+ * Copyright 2017 Groupon, Inc
+ * Copyright 2017 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -20,6 +20,7 @@ package org.killbill.billing.plugin.util.http;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
@@ -28,20 +29,25 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.BiConsumer;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.net.HttpHeaders;
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
 import com.ning.http.client.AsyncHttpClientConfig;
 import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.ProxyServer;
 import com.ning.http.client.Realm;
 import com.ning.http.client.Response;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.common.base.Charsets;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.io.CharStreams;
+import com.google.common.net.HttpHeaders;
 
 public class HttpClient implements Closeable {
 
@@ -59,7 +65,9 @@ public class HttpClient implements Closeable {
     protected static final String USER_AGENT = "KillBill/1.0";
 
     protected static final ImmutableMap<String, String> DEFAULT_OPTIONS = ImmutableMap.<String, String>of();
-    protected static final int DEFAULT_HTTP_TIMEOUT_SEC = 10;
+    protected static final int DEFAULT_HTTP_TIMEOUT_SEC = 70;
+    private static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 5;
+    private static final int DEFAULT_HTTP_READ_TIMEOUT = 60;
 
     protected final String username;
     protected final String password;
@@ -80,14 +88,37 @@ public class HttpClient implements Closeable {
         this.password = password;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
+        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_READ_TIMEOUT, DEFAULT_HTTP_CONNECT_TIMEOUT);
+        this.mapper = createObjectMapper();
+    }
 
-        final AsyncHttpClientConfig.Builder cfg = new AsyncHttpClientConfig.Builder();
-        cfg.setUserAgent(USER_AGENT);
+    public HttpClient(final String url,
+                      final String username,
+                      final String password,
+                      final String proxyHost,
+                      final Integer proxyPort,
+                      final Boolean strictSSL,
+                      final int connectTimeout,
+                      final int readTimeout) throws GeneralSecurityException {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        this.httpClient = buildAsyncHttpClient(strictSSL, readTimeout, connectTimeout);
+        this.mapper = createObjectMapper();
+    }
+
+    private AsyncHttpClient buildAsyncHttpClient(final Boolean strictSSL, final int readTimeout, final int connectTimeout)
+            throws GeneralSecurityException {
+        AsyncHttpClientConfig.Builder cfg = new AsyncHttpClientConfig.Builder();
+        cfg.setUserAgent(USER_AGENT)
+           .setConnectTimeout(connectTimeout)
+           .setReadTimeout(readTimeout);
         if (!strictSSL) {
             cfg.setSSLContext(SslUtils.getInstance().getSSLContext(!strictSSL));
         }
-        this.httpClient = new AsyncHttpClient(cfg.build());
-        this.mapper = createObjectMapper();
+        return new AsyncHttpClient(cfg.build());
     }
 
     @Override
@@ -110,7 +141,9 @@ public class HttpClient implements Closeable {
         return mapper;
     }
 
-    protected <T> T doCall(final String verb, final String uri, final String body, final Map<String, String> options, final Class<T> clazz) throws InterruptedException, ExecutionException, TimeoutException, IOException, URISyntaxException, InvalidRequest {
+    @Deprecated
+    protected <T> T doCall(final String verb, final String uri, final String body, final Map<String, String> options,
+                           final Class<T> clazz) throws InterruptedException, ExecutionException, TimeoutException, IOException, URISyntaxException, InvalidRequest {
         final String url = getUrl(this.url, uri);
 
         final AsyncHttpClient.BoundRequestBuilder builder = getBuilderWithHeaderAndQuery(verb, url, options);
@@ -120,10 +153,37 @@ public class HttpClient implements Closeable {
             }
         }
 
-        return executeAndWait(builder, DEFAULT_HTTP_TIMEOUT_SEC, clazz);
+        return executeAndWait(builder, DEFAULT_HTTP_TIMEOUT_SEC, clazz, ResponseFormat.JSON);
     }
 
-    protected <T> T executeAndWait(final AsyncHttpClient.BoundRequestBuilder builder, final int timeoutSec, final Class<T> clazz) throws IOException, InterruptedException, ExecutionException, TimeoutException, InvalidRequest {
+    protected String doCallAndReturnTextResponse(final String verb, final String uri, final String body,
+                                                 final Map<String, String> queryParams,
+                                                 final Map<String, String> headers) throws InvalidRequest,
+                                                                                           InterruptedException,
+                                                                                           ExecutionException,
+                                                                                           IOException,
+                                                                                           TimeoutException,
+                                                                                           URISyntaxException {
+        return doCall(verb, uri, body, headers, queryParams, String.class, ResponseFormat.TEXT);
+    }
+
+    protected <T> T doCall(final String verb, final String uri, final String body, final Map<String, String> queryParams,
+                           final Map<String, String> headers, final Class<T> clazz, final ResponseFormat format)
+            throws InterruptedException, ExecutionException, TimeoutException, IOException, URISyntaxException, InvalidRequest {
+        final String url = getUrl(this.url, uri);
+
+        final AsyncHttpClient.BoundRequestBuilder builder = getBuilderWithHeaderAndQuery(verb, headers, queryParams);
+        if (!GET.equals(verb) && !HEAD.equals(verb)) {
+            if (body != null) {
+                builder.setBody(body);
+            }
+        }
+
+        return executeAndWait(builder, DEFAULT_HTTP_TIMEOUT_SEC, clazz, format);
+    }
+
+    protected <T> T executeAndWait(final AsyncHttpClient.BoundRequestBuilder builder, final int timeoutSec,
+                                   final Class<T> clazz, final ResponseFormat format) throws IOException, InterruptedException, ExecutionException, TimeoutException, InvalidRequest {
         final Response response;
         final ListenableFuture<Response> futureStatus = builder.execute(new AsyncCompletionHandler<Response>() {
             @Override
@@ -139,14 +199,19 @@ public class HttpClient implements Closeable {
             throw new InvalidRequest("Invalid request", response);
         }
 
-        return deserializeResponse(response, clazz);
+        return deserializeResponse(response, clazz, format);
     }
 
-    protected <T> T deserializeResponse(final Response response, final Class<T> clazz) throws IOException {
+    protected <T> T deserializeResponse(final Response response, final Class<T> clazz, ResponseFormat format) throws IOException {
         InputStream in = null;
         try {
             in = response.getResponseBodyAsStream();
-            return mapper.readValue(in, clazz);
+            switch (format) {
+                case TEXT:
+                    return (T) CharStreams.toString(new InputStreamReader(in, Charsets.UTF_8));
+                default:
+                    return mapper.readValue(in, clazz);
+            }
         } finally {
             if (in != null) {
                 in.close();
@@ -154,9 +219,51 @@ public class HttpClient implements Closeable {
         }
     }
 
+    @Deprecated
     protected AsyncHttpClient.BoundRequestBuilder getBuilderWithHeaderAndQuery(final String verb, final String url, final Map<String, String> immutableOptions) {
-        final AsyncHttpClient.BoundRequestBuilder builder;
+        final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb, url);
 
+        final Map<String, String> options = new HashMap<String, String>(immutableOptions);
+
+        if (options.get(HttpHeaders.ACCEPT) != null) {
+            builder.addHeader(HttpHeaders.ACCEPT, options.remove(HttpHeaders.ACCEPT));
+        }
+        if (options.get(HttpHeaders.CONTENT_TYPE) != null) {
+            builder.addHeader(HttpHeaders.CONTENT_TYPE, options.remove(HttpHeaders.CONTENT_TYPE));
+        }
+
+        for (final String key : options.keySet()) {
+            if (options.get(key) != null) {
+                builder.addQueryParam(key, options.get(key));
+            }
+        }
+
+        if (proxyHost != null && proxyPort != null) {
+            final ProxyServer proxyServer = new ProxyServer(proxyHost, proxyPort);
+            builder.setProxyServer(proxyServer);
+        }
+
+        return builder;
+    }
+
+
+    protected AsyncHttpClient.BoundRequestBuilder getBuilderWithHeaderAndQuery(final String verb,
+                                                                               final Map<String, String> headers,
+                                                                               final Map<String, String> queryParams) {
+        final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb, url);
+        addHeadsOrParams(headers, (key, value) -> builder.addHeader(key, value));
+        addHeadsOrParams(queryParams, (key, value) -> builder.addQueryParam(key, value));
+        return builder;
+    }
+
+    private void addHeadsOrParams(final Map<String, String> options, final BiConsumer<String, String> consumer) {
+        for (final String key : options.keySet()) {
+            consumer.accept(key, options.get(key));
+        }
+    }
+
+    private BoundRequestBuilder prepareBuilder(final String verb, final String url) {
+        final AsyncHttpClient.BoundRequestBuilder builder;
         if (GET.equals(verb)) {
             builder = httpClient.prepareGet(url);
         } else if (POST.equals(verb)) {
@@ -185,21 +292,6 @@ public class HttpClient implements Closeable {
             realm.setUsePreemptiveAuth(true);
             realm.setScheme(Realm.AuthScheme.BASIC);
             builder.setRealm(realm.build());
-        }
-
-        final Map<String, String> options = new HashMap<String, String>(immutableOptions);
-
-        if (options.get(HttpHeaders.ACCEPT) != null) {
-            builder.addHeader(HttpHeaders.ACCEPT, options.remove(HttpHeaders.ACCEPT));
-        }
-        if (options.get(HttpHeaders.CONTENT_TYPE) != null) {
-            builder.addHeader(HttpHeaders.CONTENT_TYPE, options.remove(HttpHeaders.CONTENT_TYPE));
-        }
-
-        for (final String key : options.keySet()) {
-            if (options.get(key) != null) {
-                builder.addQueryParam(key, options.get(key));
-            }
         }
 
         if (proxyHost != null && proxyPort != null) {

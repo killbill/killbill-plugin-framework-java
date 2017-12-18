@@ -78,10 +78,20 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
     protected final RESP_T responsesTable;
     protected final PM_T paymentMethodsTable;
 
-    public PluginPaymentDao(final RESP_T responsesTable, final PM_T paymentMethodsTable, final DataSource dataSource) throws SQLException {
+    private final String recordIdFieldName;
+
+    public PluginPaymentDao(final RESP_T responsesTable,
+                            final PM_T paymentMethodsTable,
+                            final DataSource dataSource,
+                            final String recordIdFieldName) throws SQLException {
         super(dataSource);
         this.responsesTable = responsesTable;
         this.paymentMethodsTable = paymentMethodsTable;
+        this.recordIdFieldName = recordIdFieldName;
+    }
+
+    public PluginPaymentDao(final RESP_T responsesTable, final PM_T paymentMethodsTable, final DataSource dataSource) throws SQLException {
+        this(responsesTable, paymentMethodsTable, dataSource, RECORD_ID);
     }
 
     // Responses
@@ -134,7 +144,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                          .selectFrom(responsesTable)
                                          .where(DSL.field(responsesTable.getName() + "." + KB_PAYMENT_ID).equal(kbPaymentId.toString()))
                                          .and(DSL.field(responsesTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(responsesTable.getName() + "." + RECORD_ID).asc())
+                                         .orderBy(DSL.field(responsesTable.getName() + "." + recordIdFieldName).asc())
                                          .fetch();
                            }
                        });
@@ -151,7 +161,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                          .where(DSL.field(responsesTable.getName() + "." + KB_PAYMENT_ID).equal(kbPaymentId.toString()))
                                          .and(DSL.field(responsesTable.getName() + "." + TRANSACTION_TYPE).equal(TransactionType.AUTHORIZE.toString()))
                                          .and(DSL.field(responsesTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(responsesTable.getName() + "." + RECORD_ID).desc())
+                                         .orderBy(DSL.field(responsesTable.getName() + "." + recordIdFieldName).desc())
                                          .limit(1)
                                          .fetchOne();
                            }
@@ -284,7 +294,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                          .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
                                          .and(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED).equal(FALSE))
                                          .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(paymentMethodsTable.getName() + "." + RECORD_ID).desc())
+                                         .orderBy(DSL.field(paymentMethodsTable.getName() + "." + recordIdFieldName).desc())
                                          .fetchOne();
                            }
                        });
@@ -331,7 +341,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                          .where(DSL.field(paymentMethodsTable.getName() + "." + KB_ACCOUNT_ID).equal(kbAccountId.toString()))
                                          .and(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED).equal(FALSE))
                                          .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(paymentMethodsTable.getName() + "." + RECORD_ID).asc())
+                                         .orderBy(DSL.field(paymentMethodsTable.getName() + "." + recordIdFieldName).asc())
                                          .fetch();
                            }
                        });

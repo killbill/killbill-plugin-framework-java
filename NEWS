@@ -1,3 +1,10 @@
+1.2.2
+    Add KillBillContext utility class to retrieve X-Request-Id
+
+1.2.1
+    Make httpclient timeouts configurable
+    Add support for YAML config
+
 1.2.0
     jdk1.8+ only
     Support for servlets backed by jooby
