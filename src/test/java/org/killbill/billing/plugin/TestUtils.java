@@ -163,6 +163,7 @@ public abstract class TestUtils {
                                                  Mockito.<UUID>any(),
                                                  Mockito.<BigDecimal>any(),
                                                  Mockito.<Currency>any(),
+                                                 Mockito.<DateTime>any(),
                                                  Mockito.<String>any(),
                                                  Mockito.<CallContext>any()))
                .then(new Answer<Payment>() {
@@ -183,6 +184,7 @@ public abstract class TestUtils {
                });
         Mockito.when(paymentApi.createChargebackReversal(Mockito.<Account>any(),
                                                          Mockito.<UUID>any(),
+                                                         Mockito.<DateTime>any(),
                                                          Mockito.<String>any(),
                                                          Mockito.<CallContext>any()))
                .then(new Answer<Payment>() {
@@ -237,6 +239,7 @@ public abstract class TestUtils {
                                                                      Mockito.<UUID>any(),
                                                                      Mockito.<BigDecimal>any(),
                                                                      Mockito.<Currency>any(),
+                                                                     Mockito.<DateTime>any(),
                                                                      Mockito.<String>any(),
                                                                      Mockito.<String>any(),
                                                                      Mockito.<Iterable<PluginProperty>>any(),
@@ -273,6 +276,7 @@ public abstract class TestUtils {
                                                                 Mockito.<UUID>any(),
                                                                 Mockito.<BigDecimal>any(),
                                                                 Mockito.<Currency>any(),
+                                                                Mockito.<DateTime>any(),
                                                                 Mockito.<String>any(),
                                                                 Mockito.<String>any(),
                                                                 Mockito.<Iterable<PluginProperty>>any(),
@@ -309,6 +313,7 @@ public abstract class TestUtils {
                                                               Mockito.<UUID>any(),
                                                               Mockito.<BigDecimal>any(),
                                                               Mockito.<Currency>any(),
+                                                              Mockito.<DateTime>any(),
                                                               Mockito.<String>any(),
                                                               Mockito.<String>any(),
                                                               Mockito.<Iterable<PluginProperty>>any(),
