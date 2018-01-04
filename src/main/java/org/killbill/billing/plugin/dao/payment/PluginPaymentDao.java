@@ -34,6 +34,7 @@ import org.jooq.Table;
 import org.jooq.TransactionalRunnable;
 import org.jooq.UpdatableRecord;
 import org.jooq.impl.DSL;
+import static org.jooq.impl.DSL.choose
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.payment.api.TransactionType;
 import org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi;
@@ -330,18 +331,11 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                public void run(final Configuration configuration) throws Exception {
                                    DSL.using(conn, dialect, settings)
                                       .update(paymentMethodsTable)
-                                      .set(DSL.field(paymentMethodsTable.getName() + "." + IS_DEFAULT), FALSE)
+                                      .set(DSL.field(paymentMethodsTable.getName() + "." + IS_DEFAULT), choose(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID))
+				                      .when(kbPaymentMethodId.toString(), TRUE)
+				                      .otherwise(FALSE)
                                       .set(DSL.field(paymentMethodsTable.getName() + "." + UPDATED_DATE), toTimestamp(utcNow))
-                                      .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).notEqual(kbPaymentMethodId.toString()))
-                                      .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                      .execute();
-
-                                   DSL.using(conn, dialect, settings)
-                                      .update(paymentMethodsTable)
-                                      .set(DSL.field(paymentMethodsTable.getName() + "." + IS_DEFAULT), TRUE)
-                                      .set(DSL.field(paymentMethodsTable.getName() + "." + UPDATED_DATE), toTimestamp(utcNow))
-                                      .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
-                                      .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
+                                      .where(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
                                       .execute();
                                }
                            });
