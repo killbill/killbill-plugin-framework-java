@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 
 import org.joda.time.DateTime;
 import org.jooq.Configuration;
+import org.jooq.Field;
 import org.jooq.SQLDialect;
 import org.jooq.Table;
 import org.jooq.TransactionalRunnable;
@@ -38,6 +39,8 @@ import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.payment.api.TransactionType;
 import org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi;
 import org.killbill.billing.plugin.dao.PluginDao;
+
+import com.google.common.base.MoreObjects;
 
 public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, RESP_T extends Table<RESP_R>, PM_R extends UpdatableRecord<PM_R>, PM_T extends Table<PM_R>> extends PluginDao {
 
@@ -328,11 +331,23 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                            .transaction(new TransactionalRunnable() {
                                @Override
                                public void run(final Configuration configuration) throws Exception {
+                                   PM_R record = DSL.using(conn, dialect, settings)
+                                      .selectFrom(paymentMethodsTable)
+                                      .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
+                                      .and(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED).equal(FALSE))
+                                      .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
+                                      .orderBy(DSL.field(paymentMethodsTable.getName() + "." + recordIdFieldName).desc())
+                                      .fetchOne();
+
+                                   Field accountField = MoreObjects.firstNonNull(paymentMethodsTable.field(KB_ACCOUNT_ID), paymentMethodsTable.field(KB_ACCOUNT_ID.toLowerCase()));
+                                   String accountId = record.get(accountField, String.class);
+
                                    DSL.using(conn, dialect, settings)
                                       .update(paymentMethodsTable)
                                       .set(DSL.field(paymentMethodsTable.getName() + "." + IS_DEFAULT), FALSE)
                                       .set(DSL.field(paymentMethodsTable.getName() + "." + UPDATED_DATE), toTimestamp(utcNow))
                                       .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).notEqual(kbPaymentMethodId.toString()))
+                                      .and(DSL.field(paymentMethodsTable.getName() + "." + KB_ACCOUNT_ID).equal(accountId))
                                       .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
                                       .execute();
 
