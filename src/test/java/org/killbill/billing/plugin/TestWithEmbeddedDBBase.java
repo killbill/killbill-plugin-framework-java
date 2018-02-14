@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 Groupon, Inc
- * Copyright 2014 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -17,7 +17,8 @@
 
 package org.killbill.billing.plugin;
 
-import org.killbill.commons.embeddeddb.mysql.MySQLEmbeddedDB;
+import org.killbill.billing.platform.test.PlatformDBTestingHelper;
+import org.killbill.commons.embeddeddb.EmbeddedDB;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -26,11 +27,11 @@ public class TestWithEmbeddedDBBase {
 
     protected static final String DDL_FILE_NAME = "ddl.sql";
 
-    protected MySQLEmbeddedDB embeddedDB;
+    protected EmbeddedDB embeddedDB;
 
     @BeforeClass(groups = "slow")
     public void setUpBeforeClass() throws Exception {
-        embeddedDB = new MySQLEmbeddedDB();
+        embeddedDB = PlatformDBTestingHelper.get().getInstance();
         embeddedDB.initialize();
         embeddedDB.start();
 
