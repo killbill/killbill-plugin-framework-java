@@ -17,6 +17,8 @@
 
 package org.killbill.billing.plugin.dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -38,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Strings;
 
 public class PluginDao {
@@ -50,6 +53,7 @@ public class PluginDao {
     protected static final String DEFAULT_SCHEMA_NAME = "killbill";
 
     protected static final ObjectMapper objectMapper = new ObjectMapper();
+    protected static final XmlMapper XML_MAPPER = new XmlMapper();
 
     protected final DataSource dataSource;
     protected final SQLDialect dialect;
@@ -170,6 +174,10 @@ public class PluginDao {
             dbEngine = EmbeddedDB.DBEngine.GENERIC;
         }
         return dbEngine;
+    }
+
+    public static Settings getSettings(final InputStream xml) throws IOException {
+        return XML_MAPPER.readValue(xml, Settings.class);
     }
 
     protected interface WithConnectionCallback<T> {
