@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2016 Groupon, Inc
- * Copyright 2014-2016 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -157,7 +157,7 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
     public void setDefaultPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final Iterable<PluginProperty> properties, final CallContext context) throws PaymentPluginApiException {
         final DateTime utcNow = clock.getUTCNow();
         try {
-            dao.setDefaultPaymentMethod(kbPaymentMethodId, utcNow, context.getTenantId());
+            dao.setDefaultPaymentMethod(kbAccountId, kbPaymentMethodId, utcNow, context.getTenantId());
         } catch (final SQLException e) {
             throw new PaymentPluginApiException("Unable to set default payment method for kbPaymentMethodId " + kbPaymentMethodId, e);
         }

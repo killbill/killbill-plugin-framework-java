@@ -343,7 +343,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                        });
     }
 
-    public void setDefaultPaymentMethod(final UUID kbPaymentMethodId, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
+    public void setDefaultPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
         execute(dataSource.getConnection(),
                 new WithConnectionCallback<Void>() {
                     @Override
@@ -357,6 +357,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                       .set(DSL.field(IS_DEFAULT), FALSE)
                                       .set(DSL.field(UPDATED_DATE), toTimestamp(utcNow))
                                       .where(DSL.field(KB_PAYMENT_METHOD_ID).notEqual(kbPaymentMethodId.toString()))
+                                      .and(DSL.field(KB_ACCOUNT_ID).equal(kbAccountId.toString()))
                                       .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
                                       .execute();
 
