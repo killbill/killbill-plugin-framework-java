@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 Groupon, Inc
- * Copyright 2015-2016 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -129,7 +129,7 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
                              amount,
                              currency,
                              additionalData,
-                             utcNow,
+                             timestamp,
                              kbTenantId);
 
         final List<TestResponsesRecord> records = this.dao.getResponses(kbPaymentId, kbTenantId);
