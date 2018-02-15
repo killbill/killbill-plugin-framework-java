@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2017 Groupon, Inc
- * Copyright 2014-2017 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -48,6 +48,8 @@ public class PluginInvoiceItem implements InvoiceItem {
     protected final UUID linkedItemId;
     protected final String usageName;
     protected final String prettyUsageName;
+    protected final Integer quantity;
+    protected final String itemDetails;
     protected final DateTime createdDate;
     protected final DateTime updatedDate;
 
@@ -92,13 +94,16 @@ public class PluginInvoiceItem implements InvoiceItem {
                                      model.getPrettyPlanName(),
                                      model.getPhaseName(),
                                      model.getPrettyPhaseName(),
-                                     null,
+                                     model.getRate(),
                                      model.getId(),
                                      model.getUsageName(),
                                      model.getPrettyUsageName(),
+                                     model.getQuantity(),
+                                     model.getItemDetails(),
                                      model.getCreatedDate(),
                                      model.getUpdatedDate());
     }
+
 
     public PluginInvoiceItem(final UUID id,
                              final InvoiceItemType invoiceItemType,
@@ -120,6 +125,8 @@ public class PluginInvoiceItem implements InvoiceItem {
                              final UUID linkedItemId,
                              final String usageName,
                              final String prettyUsageName,
+                             final Integer quantity,
+                             final String itemDetails,
                              final DateTime createdDate,
                              final DateTime updatedDate) {
         this.id = id;
@@ -142,6 +149,8 @@ public class PluginInvoiceItem implements InvoiceItem {
         this.linkedItemId = linkedItemId;
         this.usageName = usageName;
         this.prettyUsageName = prettyUsageName;
+        this.quantity = quantity;
+        this.itemDetails = itemDetails;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
@@ -247,6 +256,16 @@ public class PluginInvoiceItem implements InvoiceItem {
     }
 
     @Override
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    @Override
+    public String getItemDetails() {
+        return itemDetails;
+    }
+
+    @Override
     public DateTime getCreatedDate() {
         return createdDate;
     }
@@ -315,6 +334,12 @@ public class PluginInvoiceItem implements InvoiceItem {
         if (prettyUsageName != null ? !prettyUsageName.equals(that.prettyUsageName) : that.prettyUsageName != null) {
             return false;
         }
+        if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) {
+            return false;
+        }
+        if (itemDetails != null ? !itemDetails.equals(that.itemDetails) : that.itemDetails != null) {
+            return false;
+        }
         return true;
     }
 
@@ -353,6 +378,8 @@ public class PluginInvoiceItem implements InvoiceItem {
         sb.append(", linkedItemId=").append(linkedItemId);
         sb.append(", usageName='").append(usageName).append('\'');
         sb.append(", prettyUsageName='").append(prettyUsageName).append('\'');
+        sb.append(", quantity=").append(quantity);
+        sb.append(", itemDetails='").append(itemDetails).append('\'');
         sb.append(", createdDate=").append(createdDate);
         sb.append(", updatedDate=").append(updatedDate);
         sb.append('}');
@@ -417,6 +444,8 @@ public class PluginInvoiceItem implements InvoiceItem {
         result = 31 * result + (linkedItemId != null ? linkedItemId.hashCode() : 0);
         result = 31 * result + (usageName != null ? usageName.hashCode() : 0);
         result = 31 * result + (prettyUsageName != null ? prettyUsageName.hashCode() : 0);
+        result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+        result = 31 * result + (itemDetails != null ? itemDetails.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         return result;

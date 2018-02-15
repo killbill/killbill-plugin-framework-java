@@ -1,6 +1,9 @@
 2.0.0
     Initial release for KB 0.19.x
 
+1.2.3
+    Add two new constructors to allow overriding jooq SQLDialect
+
 1.2.2
     Add KillBillContext utility class to retrieve X-Request-Id
 

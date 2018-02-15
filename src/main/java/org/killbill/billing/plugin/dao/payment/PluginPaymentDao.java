@@ -1,6 +1,6 @@
 /*
- * Copyright 2014 Groupon, Inc
- * Copyright 2014 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -33,6 +33,7 @@ import org.jooq.SQLDialect;
 import org.jooq.Table;
 import org.jooq.TransactionalRunnable;
 import org.jooq.UpdatableRecord;
+import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.payment.api.TransactionType;
@@ -83,9 +84,36 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
 
     public PluginPaymentDao(final RESP_T responsesTable,
                             final PM_T paymentMethodsTable,
+                            final DataSource dataSource) throws SQLException {
+        this(responsesTable, paymentMethodsTable, dataSource, RECORD_ID);
+    }
+
+    public PluginPaymentDao(final RESP_T responsesTable,
+                            final PM_T paymentMethodsTable,
                             final DataSource dataSource,
                             final SQLDialect dialect) throws SQLException {
         this(responsesTable, paymentMethodsTable, dataSource, dialect, RECORD_ID);
+    }
+
+    public PluginPaymentDao(final RESP_T responsesTable,
+                            final PM_T paymentMethodsTable,
+                            final DataSource dataSource,
+                            final Settings settings) throws SQLException {
+        super(dataSource, settings);
+        this.responsesTable = responsesTable;
+        this.paymentMethodsTable = paymentMethodsTable;
+        this.recordIdFieldName = RECORD_ID;
+    }
+
+    public PluginPaymentDao(final RESP_T responsesTable,
+                            final PM_T paymentMethodsTable,
+                            final DataSource dataSource,
+                            final SQLDialect dialect,
+                            final Settings settings) {
+        super(dataSource, dialect, settings);
+        this.responsesTable = responsesTable;
+        this.paymentMethodsTable = paymentMethodsTable;
+        this.recordIdFieldName = RECORD_ID;
     }
 
     public PluginPaymentDao(final RESP_T responsesTable,
@@ -109,10 +137,6 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
         this.recordIdFieldName = recordIdFieldName;
     }
 
-    public PluginPaymentDao(final RESP_T responsesTable, final PM_T paymentMethodsTable, final DataSource dataSource) throws SQLException {
-        this(responsesTable, paymentMethodsTable, dataSource, RECORD_ID);
-    }
-
     // Responses
 
     public void addResponse(final UUID kbAccountId,
@@ -130,15 +154,15 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                     public Void withConnection(final Connection conn) throws SQLException {
                         DSL.using(conn, dialect, settings)
                            .insertInto(responsesTable,
-                                       DSL.field(responsesTable.getName() + "." + KB_ACCOUNT_ID),
-                                       DSL.field(responsesTable.getName() + "." + KB_PAYMENT_ID),
-                                       DSL.field(responsesTable.getName() + "." + KB_PAYMENT_TRANSACTION_ID),
-                                       DSL.field(responsesTable.getName() + "." + TRANSACTION_TYPE),
-                                       DSL.field(responsesTable.getName() + "." + AMOUNT),
-                                       DSL.field(responsesTable.getName() + "." + CURRENCY),
-                                       DSL.field(responsesTable.getName() + "." + ADDITIONAL_DATA),
-                                       DSL.field(responsesTable.getName() + "." + CREATED_DATE),
-                                       DSL.field(responsesTable.getName() + "." + KB_TENANT_ID))
+                                       DSL.field(KB_ACCOUNT_ID),
+                                       DSL.field(KB_PAYMENT_ID),
+                                       DSL.field(KB_PAYMENT_TRANSACTION_ID),
+                                       DSL.field(TRANSACTION_TYPE),
+                                       DSL.field(AMOUNT),
+                                       DSL.field(CURRENCY),
+                                       DSL.field(ADDITIONAL_DATA),
+                                       DSL.field(CREATED_DATE),
+                                       DSL.field(KB_TENANT_ID))
                            .values(kbAccountId.toString(),
                                    kbPaymentId.toString(),
                                    kbPaymentTransactionId.toString(),
@@ -161,9 +185,9 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                            public List<RESP_R> withConnection(final Connection conn) throws SQLException {
                                return DSL.using(conn, dialect, settings)
                                          .selectFrom(responsesTable)
-                                         .where(DSL.field(responsesTable.getName() + "." + KB_PAYMENT_ID).equal(kbPaymentId.toString()))
-                                         .and(DSL.field(responsesTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(responsesTable.getName() + "." + recordIdFieldName).asc())
+                                         .where(DSL.field(KB_PAYMENT_ID).equal(kbPaymentId.toString()))
+                                         .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
+                                         .orderBy(DSL.field(recordIdFieldName).asc())
                                          .fetch();
                            }
                        });
@@ -177,10 +201,10 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                            public RESP_R withConnection(final Connection conn) throws SQLException {
                                return DSL.using(conn, dialect, settings)
                                          .selectFrom(responsesTable)
-                                         .where(DSL.field(responsesTable.getName() + "." + KB_PAYMENT_ID).equal(kbPaymentId.toString()))
-                                         .and(DSL.field(responsesTable.getName() + "." + TRANSACTION_TYPE).equal(TransactionType.AUTHORIZE.toString()))
-                                         .and(DSL.field(responsesTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(responsesTable.getName() + "." + recordIdFieldName).desc())
+                                         .where(DSL.field(KB_PAYMENT_ID).equal(kbPaymentId.toString()))
+                                         .and(DSL.field(TRANSACTION_TYPE).equal(TransactionType.AUTHORIZE.toString()))
+                                         .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
+                                         .orderBy(DSL.field(recordIdFieldName).desc())
                                          .limit(1)
                                          .fetchOne();
                            }
@@ -226,33 +250,33 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                     public Void withConnection(final Connection conn) throws SQLException {
                         DSL.using(conn, dialect, settings)
                            .insertInto(paymentMethodsTable,
-                                       DSL.field(paymentMethodsTable.getName() + "." + KB_ACCOUNT_ID),
-                                       DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID),
-                                       DSL.field(paymentMethodsTable.getName() + "." + TOKEN),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_FIRST_NAME),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_LAST_NAME),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_TYPE),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_EXP_MONTH),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_EXP_YEAR),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_NUMBER),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_LAST_4),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_START_MONTH),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_START_YEAR),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_ISSUE_NUMBER),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_VERIFICATION_VALUE),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CC_TRACK_DATA),
-                                       DSL.field(paymentMethodsTable.getName() + "." + ADDRESS1),
-                                       DSL.field(paymentMethodsTable.getName() + "." + ADDRESS2),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CITY),
-                                       DSL.field(paymentMethodsTable.getName() + "." + STATE),
-                                       DSL.field(paymentMethodsTable.getName() + "." + ZIP),
-                                       DSL.field(paymentMethodsTable.getName() + "." + COUNTRY),
-                                       DSL.field(paymentMethodsTable.getName() + "." + IS_DEFAULT),
-                                       DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED),
-                                       DSL.field(paymentMethodsTable.getName() + "." + ADDITIONAL_DATA),
-                                       DSL.field(paymentMethodsTable.getName() + "." + CREATED_DATE),
-                                       DSL.field(paymentMethodsTable.getName() + "." + UPDATED_DATE),
-                                       DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID))
+                                       DSL.field(KB_ACCOUNT_ID),
+                                       DSL.field(KB_PAYMENT_METHOD_ID),
+                                       DSL.field(TOKEN),
+                                       DSL.field(CC_FIRST_NAME),
+                                       DSL.field(CC_LAST_NAME),
+                                       DSL.field(CC_TYPE),
+                                       DSL.field(CC_EXP_MONTH),
+                                       DSL.field(CC_EXP_YEAR),
+                                       DSL.field(CC_NUMBER),
+                                       DSL.field(CC_LAST_4),
+                                       DSL.field(CC_START_MONTH),
+                                       DSL.field(CC_START_YEAR),
+                                       DSL.field(CC_ISSUE_NUMBER),
+                                       DSL.field(CC_VERIFICATION_VALUE),
+                                       DSL.field(CC_TRACK_DATA),
+                                       DSL.field(ADDRESS1),
+                                       DSL.field(ADDRESS2),
+                                       DSL.field(CITY),
+                                       DSL.field(STATE),
+                                       DSL.field(ZIP),
+                                       DSL.field(COUNTRY),
+                                       DSL.field(IS_DEFAULT),
+                                       DSL.field(IS_DELETED),
+                                       DSL.field(ADDITIONAL_DATA),
+                                       DSL.field(CREATED_DATE),
+                                       DSL.field(UPDATED_DATE),
+                                       DSL.field(KB_TENANT_ID))
                            .values(kbAccountId.toString(),
                                    kbPaymentMethodId.toString(),
                                    token,
@@ -293,10 +317,10 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                     public Void withConnection(final Connection conn) throws SQLException {
                         DSL.using(conn, dialect, settings)
                            .update(paymentMethodsTable)
-                           .set(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED), TRUE)
-                           .set(DSL.field(paymentMethodsTable.getName() + "." + UPDATED_DATE), toTimestamp(utcNow))
-                           .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
-                           .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
+                           .set(DSL.field(IS_DELETED), TRUE)
+                           .set(DSL.field(UPDATED_DATE), toTimestamp(utcNow))
+                           .where(DSL.field(KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
+                           .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
                            .execute();
                         return null;
                     }
@@ -310,16 +334,16 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                            public PM_R withConnection(final Connection conn) throws SQLException {
                                return DSL.using(conn, dialect, settings)
                                          .selectFrom(paymentMethodsTable)
-                                         .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
-                                         .and(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED).equal(FALSE))
-                                         .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(paymentMethodsTable.getName() + "." + recordIdFieldName).desc())
+                                         .where(DSL.field(KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
+                                         .and(DSL.field(IS_DELETED).equal(FALSE))
+                                         .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
+                                         .orderBy(DSL.field(recordIdFieldName).desc())
                                          .fetchOne();
                            }
                        });
     }
 
-    public void setDefaultPaymentMethod(final UUID kbPaymentMethodId, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
+    public void setDefaultPaymentMethod(final UUID kbAccountId, final UUID kbPaymentMethodId, final DateTime utcNow, final UUID kbTenantId) throws SQLException {
         execute(dataSource.getConnection(),
                 new WithConnectionCallback<Void>() {
                     @Override
@@ -330,18 +354,19 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                                public void run(final Configuration configuration) throws Exception {
                                    DSL.using(conn, dialect, settings)
                                       .update(paymentMethodsTable)
-                                      .set(DSL.field(paymentMethodsTable.getName() + "." + IS_DEFAULT), FALSE)
-                                      .set(DSL.field(paymentMethodsTable.getName() + "." + UPDATED_DATE), toTimestamp(utcNow))
-                                      .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).notEqual(kbPaymentMethodId.toString()))
-                                      .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
+                                      .set(DSL.field(IS_DEFAULT), FALSE)
+                                      .set(DSL.field(UPDATED_DATE), toTimestamp(utcNow))
+                                      .where(DSL.field(KB_PAYMENT_METHOD_ID).notEqual(kbPaymentMethodId.toString()))
+                                      .and(DSL.field(KB_ACCOUNT_ID).equal(kbAccountId.toString()))
+                                      .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
                                       .execute();
 
                                    DSL.using(conn, dialect, settings)
                                       .update(paymentMethodsTable)
-                                      .set(DSL.field(paymentMethodsTable.getName() + "." + IS_DEFAULT), TRUE)
-                                      .set(DSL.field(paymentMethodsTable.getName() + "." + UPDATED_DATE), toTimestamp(utcNow))
-                                      .where(DSL.field(paymentMethodsTable.getName() + "." + KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
-                                      .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
+                                      .set(DSL.field(IS_DEFAULT), TRUE)
+                                      .set(DSL.field(UPDATED_DATE), toTimestamp(utcNow))
+                                      .where(DSL.field(KB_PAYMENT_METHOD_ID).equal(kbPaymentMethodId.toString()))
+                                      .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
                                       .execute();
                                }
                            });
@@ -357,10 +382,10 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
                            public List<PM_R> withConnection(final Connection conn) throws SQLException {
                                return DSL.using(conn, dialect, settings)
                                          .selectFrom(paymentMethodsTable)
-                                         .where(DSL.field(paymentMethodsTable.getName() + "." + KB_ACCOUNT_ID).equal(kbAccountId.toString()))
-                                         .and(DSL.field(paymentMethodsTable.getName() + "." + IS_DELETED).equal(FALSE))
-                                         .and(DSL.field(paymentMethodsTable.getName() + "." + KB_TENANT_ID).equal(kbTenantId.toString()))
-                                         .orderBy(DSL.field(paymentMethodsTable.getName() + "." + recordIdFieldName).asc())
+                                         .where(DSL.field(KB_ACCOUNT_ID).equal(kbAccountId.toString()))
+                                         .and(DSL.field(IS_DELETED).equal(FALSE))
+                                         .and(DSL.field(KB_TENANT_ID).equal(kbTenantId.toString()))
+                                         .orderBy(DSL.field(recordIdFieldName).asc())
                                          .fetch();
                            }
                        });

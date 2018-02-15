@@ -1,6 +1,6 @@
 /*
- * Copyright 2015-2016 Groupon, Inc
- * Copyright 2015-2016 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -129,7 +129,7 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
                              amount,
                              currency,
                              additionalData,
-                             utcNow,
+                             timestamp,
                              kbTenantId);
 
         final List<TestResponsesRecord> records = this.dao.getResponses(kbPaymentId, kbTenantId);
@@ -291,5 +291,53 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
         Assert.assertEquals(PluginProperties.getValue("Foo", null, pluginProperties), "myFooXX", "Wrong extra property Foo");
         Assert.assertEquals(PluginProperties.getValue("Bar", null, pluginProperties), "myBarYY", "Wrong extra property Bar");
         Assert.assertEquals(PluginProperties.getValue("Baz", null, pluginProperties), "myBazZZ", "Wrong extra property Baz");
+    }
+
+    @Test(groups = "slow")
+    public void testSetDefaultPaymentMethod() throws Exception {
+        final List<PluginProperty> methodProperties = TestUtils.toProperties(Collections.singletonMap(PROPERTY_CC_NUMBER, "The Wrong CC number"));
+        final PaymentMethodPlugin account1Method1 = new PluginPaymentMethodPlugin(null, null, false, methodProperties);
+        final PaymentMethodPlugin account1Method2 = new PluginPaymentMethodPlugin(null, null, false, methodProperties);
+        final PaymentMethodPlugin account2Method = new PluginPaymentMethodPlugin(null, null, false, methodProperties);
+
+        final Map<String, String> propertiesMap = new HashMap<String, String>();
+        propertiesMap.put(PROPERTY_CC_FIRST_NAME, "myCcFirstName");
+        propertiesMap.put(PROPERTY_CC_LAST_NAME, "myCcLAstName");
+        propertiesMap.put(PROPERTY_CC_TYPE, "myCcType");
+        propertiesMap.put(PROPERTY_CC_EXPIRATION_MONTH, "myCcExpMonth");
+        propertiesMap.put(PROPERTY_CC_EXPIRATION_YEAR, "myCcExpYear");
+        propertiesMap.put(PROPERTY_CC_NUMBER, "01234567890ABCDEF");
+        propertiesMap.put(PROPERTY_CC_START_MONTH, "myCcStartMonth");
+        propertiesMap.put(PROPERTY_CC_START_YEAR, "myCcStartYear");
+        propertiesMap.put(PROPERTY_CC_ISSUE_NUMBER, "myCcIssueNumber");
+        propertiesMap.put(PROPERTY_CC_VERIFICATION_VALUE, "myCcVerificationVal");
+        propertiesMap.put(PROPERTY_CC_TRACK_DATA, "myCcTrackData");
+        propertiesMap.put(PROPERTY_ADDRESS1, "myAddress1");
+        propertiesMap.put(PROPERTY_ADDRESS2, "myAddress2");
+        propertiesMap.put(PROPERTY_CITY, "myCity");
+        propertiesMap.put(PROPERTY_STATE, "myState");
+        propertiesMap.put(PROPERTY_ZIP, "myZip");
+        propertiesMap.put(PROPERTY_COUNTRY, "myCountry");
+        propertiesMap.put(PROPERTY_TOKEN, "myToken");
+
+        final UUID kbPaymentMethodId1 = UUID.randomUUID();
+        final UUID kbPaymentMethodId2 = UUID.randomUUID();
+        final UUID kbPaymentMethodId3 = UUID.randomUUID();
+
+        api.addPaymentMethod(account.getId(), kbPaymentMethodId1, account1Method1, true, TestUtils.toProperties(propertiesMap), context);
+        api.addPaymentMethod(account.getId(), kbPaymentMethodId2, account1Method2, false, TestUtils.toProperties(propertiesMap), context);
+
+        final Account account2 = TestUtils.buildAccount(Currency.SAR, "KSA");
+        api.addPaymentMethod(account2.getId(), kbPaymentMethodId3, account2Method, true, TestUtils.toProperties(propertiesMap), context);
+
+        dao.setDefaultPaymentMethod(account.getId(), kbPaymentMethodId2, DateTime.now(), context.getTenantId());
+
+        final TestPaymentMethodsRecord account1Method1Record = dao.getPaymentMethod(kbPaymentMethodId1, context.getTenantId());
+        final TestPaymentMethodsRecord account1Method2Record = dao.getPaymentMethod(kbPaymentMethodId2, context.getTenantId());
+        final TestPaymentMethodsRecord account2Method1Record = dao.getPaymentMethod(kbPaymentMethodId3, context.getTenantId());
+
+        Assert.assertEquals(account1Method1Record.getIsDefault().byteValue(), PluginPaymentDao.FALSE, "Wrong isDefault for account 1 method 1");
+        Assert.assertEquals(account1Method2Record.getIsDefault().byteValue(), PluginPaymentDao.TRUE, "Wrong isDefault for account 1 method 2");
+        Assert.assertEquals(account2Method1Record.getIsDefault().byteValue(), PluginPaymentDao.TRUE, "Wrong isDefault for account 2 method 1");
     }
 }
