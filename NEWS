@@ -1,3 +1,6 @@
+2.2.0
+    Update to killbill-oss-parent 0.141.48
+
 2.1.0
     Add support for PostgreSQL and H2
     https://github.com/killbill/killbill-plugin-framework-java/issues/16
