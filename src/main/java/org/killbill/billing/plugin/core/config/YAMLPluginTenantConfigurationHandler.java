@@ -17,9 +17,7 @@
 
 package org.killbill.billing.plugin.core.config;
 
-import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,34 +32,29 @@ import org.killbill.billing.plugin.api.notification.PluginConfigurationHandler;
 import org.killbill.billing.plugin.api.notification.PluginTenantConfigurable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.Yaml;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
-public abstract class YAMLPluginTenantConfigurationHandler<T> extends PluginConfigurationHandler {
+public abstract class YAMLPluginTenantConfigurationHandler<U, T> extends PluginConfigurationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(YAMLPluginTenantConfigurationHandler.class);
-
-    private static final ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory());
 
     private final Collection<UUID> configuredTenants = new HashSet<>();
     private final PluginTenantConfigurable<T> pluginTenantConfigurable = new PluginTenantConfigurable<>();
 
-    private final ObjectReader yamlObjectReader;
     private final String configurationKey;
+
+    public YAMLPluginTenantConfigurationHandler(final String pluginName,
+                                                final OSGIKillbillAPI osgiKillbillAPI,
+                                                final OSGIKillbillLogService osgiKillbillLogService) {
+        this(pluginName, osgiKillbillAPI, osgiKillbillLogService, null);
+    }
 
     public YAMLPluginTenantConfigurationHandler(final String pluginName,
                                                 final OSGIKillbillAPI osgiKillbillAPI,
                                                 final OSGIKillbillLogService osgiKillbillLogService,
                                                 final String configurationKey) {
         super(pluginName, osgiKillbillAPI, osgiKillbillLogService);
-
         this.configurationKey = configurationKey;
-        final MapType mapType = TypeFactory.defaultInstance().constructMapType(Map.class, String.class, Map.class);
-        this.yamlObjectReader = yamlObjectMapper.readerFor(mapType);
     }
 
     public String getConfigurationKey() {
@@ -77,17 +70,26 @@ public abstract class YAMLPluginTenantConfigurationHandler<T> extends PluginConf
     protected void configure(@Nullable final UUID kbTenantId) {
         final String rawConfiguration = getTenantConfigurationAsString(kbTenantId);
         if (rawConfiguration != null) {
-            try {
-                final Map<String, Map<String, Object>> configObject = yamlObjectReader.readValue(rawConfiguration);
-                final T configurable = createConfigurable(configObject.getOrDefault(configurationKey, Collections.emptyMap()));
-                pluginTenantConfigurable.put(kbTenantId, configurable);
-            } catch (final IOException e) {
-                logger.warn("Error while parsing YAML configuration", e);
-            }
+            final U configObject = parseRawConfiguration(rawConfiguration);
+            final T configurable = createConfigurable(configObject);
+            pluginTenantConfigurable.put(kbTenantId, configurable);
         }
     }
 
-    protected abstract T createConfigurable(final Map<String, ?> configObject);
+    protected U parseRawConfiguration(final String rawConfiguration) {
+        final Yaml yaml = new Yaml();
+        final Object configObject = yaml.load(rawConfiguration);
+        if (configurationKey != null &&
+            configObject instanceof Map) {
+            return (U) ((Map) configObject).get(configurationKey);
+        } else {
+            return (U) configObject;
+        }
+    }
+
+    protected T createConfigurable(final U configObject) {
+        return (T) configObject;
+    }
 
     public T getConfigurable(@Nullable final UUID kbTenantId) {
         // Initial configuration
