@@ -40,6 +40,8 @@ public class PluginInvoiceItem implements InvoiceItem {
     protected final String description;
     protected final UUID subscriptionId;
     protected final UUID bundleId;
+    protected final String productName;
+    protected final String prettyProductName;
     protected final String planName;
     protected final String prettyPlanName;
     protected final String phaseName;
@@ -90,6 +92,8 @@ public class PluginInvoiceItem implements InvoiceItem {
                                      description,
                                      model.getSubscriptionId(),
                                      model.getBundleId(),
+                                     model.getProductName(),
+                                     model.getPrettyProductName(),
                                      model.getPlanName(),
                                      model.getPrettyPlanName(),
                                      model.getPhaseName(),
@@ -117,6 +121,8 @@ public class PluginInvoiceItem implements InvoiceItem {
                              final String description,
                              final UUID subscriptionId,
                              final UUID bundleId,
+                             final String productName,
+                             final String prettyProductName,
                              final String planName,
                              final String prettyPlanName,
                              final String phaseName,
@@ -141,6 +147,8 @@ public class PluginInvoiceItem implements InvoiceItem {
         this.description = description;
         this.subscriptionId = subscriptionId;
         this.bundleId = bundleId;
+        this.productName = productName;
+        this.prettyProductName = prettyProductName;
         this.planName = planName;
         this.prettyPlanName = prettyPlanName;
         this.phaseName = phaseName;
@@ -208,6 +216,16 @@ public class PluginInvoiceItem implements InvoiceItem {
     @Override
     public UUID getSubscriptionId() {
         return subscriptionId;
+    }
+
+    @Override
+    public String getProductName() {
+        return this.productName;
+    }
+
+    @Override
+    public String getPrettyProductName() {
+        return this.prettyProductName;
     }
 
     @Override
