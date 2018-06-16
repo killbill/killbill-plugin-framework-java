@@ -44,7 +44,7 @@ public class PluginPriorInvoiceResult implements PriorInvoiceResult {
 
     @Override
     public boolean isAborted() {
-        return false;
+        return isAborted;
     }
 
     @Override
