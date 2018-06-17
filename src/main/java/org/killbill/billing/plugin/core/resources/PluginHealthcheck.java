@@ -25,8 +25,8 @@ import org.jooby.MediaType;
 import org.jooby.Result;
 import org.jooby.Results;
 import org.jooby.Status;
-import org.killbill.billing.plugin.service.Healthcheck;
-import org.killbill.billing.plugin.service.Healthcheck.HealthStatus;
+import org.killbill.billing.osgi.api.Healthcheck;
+import org.killbill.billing.osgi.api.Healthcheck.HealthStatus;
 import org.killbill.billing.tenant.api.Tenant;
 
 // Specified in the concrete class
