@@ -1,5 +1,12 @@
+2.3.3
+    Fix PluginPriorInvoiceResult#isAborted implementation
+    Update to killbill-oss-parent 0.141.83
+
+2.3.2
+    Update killbill-oss-parent to 0.141.77 (Jooby now requires Jackson 2.9.5)
+
 2.3.1
-    Add productName to PluginInvoiceItem 
+    Add productName to PluginInvoiceItem
 
 2.3.0
     Config: improve YAML support
