@@ -17,13 +17,11 @@
 
 package org.killbill.billing.plugin.api.core;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.joda.time.LocalDate;
 import org.killbill.billing.catalog.api.BillingActionPolicy;
-import org.killbill.billing.catalog.api.PlanPhasePriceOverride;
-import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
+import org.killbill.billing.entitlement.api.EntitlementSpecifier;
 import org.killbill.billing.entitlement.api.SubscriptionEventType;
 import org.killbill.billing.invoice.api.DryRunArguments;
 import org.killbill.billing.invoice.api.DryRunType;
@@ -31,13 +29,12 @@ import org.killbill.billing.invoice.api.DryRunType;
 public class PluginDryRunArguments implements DryRunArguments {
 
     private final DryRunType dryRunType;
-    private final PlanPhaseSpecifier planPhaseSpecifier;
+    private final EntitlementSpecifier entitlementSpecifier;
     private final SubscriptionEventType action;
     private final UUID subscriptionId;
     private final LocalDate effectiveDate;
     private final UUID bundleId;
     private final BillingActionPolicy billingActionPolicy;
-    private final List<PlanPhasePriceOverride> planPhasePriceOverrides;
 
     public PluginDryRunArguments(final UUID bundleId, final UUID subscriptionId) {
         this(DryRunType.UPCOMING_INVOICE,
@@ -46,26 +43,23 @@ public class PluginDryRunArguments implements DryRunArguments {
              subscriptionId,
              null,
              bundleId,
-             null,
              null);
     }
 
     public PluginDryRunArguments(final DryRunType dryRunType,
-                                 final PlanPhaseSpecifier planPhaseSpecifier,
+                                 final EntitlementSpecifier entitlementSpecifier,
                                  final SubscriptionEventType action,
                                  final UUID subscriptionId,
                                  final LocalDate effectiveDate,
                                  final UUID bundleId,
-                                 final BillingActionPolicy billingActionPolicy,
-                                 final List<PlanPhasePriceOverride> planPhasePriceOverrides) {
+                                 final BillingActionPolicy billingActionPolicy) {
         this.dryRunType = dryRunType;
-        this.planPhaseSpecifier = planPhaseSpecifier;
+        this.entitlementSpecifier = entitlementSpecifier;
         this.action = action;
         this.subscriptionId = subscriptionId;
         this.effectiveDate = effectiveDate;
         this.bundleId = bundleId;
         this.billingActionPolicy = billingActionPolicy;
-        this.planPhasePriceOverrides = planPhasePriceOverrides;
     }
 
     @Override
@@ -74,8 +68,8 @@ public class PluginDryRunArguments implements DryRunArguments {
     }
 
     @Override
-    public PlanPhaseSpecifier getPlanPhaseSpecifier() {
-        return planPhaseSpecifier;
+    public EntitlementSpecifier getEntitlementSpecifier() {
+        return entitlementSpecifier;
     }
 
     @Override
@@ -104,21 +98,15 @@ public class PluginDryRunArguments implements DryRunArguments {
     }
 
     @Override
-    public List<PlanPhasePriceOverride> getPlanPhasePriceOverrides() {
-        return planPhasePriceOverrides;
-    }
-
-    @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("PluginDryRunArguments{");
         sb.append("dryRunType=").append(dryRunType);
-        sb.append(", planPhaseSpecifier=").append(planPhaseSpecifier);
+        sb.append(", entitlementSpecifier=").append(entitlementSpecifier);
         sb.append(", action=").append(action);
         sb.append(", subscriptionId=").append(subscriptionId);
         sb.append(", effectiveDate=").append(effectiveDate);
         sb.append(", bundleId=").append(bundleId);
         sb.append(", billingActionPolicy=").append(billingActionPolicy);
-        sb.append(", planPhasePriceOverrides=").append(planPhasePriceOverrides);
         sb.append('}');
         return sb.toString();
     }
@@ -137,7 +125,7 @@ public class PluginDryRunArguments implements DryRunArguments {
         if (dryRunType != that.dryRunType) {
             return false;
         }
-        if (planPhaseSpecifier != null ? !planPhaseSpecifier.equals(that.planPhaseSpecifier) : that.planPhaseSpecifier != null) {
+        if (entitlementSpecifier != null ? !entitlementSpecifier.equals(that.entitlementSpecifier) : that.entitlementSpecifier != null) {
             return false;
         }
         if (action != that.action) {
@@ -152,22 +140,18 @@ public class PluginDryRunArguments implements DryRunArguments {
         if (bundleId != null ? !bundleId.equals(that.bundleId) : that.bundleId != null) {
             return false;
         }
-        if (billingActionPolicy != that.billingActionPolicy) {
-            return false;
-        }
-        return planPhasePriceOverrides != null ? planPhasePriceOverrides.equals(that.planPhasePriceOverrides) : that.planPhasePriceOverrides == null;
+        return billingActionPolicy == that.billingActionPolicy;
     }
 
     @Override
     public int hashCode() {
         int result = dryRunType != null ? dryRunType.hashCode() : 0;
-        result = 31 * result + (planPhaseSpecifier != null ? planPhaseSpecifier.hashCode() : 0);
+        result = 31 * result + (entitlementSpecifier != null ? entitlementSpecifier.hashCode() : 0);
         result = 31 * result + (action != null ? action.hashCode() : 0);
         result = 31 * result + (subscriptionId != null ? subscriptionId.hashCode() : 0);
         result = 31 * result + (effectiveDate != null ? effectiveDate.hashCode() : 0);
         result = 31 * result + (bundleId != null ? bundleId.hashCode() : 0);
         result = 31 * result + (billingActionPolicy != null ? billingActionPolicy.hashCode() : 0);
-        result = 31 * result + (planPhasePriceOverrides != null ? planPhasePriceOverrides.hashCode() : 0);
         return result;
     }
 }
