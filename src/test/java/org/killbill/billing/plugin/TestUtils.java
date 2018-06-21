@@ -169,7 +169,7 @@ public abstract class TestUtils {
                .then(new Answer<Payment>() {
                    @Override
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
-                       final List<Payment> payments = paymentApi.getAccountPayments(account.getId(), false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[5]);
+                       final List<Payment> payments = paymentApi.getAccountPayments(account.getId(), false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[6]);
                        final Payment payment;
                        if (payments == null || payments.isEmpty()) {
                            payment = buildPayment(account.getId(), account.getPaymentMethodId(), (Currency) invocation.getArguments()[3], killbillApi);
@@ -191,10 +191,10 @@ public abstract class TestUtils {
                    @Override
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
                        final UUID kbPaymentId = (UUID) invocation.getArguments()[1];
-                       final Payment payment = paymentApi.getPayment(kbPaymentId, false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[3]);
+                       final Payment payment = paymentApi.getPayment(kbPaymentId, false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[4]);
                        Assert.assertNotNull(payment);
 
-                       final String kbPaymentTransactionExternalKey = (String) invocation.getArguments()[2];
+                       final String kbPaymentTransactionExternalKey = (String) invocation.getArguments()[3];
                        PaymentTransaction paymentTransaction = null;
                        for (final PaymentTransaction t : payment.getTransactions()) {
                            if (kbPaymentTransactionExternalKey.equals(t.getExternalKey())) {
@@ -252,8 +252,8 @@ public abstract class TestUtils {
                        final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
                        final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
                        final Currency currency = (Currency) invocation.getArguments()[4];
-                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[5], UUID.randomUUID().toString());
-                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], paymentExternalKey);
+                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[7], paymentExternalKey);
 
                        final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
                        final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.AUTHORIZE, TransactionStatus.UNKNOWN, amount, currency);
@@ -289,8 +289,8 @@ public abstract class TestUtils {
                        final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
                        final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
                        final Currency currency = (Currency) invocation.getArguments()[4];
-                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[5], UUID.randomUUID().toString());
-                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], paymentExternalKey);
+                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[7], paymentExternalKey);
 
                        final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
                        final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.PURCHASE, TransactionStatus.UNKNOWN, amount, currency);
@@ -326,8 +326,8 @@ public abstract class TestUtils {
                        final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
                        final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
                        final Currency currency = (Currency) invocation.getArguments()[4];
-                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[5], UUID.randomUUID().toString());
-                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], paymentExternalKey);
+                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[7], paymentExternalKey);
 
                        final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
                        final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.CREDIT, TransactionStatus.UNKNOWN, amount, currency);

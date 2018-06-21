@@ -1,3 +1,7 @@
+2.3.4
+    TestUtils bugfix
+    Update to killbill-oss-parent 0.141.87
+
 2.3.3
     Fix PluginPriorInvoiceResult#isAborted implementation
     Update to killbill-oss-parent 0.141.83
