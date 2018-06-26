@@ -341,7 +341,7 @@ public abstract class PluginApi {
     protected Catalog getCatalog(final TenantContext context) throws OSGIServiceNotAvailable {
         final CatalogUserApi catalogUserApi = getCatalogUserApi();
         try {
-            return catalogUserApi.getCatalog(null, context);
+            return catalogUserApi.getCatalog(null, null, context);
         } catch (final CatalogApiException e) {
             logService.log(LogService.LOG_INFO, "Unable to retrieve catalog for tenant " + context.getTenantId(), e);
             return null;
