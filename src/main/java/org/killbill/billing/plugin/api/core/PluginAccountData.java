@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2017 Groupon, Inc
- * Copyright 2014-2017 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -49,7 +49,6 @@ public class PluginAccountData implements AccountData {
     protected final String phone;
     protected final String notes;
     protected final Boolean isMigrated;
-    protected final Boolean isNotifiedForInvoices;
 
     public PluginAccountData(final String externalKey) {
         this(externalKey, Currency.USD, DateTimeZone.UTC, Locale.US.toString(), "US");
@@ -130,7 +129,6 @@ public class PluginAccountData implements AccountData {
         this.phone = phone;
         this.notes = notes;
         this.isMigrated = isMigrated;
-        this.isNotifiedForInvoices = isNotifiedForInvoices;
     }
 
     @Override
@@ -234,11 +232,6 @@ public class PluginAccountData implements AccountData {
     }
 
     @Override
-    public Boolean isNotifiedForInvoices() {
-        return isNotifiedForInvoices;
-    }
-
-    @Override
     public String getPhone() {
         return phone;
     }
@@ -272,7 +265,6 @@ public class PluginAccountData implements AccountData {
         sb.append(", phone='").append(phone).append('\'');
         sb.append(", notes='").append(notes).append('\'');
         sb.append(", isMigrated=").append(isMigrated);
-        sb.append(", isNotifiedForInvoices=").append(isNotifiedForInvoices);
         sb.append('}');
         return sb.toString();
     }
@@ -330,9 +322,6 @@ public class PluginAccountData implements AccountData {
         if (isMigrated != null ? !isMigrated.equals(that.isMigrated) : that.isMigrated != null) {
             return false;
         }
-        if (isNotifiedForInvoices != null ? !isNotifiedForInvoices.equals(that.isNotifiedForInvoices) : that.isNotifiedForInvoices != null) {
-            return false;
-        }
         if (locale != null ? !locale.equals(that.locale) : that.locale != null) {
             return false;
         }
@@ -385,7 +374,6 @@ public class PluginAccountData implements AccountData {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
         result = 31 * result + (isMigrated != null ? isMigrated.hashCode() : 0);
-        result = 31 * result + (isNotifiedForInvoices != null ? isNotifiedForInvoices.hashCode() : 0);
         return result;
     }
 }
