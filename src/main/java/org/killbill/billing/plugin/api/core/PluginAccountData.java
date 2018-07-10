@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2017 Groupon, Inc
- * Copyright 2014-2017 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -20,6 +20,7 @@ package org.killbill.billing.plugin.api.core;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.killbill.billing.account.api.AccountData;
 import org.killbill.billing.catalog.api.Currency;
@@ -35,6 +36,7 @@ public class PluginAccountData implements AccountData {
     protected final Boolean isPaymentDelegatedToParent;
     protected final Integer billCycleDayLocal;
     protected final UUID paymentMethodId;
+    protected final DateTime referenceTime;
     protected final DateTimeZone timeZone;
     protected final String locale;
     protected final String address1;
@@ -47,7 +49,6 @@ public class PluginAccountData implements AccountData {
     protected final String phone;
     protected final String notes;
     protected final Boolean isMigrated;
-    protected final Boolean isNotifiedForInvoices;
 
     public PluginAccountData(final String externalKey) {
         this(externalKey, Currency.USD, DateTimeZone.UTC, Locale.US.toString(), "US");
@@ -63,6 +64,7 @@ public class PluginAccountData implements AccountData {
              null,
              null,
              currency,
+             null,
              null,
              null,
              null,
@@ -91,6 +93,7 @@ public class PluginAccountData implements AccountData {
                              final Boolean isPaymentDelegatedToParent,
                              final Integer billCycleDayLocal,
                              final UUID paymentMethodId,
+                             final DateTime referenceTime,
                              final DateTimeZone timeZone,
                              final String locale,
                              final String address1,
@@ -113,6 +116,7 @@ public class PluginAccountData implements AccountData {
         this.isPaymentDelegatedToParent = isPaymentDelegatedToParent;
         this.billCycleDayLocal = billCycleDayLocal;
         this.paymentMethodId = paymentMethodId;
+        this.referenceTime = referenceTime;
         this.timeZone = timeZone;
         this.locale = locale;
         this.address1 = address1;
@@ -125,7 +129,6 @@ public class PluginAccountData implements AccountData {
         this.phone = phone;
         this.notes = notes;
         this.isMigrated = isMigrated;
-        this.isNotifiedForInvoices = isNotifiedForInvoices;
     }
 
     @Override
@@ -171,6 +174,11 @@ public class PluginAccountData implements AccountData {
     @Override
     public UUID getPaymentMethodId() {
         return paymentMethodId;
+    }
+
+    @Override
+    public DateTime getReferenceTime() {
+        return referenceTime;
     }
 
     @Override
@@ -224,11 +232,6 @@ public class PluginAccountData implements AccountData {
     }
 
     @Override
-    public Boolean isNotifiedForInvoices() {
-        return isNotifiedForInvoices;
-    }
-
-    @Override
     public String getPhone() {
         return phone;
     }
@@ -262,7 +265,6 @@ public class PluginAccountData implements AccountData {
         sb.append(", phone='").append(phone).append('\'');
         sb.append(", notes='").append(notes).append('\'');
         sb.append(", isMigrated=").append(isMigrated);
-        sb.append(", isNotifiedForInvoices=").append(isNotifiedForInvoices);
         sb.append('}');
         return sb.toString();
     }
@@ -320,9 +322,6 @@ public class PluginAccountData implements AccountData {
         if (isMigrated != null ? !isMigrated.equals(that.isMigrated) : that.isMigrated != null) {
             return false;
         }
-        if (isNotifiedForInvoices != null ? !isNotifiedForInvoices.equals(that.isNotifiedForInvoices) : that.isNotifiedForInvoices != null) {
-            return false;
-        }
         if (locale != null ? !locale.equals(that.locale) : that.locale != null) {
             return false;
         }
@@ -375,7 +374,6 @@ public class PluginAccountData implements AccountData {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (notes != null ? notes.hashCode() : 0);
         result = 31 * result + (isMigrated != null ? isMigrated.hashCode() : 0);
-        result = 31 * result + (isNotifiedForInvoices != null ? isNotifiedForInvoices.hashCode() : 0);
         return result;
     }
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright 2015 Groupon, Inc
- * Copyright 2015 The Billing Project, LLC
+ * Copyright 2014-2018 Groupon, Inc
+ * Copyright 2014-2018 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -40,11 +40,18 @@ public class PluginInvoiceItem implements InvoiceItem {
     protected final String description;
     protected final UUID subscriptionId;
     protected final UUID bundleId;
+    protected final String productName;
+    protected final String prettyProductName;
     protected final String planName;
+    protected final String prettyPlanName;
     protected final String phaseName;
+    protected final String prettyPhaseName;
     protected final BigDecimal rate;
     protected final UUID linkedItemId;
     protected final String usageName;
+    protected final String prettyUsageName;
+    protected final Integer quantity;
+    protected final String itemDetails;
     protected final DateTime createdDate;
     protected final DateTime updatedDate;
 
@@ -85,14 +92,22 @@ public class PluginInvoiceItem implements InvoiceItem {
                                      description,
                                      model.getSubscriptionId(),
                                      model.getBundleId(),
+                                     model.getProductName(),
+                                     model.getPrettyProductName(),
                                      model.getPlanName(),
+                                     model.getPrettyPlanName(),
                                      model.getPhaseName(),
-                                     null,
+                                     model.getPrettyPhaseName(),
+                                     model.getRate(),
                                      model.getId(),
                                      model.getUsageName(),
+                                     model.getPrettyUsageName(),
+                                     model.getQuantity(),
+                                     model.getItemDetails(),
                                      model.getCreatedDate(),
                                      model.getUpdatedDate());
     }
+
 
     public PluginInvoiceItem(final UUID id,
                              final InvoiceItemType invoiceItemType,
@@ -106,11 +121,18 @@ public class PluginInvoiceItem implements InvoiceItem {
                              final String description,
                              final UUID subscriptionId,
                              final UUID bundleId,
+                             final String productName,
+                             final String prettyProductName,
                              final String planName,
+                             final String prettyPlanName,
                              final String phaseName,
+                             final String prettyPhaseName,
                              final BigDecimal rate,
                              final UUID linkedItemId,
                              final String usageName,
+                             final String prettyUsageName,
+                             final Integer quantity,
+                             final String itemDetails,
                              final DateTime createdDate,
                              final DateTime updatedDate) {
         this.id = id;
@@ -125,11 +147,18 @@ public class PluginInvoiceItem implements InvoiceItem {
         this.description = description;
         this.subscriptionId = subscriptionId;
         this.bundleId = bundleId;
+        this.productName = productName;
+        this.prettyProductName = prettyProductName;
         this.planName = planName;
+        this.prettyPlanName = prettyPlanName;
         this.phaseName = phaseName;
+        this.prettyPhaseName = prettyPhaseName;
         this.rate = rate;
         this.linkedItemId = linkedItemId;
         this.usageName = usageName;
+        this.prettyUsageName = prettyUsageName;
+        this.quantity = quantity;
+        this.itemDetails = itemDetails;
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
     }
@@ -190,6 +219,16 @@ public class PluginInvoiceItem implements InvoiceItem {
     }
 
     @Override
+    public String getProductName() {
+        return this.productName;
+    }
+
+    @Override
+    public String getPrettyProductName() {
+        return this.prettyProductName;
+    }
+
+    @Override
     public UUID getBundleId() {
         return bundleId;
     }
@@ -200,8 +239,18 @@ public class PluginInvoiceItem implements InvoiceItem {
     }
 
     @Override
+    public String getPrettyPlanName() {
+        return prettyPlanName;
+    }
+
+    @Override
     public String getPhaseName() {
         return phaseName;
+    }
+
+    @Override
+    public String getPrettyPhaseName() {
+        return prettyPhaseName;
     }
 
     @Override
@@ -217,6 +266,21 @@ public class PluginInvoiceItem implements InvoiceItem {
     @Override
     public String getUsageName() {
         return usageName;
+    }
+
+    @Override
+    public String getPrettyUsageName() {
+        return prettyUsageName;
+    }
+
+    @Override
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    @Override
+    public String getItemDetails() {
+        return itemDetails;
     }
 
     @Override
@@ -273,10 +337,25 @@ public class PluginInvoiceItem implements InvoiceItem {
         if (phaseName != null ? !phaseName.equals(that.phaseName) : that.phaseName != null) {
             return false;
         }
+        if (prettyPhaseName != null ? !prettyPhaseName.equals(that.prettyPhaseName) : that.prettyPhaseName != null) {
+            return false;
+        }
         if (planName != null ? !planName.equals(that.planName) : that.planName != null) {
             return false;
         }
+        if (prettyPlanName != null ? !prettyPlanName.equals(that.prettyPlanName) : that.prettyPlanName != null) {
+            return false;
+        }
         if (usageName != null ? !usageName.equals(that.usageName) : that.usageName != null) {
+            return false;
+        }
+        if (prettyUsageName != null ? !prettyUsageName.equals(that.prettyUsageName) : that.prettyUsageName != null) {
+            return false;
+        }
+        if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) {
+            return false;
+        }
+        if (itemDetails != null ? !itemDetails.equals(that.itemDetails) : that.itemDetails != null) {
             return false;
         }
         return true;
@@ -310,10 +389,15 @@ public class PluginInvoiceItem implements InvoiceItem {
         sb.append(", subscriptionId=").append(subscriptionId);
         sb.append(", bundleId=").append(bundleId);
         sb.append(", planName='").append(planName).append('\'');
+        sb.append(", prettyPlanName='").append(prettyPlanName).append('\'');
         sb.append(", phaseName='").append(phaseName).append('\'');
+        sb.append(", prettyPhaseName='").append(prettyPhaseName).append('\'');
         sb.append(", rate=").append(rate);
         sb.append(", linkedItemId=").append(linkedItemId);
         sb.append(", usageName='").append(usageName).append('\'');
+        sb.append(", prettyUsageName='").append(prettyUsageName).append('\'');
+        sb.append(", quantity=").append(quantity);
+        sb.append(", itemDetails='").append(itemDetails).append('\'');
         sb.append(", createdDate=").append(createdDate);
         sb.append(", updatedDate=").append(updatedDate);
         sb.append('}');
@@ -371,10 +455,15 @@ public class PluginInvoiceItem implements InvoiceItem {
         result = 31 * result + (subscriptionId != null ? subscriptionId.hashCode() : 0);
         result = 31 * result + (bundleId != null ? bundleId.hashCode() : 0);
         result = 31 * result + (planName != null ? planName.hashCode() : 0);
+        result = 31 * result + (prettyPlanName != null ? prettyPlanName.hashCode() : 0);
         result = 31 * result + (phaseName != null ? phaseName.hashCode() : 0);
+        result = 31 * result + (prettyPhaseName != null ? prettyPhaseName.hashCode() : 0);
         result = 31 * result + (rate != null ? rate.hashCode() : 0);
         result = 31 * result + (linkedItemId != null ? linkedItemId.hashCode() : 0);
         result = 31 * result + (usageName != null ? usageName.hashCode() : 0);
+        result = 31 * result + (prettyUsageName != null ? prettyUsageName.hashCode() : 0);
+        result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+        result = 31 * result + (itemDetails != null ? itemDetails.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         return result;

@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import org.joda.time.DateTime;
 import org.killbill.billing.account.api.Account;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
@@ -145,6 +146,7 @@ public class PaymentApiWrapper {
             paymentOptions = null;
         }
 
+        final DateTime effectiveDate = context.getCreatedDate();
         final Payment createdPayment;
         switch (transactionType) {
             case AUTHORIZE:
@@ -154,6 +156,7 @@ public class PaymentApiWrapper {
                                                                                          kbPaymentId,
                                                                                          amount,
                                                                                          currency,
+                                                                                         effectiveDate,
                                                                                          paymentExternalKey,
                                                                                          paymentTransactionExternalKey,
                                                                                          pluginProperties,
@@ -164,6 +167,7 @@ public class PaymentApiWrapper {
                                                                                                            kbPaymentId,
                                                                                                            amount,
                                                                                                            currency,
+                                                                                                           effectiveDate,
                                                                                                            paymentExternalKey,
                                                                                                            paymentTransactionExternalKey,
                                                                                                            pluginProperties,
@@ -177,6 +181,7 @@ public class PaymentApiWrapper {
                                                                                    kbPaymentId,
                                                                                    amount,
                                                                                    currency,
+                                                                                   effectiveDate,
                                                                                    paymentTransactionExternalKey,
                                                                                    pluginProperties,
                                                                                    context);
@@ -186,6 +191,7 @@ public class PaymentApiWrapper {
                                                                                                      kbPaymentId,
                                                                                                      amount,
                                                                                                      currency,
+                                                                                                     effectiveDate,
                                                                                                      paymentTransactionExternalKey,
                                                                                                      pluginProperties,
                                                                                                      paymentOptions,
@@ -198,6 +204,7 @@ public class PaymentApiWrapper {
                                                                                       kbPaymentId,
                                                                                       amount,
                                                                                       currency,
+                                                                                      effectiveDate,
                                                                                       paymentTransactionExternalKey,
                                                                                       context);
                 } else {
@@ -205,6 +212,7 @@ public class PaymentApiWrapper {
                                                                                                         kbPaymentId,
                                                                                                         amount,
                                                                                                         currency,
+                                                                                                        effectiveDate,
                                                                                                         paymentTransactionExternalKey,
                                                                                                         paymentOptions,
                                                                                                         context);
@@ -217,6 +225,7 @@ public class PaymentApiWrapper {
                                                                                   kbPaymentId,
                                                                                   amount,
                                                                                   currency,
+                                                                                  effectiveDate,
                                                                                   paymentExternalKey,
                                                                                   paymentTransactionExternalKey,
                                                                                   pluginProperties,
@@ -227,6 +236,7 @@ public class PaymentApiWrapper {
                                                                                                     kbPaymentId,
                                                                                                     amount,
                                                                                                     currency,
+                                                                                                    effectiveDate,
                                                                                                     paymentExternalKey,
                                                                                                     paymentTransactionExternalKey,
                                                                                                     pluginProperties,
@@ -241,6 +251,7 @@ public class PaymentApiWrapper {
                                                                                     kbPaymentId,
                                                                                     amount,
                                                                                     currency,
+                                                                                    effectiveDate,
                                                                                     paymentExternalKey,
                                                                                     paymentTransactionExternalKey,
                                                                                     pluginProperties,
@@ -251,6 +262,7 @@ public class PaymentApiWrapper {
                                                                                                       kbPaymentId,
                                                                                                       amount,
                                                                                                       currency,
+                                                                                                      effectiveDate,
                                                                                                       paymentExternalKey,
                                                                                                       paymentTransactionExternalKey,
                                                                                                       pluginProperties,
@@ -264,6 +276,7 @@ public class PaymentApiWrapper {
                                                                                   kbPaymentId,
                                                                                   amount,
                                                                                   currency,
+                                                                                  effectiveDate,
                                                                                   paymentTransactionExternalKey,
                                                                                   pluginProperties,
                                                                                   context);
@@ -272,6 +285,7 @@ public class PaymentApiWrapper {
                                                                                                     kbPaymentId,
                                                                                                     amount,
                                                                                                     currency,
+                                                                                                    effectiveDate,
                                                                                                     paymentTransactionExternalKey,
                                                                                                     pluginProperties,
                                                                                                     paymentOptions,
@@ -282,12 +296,14 @@ public class PaymentApiWrapper {
                 if (paymentOptions == null) {
                     createdPayment = osgiKillbillAPI.getPaymentApi().createVoid(account,
                                                                                 kbPaymentId,
+                                                                                effectiveDate,
                                                                                 paymentTransactionExternalKey,
                                                                                 pluginProperties,
                                                                                 context);
                 } else {
                     createdPayment = osgiKillbillAPI.getPaymentApi().createVoidWithPaymentControl(account,
                                                                                                   kbPaymentId,
+                                                                                                  effectiveDate,
                                                                                                   paymentTransactionExternalKey,
                                                                                                   pluginProperties,
                                                                                                   paymentOptions,
@@ -306,6 +322,7 @@ public class PaymentApiWrapper {
                                                final Currency currency,
                                                final String paymentTransactionExternalKey,
                                                final CallContext context) throws PaymentApiException {
+        final DateTime effectiveDate = context.getCreatedDate();
         final Payment chargeback;
         final PaymentOptions paymentOptions = getPaymentOptions(kbPaymentId, context);
         if (paymentOptions == null) {
@@ -313,6 +330,7 @@ public class PaymentApiWrapper {
                                                                           kbPaymentId,
                                                                           amount,
                                                                           currency,
+                                                                          effectiveDate,
                                                                           paymentTransactionExternalKey,
                                                                           context);
 
@@ -321,6 +339,7 @@ public class PaymentApiWrapper {
                                                                                             kbPaymentId,
                                                                                             amount,
                                                                                             currency,
+                                                                                            effectiveDate,
                                                                                             paymentTransactionExternalKey,
                                                                                             paymentOptions,
                                                                                             context);
@@ -332,6 +351,7 @@ public class PaymentApiWrapper {
                                                        final UUID kbPaymentId,
                                                        final PaymentTransaction chargeback,
                                                        final CallContext context) throws PaymentApiException {
+        final DateTime effectiveDate = context.getCreatedDate();
         final String paymentTransactionExternalKey = chargeback.getExternalKey();
 
         final Payment chargebackReversal;
@@ -339,11 +359,13 @@ public class PaymentApiWrapper {
         if (paymentOptions == null) {
             chargebackReversal = osgiKillbillAPI.getPaymentApi().createChargebackReversal(account,
                                                                                           kbPaymentId,
+                                                                                          effectiveDate,
                                                                                           paymentTransactionExternalKey,
                                                                                           context);
         } else {
             chargebackReversal = osgiKillbillAPI.getPaymentApi().createChargebackReversalWithPaymentControl(account,
                                                                                                             kbPaymentId,
+                                                                                                            effectiveDate,
                                                                                                             paymentTransactionExternalKey,
                                                                                                             paymentOptions,
                                                                                                             context);

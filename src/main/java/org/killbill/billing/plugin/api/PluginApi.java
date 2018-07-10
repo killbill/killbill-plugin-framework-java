@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2016 Groupon, Inc
- * Copyright 2014-2016 The Billing Project, LLC
+ * Copyright 2014-2017 Groupon, Inc
+ * Copyright 2014-2017 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -41,12 +41,12 @@ import org.killbill.billing.entitlement.api.SubscriptionEvent;
 import org.killbill.billing.invoice.api.Invoice;
 import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.api.InvoicePayment;
-import org.killbill.billing.invoice.api.InvoicePaymentApi;
 import org.killbill.billing.invoice.api.InvoiceUserApi;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.osgi.libs.killbill.OSGIServiceNotAvailable;
+import org.killbill.billing.payment.api.InvoicePaymentApi;
 import org.killbill.billing.payment.api.Payment;
 import org.killbill.billing.payment.api.PaymentApi;
 import org.killbill.billing.payment.api.PaymentApiException;
@@ -305,7 +305,7 @@ public abstract class PluginApi {
 
     protected Collection<Invoice> getInvoicesByAccountId(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {
         final InvoiceUserApi invoiceUserApi = getInvoiceUserApi();
-        return invoiceUserApi.getInvoicesByAccount(accountId, false, context);
+        return invoiceUserApi.getInvoicesByAccount(accountId, false, false, context);
     }
 
     protected BigDecimal getAccountBalance(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {
@@ -341,7 +341,7 @@ public abstract class PluginApi {
     protected Catalog getCatalog(final TenantContext context) throws OSGIServiceNotAvailable {
         final CatalogUserApi catalogUserApi = getCatalogUserApi();
         try {
-            return catalogUserApi.getCatalog(null, context);
+            return catalogUserApi.getCatalog(null, null, context);
         } catch (final CatalogApiException e) {
             logService.log(LogService.LOG_INFO, "Unable to retrieve catalog for tenant " + context.getTenantId(), e);
             return null;
@@ -401,7 +401,7 @@ public abstract class PluginApi {
         try {
             // Try to get all payment methods, with plugin information
             // TODO this will not return deleted payment methods
-            return paymentApi.getAccountPaymentMethods(accountId, true, PLUGIN_PROPERTIES, context);
+            return paymentApi.getAccountPaymentMethods(accountId, false, true, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
             logService.log(LogService.LOG_INFO, "Error retrieving payment methods for accountId " + accountId + ": " + e.getMessage());
             throw new OSGIServiceNotAvailable(e);
