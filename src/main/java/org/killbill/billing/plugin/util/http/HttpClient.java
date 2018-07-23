@@ -66,8 +66,8 @@ public class HttpClient implements Closeable {
 
     protected static final ImmutableMap<String, String> DEFAULT_OPTIONS = ImmutableMap.<String, String>of();
     protected static final int DEFAULT_HTTP_TIMEOUT_SEC = 70;
-    private static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 5;
-    private static final int DEFAULT_HTTP_READ_TIMEOUT = 60;
+    private static final int DEFAULT_HTTP_CONNECT_TIMEOUT_SEC = 5;
+    private static final int DEFAULT_HTTP_READ_TIMEOUT_SEC = 60;
 
     protected final String username;
     protected final String password;
@@ -88,7 +88,7 @@ public class HttpClient implements Closeable {
         this.password = password;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
-        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_READ_TIMEOUT, DEFAULT_HTTP_CONNECT_TIMEOUT);
+        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_READ_TIMEOUT_SEC * 1000, DEFAULT_HTTP_CONNECT_TIMEOUT_SEC * 1000);
         this.mapper = createObjectMapper();
     }
 
@@ -98,23 +98,23 @@ public class HttpClient implements Closeable {
                       final String proxyHost,
                       final Integer proxyPort,
                       final Boolean strictSSL,
-                      final int connectTimeout,
-                      final int readTimeout) throws GeneralSecurityException {
+                      final int connectTimeoutMs,
+                      final int readTimeoutMs) throws GeneralSecurityException {
         this.url = url;
         this.username = username;
         this.password = password;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
-        this.httpClient = buildAsyncHttpClient(strictSSL, readTimeout, connectTimeout);
+        this.httpClient = buildAsyncHttpClient(strictSSL, readTimeoutMs, connectTimeoutMs);
         this.mapper = createObjectMapper();
     }
 
-    private AsyncHttpClient buildAsyncHttpClient(final Boolean strictSSL, final int readTimeout, final int connectTimeout)
+    private AsyncHttpClient buildAsyncHttpClient(final Boolean strictSSL, final int readTimeoutMs, final int connectTimeoutMs)
             throws GeneralSecurityException {
-        AsyncHttpClientConfig.Builder cfg = new AsyncHttpClientConfig.Builder();
+        final AsyncHttpClientConfig.Builder cfg = new AsyncHttpClientConfig.Builder();
         cfg.setUserAgent(USER_AGENT)
-           .setConnectTimeout(connectTimeout)
-           .setReadTimeout(readTimeout);
+           .setConnectTimeout(connectTimeoutMs)
+           .setReadTimeout(readTimeoutMs);
         if (!strictSSL) {
             cfg.setSSLContext(SslUtils.getInstance().getSSLContext(!strictSSL));
         }
