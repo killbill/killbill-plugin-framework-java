@@ -91,6 +91,11 @@ public class PluginAppBuilder {
         return this;
     }
 
+    public PluginAppBuilder withConfigValue(final String path, final Object value){
+        this.config = this.config.withValue(path, ConfigValueFactory.fromAnyRef(value));
+        return this;
+    }
+
     public PluginApp build() {
         final PluginApp app = new PluginApp(objectMapper, services, routeClasses);
         app.use(config);
