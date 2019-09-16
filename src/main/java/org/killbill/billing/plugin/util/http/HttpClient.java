@@ -164,7 +164,7 @@ public class HttpClient implements Closeable {
                                                                                            IOException,
                                                                                            TimeoutException,
                                                                                            URISyntaxException {
-        return doCall(verb, uri, body, headers, queryParams, String.class, ResponseFormat.TEXT);
+        return doCall(verb, uri, body, queryParams, headers, String.class, ResponseFormat.TEXT);
     }
 
     protected <T> T doCall(final String verb, final String uri, final String body, final Map<String, String> queryParams,
