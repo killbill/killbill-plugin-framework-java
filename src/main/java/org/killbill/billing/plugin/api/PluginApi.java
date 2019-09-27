@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.killbill.billing.ObjectType;
 import org.killbill.billing.account.api.Account;
@@ -69,6 +70,7 @@ import org.killbill.clock.Clock;
 import org.osgi.service.log.LogService;
 
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -316,7 +318,9 @@ public abstract class PluginApi {
     protected Plan getPlanFromInvoiceItem(final InvoiceItem invoiceItem, final TenantContext context) throws OSGIServiceNotAvailable {
         try {
             final VersionedCatalog catalog = getCatalog(context);
-            return catalog.getVersion(invoiceItem.getCreatedDate().toDate()).findPlan(invoiceItem.getPlanName());
+            // getCatalogEffectiveDate was introduced in 0.21.x
+            final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
+            return catalog.getVersion(catalogEffectiveDate.toDate()).findPlan(invoiceItem.getPlanName());
         } catch (final CatalogApiException e) {
             logService.log(LogService.LOG_INFO, "Unable to retrieve plan for invoice item " + invoiceItem.getId(), e);
             return null;
@@ -326,7 +330,9 @@ public abstract class PluginApi {
     protected PlanPhase getPlanPhaseFromInvoiceItem(final InvoiceItem invoiceItem, final LocalDate subscriptionStartDate, final TenantContext context) throws OSGIServiceNotAvailable {
         try {
             final VersionedCatalog catalog = getCatalog(context);
-            return catalog.getVersion(invoiceItem.getCreatedDate().toDate()).findPhase(invoiceItem.getPhaseName());
+            // getCatalogEffectiveDate was introduced in 0.21.x
+            final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
+            return catalog.getVersion(catalogEffectiveDate.toDate()).findPhase(invoiceItem.getPhaseName());
         } catch (final CatalogApiException e) {
             logService.log(LogService.LOG_INFO, "Unable to retrieve phase for invoice item " + invoiceItem.getId(), e);
             return null;
