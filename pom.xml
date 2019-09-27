@@ -38,11 +38,6 @@
         <system>Github</system>
         <url>https://github.com/killbill/killbill-plugin-framework-java/issues</url>
     </issueManagement>
-    <properties>
-        <!-- More recent versions than the core (JDK1.8+) -->
-        <guava.version>21.0</guava.version>
-        <jackson.version>2.9.5</jackson.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
