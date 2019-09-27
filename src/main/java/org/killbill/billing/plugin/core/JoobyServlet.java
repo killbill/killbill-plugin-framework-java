@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2017 Groupon, Inc
- * Copyright 2014-2017 The Billing Project, LLC
+ * Copyright 2014-2019 Groupon, Inc
+ * Copyright 2014-2019 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -20,12 +20,17 @@ package org.killbill.billing.plugin.core;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jooby.Sse;
 import org.jooby.servlet.ServletServletRequest;
 import org.jooby.servlet.ServletServletResponse;
+import org.jooby.servlet.ServletUpgrade;
 import org.jooby.spi.HttpHandler;
+import org.jooby.spi.NativeResponse;
+import org.killbill.billing.plugin.core.resources.ServletSse;
 import org.killbill.billing.plugin.core.resources.jooby.PluginApp;
 
 import com.typesafe.config.Config;
@@ -47,9 +52,11 @@ public class JoobyServlet extends PluginServlet {
 
     @Override
     protected void service(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
+        final ServletServletRequest request = new ServletServletRequest(req, tmpdir).with(new ServletSseUpgrade(req));
+        final NativeResponse response = new ServletServletResponse(req, resp);
+
         try {
-            dispatcher.handle(new ServletServletRequest(req, tmpdir),
-                              new ServletServletResponse(req, resp));
+            dispatcher.handle(request, response);
         } catch (final Exception e) {
             throw new ServletException(e);
         }
@@ -59,5 +66,23 @@ public class JoobyServlet extends PluginServlet {
     public void destroy() {
         super.destroy();
         app.stop();
+    }
+
+    public static class ServletSseUpgrade implements ServletUpgrade {
+
+        private final ServletRequest req;
+
+        public ServletSseUpgrade(final ServletRequest req) {
+            this.req = req;
+        }
+
+        @Override
+        public <T> T upgrade(final Class<T> type) {
+            if (type == Sse.class) {
+                //noinspection unchecked
+                return (T) new ServletSse(req);
+            }
+            throw new UnsupportedOperationException("#upgrade not yet supported: " + type);
+        }
     }
 }

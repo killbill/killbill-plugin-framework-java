@@ -50,23 +50,27 @@ public class PluginAppBuilder {
     private ObjectMapper objectMapper;
     private Config config;
 
+    public PluginAppBuilder(final String pluginName) {
+        withConfig(ConfigFactory.empty()
+                                .withValue("application.path", ConfigValueFactory.fromAnyRef(String.format("/plugins/%s/", pluginName)))
+                                .withValue("server.module", ConfigValueFactory.fromAnyRef(ServerInitializer.ServletModule.class.getName())));
+
+        withObjectMapper(DEFAULT_OBJECT_MAPPER);
+    }
+
     public PluginAppBuilder(final String pluginName,
                             final OSGIKillbillAPI killbillAPI,
                             final OSGIKillbillLogService logService,
                             final OSGIKillbillDataSource dataSource,
                             final OSGIKillbillClock clock,
                             final OSGIConfigPropertiesService configProperties) {
-        withConfig(ConfigFactory.empty()
-                                .withValue("application.path", ConfigValueFactory.fromAnyRef(String.format("/plugins/%s/", pluginName)))
-                                .withValue("server.module", ConfigValueFactory.fromAnyRef(ServerInitializer.ServletModule.class.getName())));
+        this(pluginName);
 
         withService(killbillAPI);
         withService(logService);
         withService(dataSource);
         withService(clock);
         withService(configProperties);
-
-        withObjectMapper(DEFAULT_OBJECT_MAPPER);
 
         withRouteClass(PluginHealthcheck.class);
     }
@@ -91,7 +95,7 @@ public class PluginAppBuilder {
         return this;
     }
 
-    public PluginAppBuilder withConfigValue(final String path, final Object value){
+    public PluginAppBuilder withConfigValue(final String path, final Object value) {
         this.config = this.config.withValue(path, ConfigValueFactory.fromAnyRef(value));
         return this;
     }
