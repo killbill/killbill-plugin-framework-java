@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2018 Groupon, Inc
- * Copyright 2014-2018 The Billing Project, LLC
+ * Copyright 2014-2019 Groupon, Inc
+ * Copyright 2014-2019 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -27,13 +27,16 @@ public class PluginEntitlementSpecifier implements EntitlementSpecifier {
 
     private final PlanPhaseSpecifier planPhaseSpecifier;
     private final Integer billCycleDay;
+    private final String externalKey;
     private final List<PlanPhasePriceOverride> overrides;
 
     public PluginEntitlementSpecifier(final PlanPhaseSpecifier planPhaseSpecifier,
                                       final Integer billCycleDay,
+                                      final String externalKey,
                                       final List<PlanPhasePriceOverride> overrides) {
         this.planPhaseSpecifier = planPhaseSpecifier;
         this.billCycleDay = billCycleDay;
+        this.externalKey = externalKey;
         this.overrides = overrides;
     }
 
@@ -48,6 +51,11 @@ public class PluginEntitlementSpecifier implements EntitlementSpecifier {
     }
 
     @Override
+    public String getExternalKey() {
+        return externalKey;
+    }
+
+    @Override
     public List<PlanPhasePriceOverride> getOverrides() {
         return overrides;
     }
@@ -57,6 +65,7 @@ public class PluginEntitlementSpecifier implements EntitlementSpecifier {
         final StringBuilder sb = new StringBuilder("PluginEntitlementSpecifier{");
         sb.append("planPhaseSpecifier=").append(planPhaseSpecifier);
         sb.append(", billCycleDay=").append(billCycleDay);
+        sb.append(", externalKey=").append(externalKey);
         sb.append(", overrides=").append(overrides);
         sb.append('}');
         return sb.toString();
@@ -79,6 +88,9 @@ public class PluginEntitlementSpecifier implements EntitlementSpecifier {
         if (billCycleDay != null ? !billCycleDay.equals(that.billCycleDay) : that.billCycleDay != null) {
             return false;
         }
+        if (externalKey != null ? !externalKey.equals(that.externalKey) : that.externalKey != null) {
+            return false;
+        }
         return overrides != null ? overrides.equals(that.overrides) : that.overrides == null;
     }
 
@@ -86,6 +98,7 @@ public class PluginEntitlementSpecifier implements EntitlementSpecifier {
     public int hashCode() {
         int result = planPhaseSpecifier != null ? planPhaseSpecifier.hashCode() : 0;
         result = 31 * result + (billCycleDay != null ? billCycleDay.hashCode() : 0);
+        result = 31 * result + (externalKey != null ? externalKey.hashCode() : 0);
         result = 31 * result + (overrides != null ? overrides.hashCode() : 0);
         return result;
     }

@@ -20,11 +20,11 @@
     <parent>
         <artifactId>killbill-oss-parent</artifactId>
         <groupId>org.kill-bill.billing</groupId>
-        <version>0.141.96</version>
+        <version>0.143.34</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Kill Bill base OSGI plugin</name>
     <description>Kill Bill base OSGI plugin</description>
@@ -38,11 +38,6 @@
         <system>Github</system>
         <url>https://github.com/killbill/killbill-plugin-framework-java/issues</url>
     </issueManagement>
-    <properties>
-        <!-- More recent versions than the core (JDK1.8+) -->
-        <guava.version>21.0</guava.version>
-        <jackson.version>2.9.5</jackson.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

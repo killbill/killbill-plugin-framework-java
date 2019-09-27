@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2017 Groupon, Inc
- * Copyright 2014-2017 The Billing Project, LLC
+ * Copyright 2014-2019 Groupon, Inc
+ * Copyright 2014-2019 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -24,16 +24,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.killbill.billing.ObjectType;
 import org.killbill.billing.account.api.Account;
 import org.killbill.billing.account.api.AccountApiException;
 import org.killbill.billing.account.api.AccountUserApi;
-import org.killbill.billing.catalog.api.Catalog;
 import org.killbill.billing.catalog.api.CatalogApiException;
 import org.killbill.billing.catalog.api.CatalogUserApi;
 import org.killbill.billing.catalog.api.Plan;
 import org.killbill.billing.catalog.api.PlanPhase;
+import org.killbill.billing.catalog.api.VersionedCatalog;
 import org.killbill.billing.entitlement.api.SubscriptionApi;
 import org.killbill.billing.entitlement.api.SubscriptionApiException;
 import org.killbill.billing.entitlement.api.SubscriptionBundle;
@@ -69,6 +70,7 @@ import org.killbill.clock.Clock;
 import org.osgi.service.log.LogService;
 
 import com.google.common.base.Function;
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -315,8 +317,10 @@ public abstract class PluginApi {
 
     protected Plan getPlanFromInvoiceItem(final InvoiceItem invoiceItem, final TenantContext context) throws OSGIServiceNotAvailable {
         try {
-            final Catalog catalog = getCatalog(context);
-            return catalog.findPlan(invoiceItem.getPlanName(), invoiceItem.getStartDate().toDateTimeAtStartOfDay());
+            final VersionedCatalog catalog = getCatalog(context);
+            // getCatalogEffectiveDate was introduced in 0.21.x
+            final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
+            return catalog.getVersion(catalogEffectiveDate.toDate()).findPlan(invoiceItem.getPlanName());
         } catch (final CatalogApiException e) {
             logService.log(LogService.LOG_INFO, "Unable to retrieve plan for invoice item " + invoiceItem.getId(), e);
             return null;
@@ -325,9 +329,10 @@ public abstract class PluginApi {
 
     protected PlanPhase getPlanPhaseFromInvoiceItem(final InvoiceItem invoiceItem, final LocalDate subscriptionStartDate, final TenantContext context) throws OSGIServiceNotAvailable {
         try {
-            final Catalog catalog = getCatalog(context);
-            // TODO - Inaccurate timing
-            return catalog.findPhase(invoiceItem.getPhaseName(), invoiceItem.getStartDate().toDateTimeAtStartOfDay(), subscriptionStartDate.toDateTimeAtStartOfDay());
+            final VersionedCatalog catalog = getCatalog(context);
+            // getCatalogEffectiveDate was introduced in 0.21.x
+            final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
+            return catalog.getVersion(catalogEffectiveDate.toDate()).findPhase(invoiceItem.getPhaseName());
         } catch (final CatalogApiException e) {
             logService.log(LogService.LOG_INFO, "Unable to retrieve phase for invoice item " + invoiceItem.getId(), e);
             return null;
@@ -338,10 +343,10 @@ public abstract class PluginApi {
     // CATALOG
     //
 
-    protected Catalog getCatalog(final TenantContext context) throws OSGIServiceNotAvailable {
+    protected VersionedCatalog getCatalog(final TenantContext context) throws OSGIServiceNotAvailable {
         final CatalogUserApi catalogUserApi = getCatalogUserApi();
         try {
-            return catalogUserApi.getCatalog(null, null, context);
+            return catalogUserApi.getCatalog(null, context);
         } catch (final CatalogApiException e) {
             logService.log(LogService.LOG_INFO, "Unable to retrieve catalog for tenant " + context.getTenantId(), e);
             return null;
