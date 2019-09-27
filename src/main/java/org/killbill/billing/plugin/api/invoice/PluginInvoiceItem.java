@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2018 Groupon, Inc
- * Copyright 2014-2018 The Billing Project, LLC
+ * Copyright 2014-2019 Groupon, Inc
+ * Copyright 2014-2019 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -40,6 +40,7 @@ public class PluginInvoiceItem implements InvoiceItem {
     protected final String description;
     protected final UUID subscriptionId;
     protected final UUID bundleId;
+    protected final DateTime catalogEffectiveDate;
     protected final String productName;
     protected final String prettyProductName;
     protected final String planName;
@@ -92,6 +93,7 @@ public class PluginInvoiceItem implements InvoiceItem {
                                      description,
                                      model.getSubscriptionId(),
                                      model.getBundleId(),
+                                     model.getCatalogEffectiveDate(),
                                      model.getProductName(),
                                      model.getPrettyProductName(),
                                      model.getPlanName(),
@@ -108,7 +110,6 @@ public class PluginInvoiceItem implements InvoiceItem {
                                      model.getUpdatedDate());
     }
 
-
     public PluginInvoiceItem(final UUID id,
                              final InvoiceItemType invoiceItemType,
                              final UUID invoiceId,
@@ -121,6 +122,7 @@ public class PluginInvoiceItem implements InvoiceItem {
                              final String description,
                              final UUID subscriptionId,
                              final UUID bundleId,
+                             final DateTime catalogEffectiveDate,
                              final String productName,
                              final String prettyProductName,
                              final String planName,
@@ -147,6 +149,7 @@ public class PluginInvoiceItem implements InvoiceItem {
         this.description = description;
         this.subscriptionId = subscriptionId;
         this.bundleId = bundleId;
+        this.catalogEffectiveDate = catalogEffectiveDate;
         this.productName = productName;
         this.prettyProductName = prettyProductName;
         this.planName = planName;
@@ -231,6 +234,11 @@ public class PluginInvoiceItem implements InvoiceItem {
     @Override
     public UUID getBundleId() {
         return bundleId;
+    }
+
+    @Override
+    public DateTime getCatalogEffectiveDate() {
+        return catalogEffectiveDate;
     }
 
     @Override
@@ -319,6 +327,9 @@ public class PluginInvoiceItem implements InvoiceItem {
         if (invoiceItemType != that.invoiceItemType) {
             return false;
         }
+        if (safeCompareTo(catalogEffectiveDate, that.catalogEffectiveDate) != 0) {
+            return false;
+        }
         if (safeCompareTo(startDate, that.startDate) != 0) {
             return false;
         }
@@ -375,7 +386,7 @@ public class PluginInvoiceItem implements InvoiceItem {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginInvoiceItem{");
+        final StringBuffer sb = new StringBuffer("PluginInvoiceItem{");
         sb.append("id=").append(id);
         sb.append(", invoiceItemType=").append(invoiceItemType);
         sb.append(", invoiceId=").append(invoiceId);
@@ -388,6 +399,9 @@ public class PluginInvoiceItem implements InvoiceItem {
         sb.append(", description='").append(description).append('\'');
         sb.append(", subscriptionId=").append(subscriptionId);
         sb.append(", bundleId=").append(bundleId);
+        sb.append(", catalogEffectiveDate=").append(catalogEffectiveDate);
+        sb.append(", productName='").append(productName).append('\'');
+        sb.append(", prettyProductName='").append(prettyProductName).append('\'');
         sb.append(", planName='").append(planName).append('\'');
         sb.append(", prettyPlanName='").append(prettyPlanName).append('\'');
         sb.append(", phaseName='").append(phaseName).append('\'');
@@ -454,6 +468,9 @@ public class PluginInvoiceItem implements InvoiceItem {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (subscriptionId != null ? subscriptionId.hashCode() : 0);
         result = 31 * result + (bundleId != null ? bundleId.hashCode() : 0);
+        result = 31 * result + (catalogEffectiveDate != null ? catalogEffectiveDate.hashCode() : 0);
+        result = 31 * result + (productName != null ? productName.hashCode() : 0);
+        result = 31 * result + (prettyProductName != null ? prettyProductName.hashCode() : 0);
         result = 31 * result + (planName != null ? planName.hashCode() : 0);
         result = 31 * result + (prettyPlanName != null ? prettyPlanName.hashCode() : 0);
         result = 31 * result + (phaseName != null ? phaseName.hashCode() : 0);
