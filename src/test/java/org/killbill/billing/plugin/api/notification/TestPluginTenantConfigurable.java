@@ -90,6 +90,38 @@ public class TestPluginTenantConfigurable {
         Assert.assertFalse(closeableTestB.isClosed());
     }
 
+    @Test (groups = "fast")
+    public void testDeleteWitDefault() {
+        final UUID kbTenantIdA = UUID.randomUUID();
+
+        final CloseableTest defaultCloseableTest = new CloseableTest();
+        final PluginTenantConfigurable<CloseableTest> testTenantConfigurable = new PluginTenantConfigurable<CloseableTest>(defaultCloseableTest);
+        final CloseableTest closeableTest = new CloseableTest();
+
+        testTenantConfigurable.put(kbTenantIdA, closeableTest);
+        Assert.assertFalse(closeableTest.isClosed());
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+
+        // simulate TENANT_CONFIG_DELETION
+        testTenantConfigurable.put(kbTenantIdA, null);
+        Assert.assertTrue(closeableTest.isClosed());
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+    }
+    @Test (groups = "fast")
+    public void testDeleteWithoutDefault() {
+        final UUID kbTenantIdA = UUID.randomUUID();
+
+        final PluginTenantConfigurable<CloseableTest> testTenantConfigurable = new PluginTenantConfigurable<CloseableTest>();
+        final CloseableTest closeableTest = new CloseableTest();
+
+        testTenantConfigurable.put(kbTenantIdA, closeableTest);
+        Assert.assertFalse(closeableTest.isClosed());
+
+        // simulate TENANT_CONFIG_DELETION
+        testTenantConfigurable.put(kbTenantIdA, null);
+        Assert.assertTrue(closeableTest.isClosed());
+    }
+
     private static final class CloseableTest implements Closeable {
 
         private boolean isClosed = false;
