@@ -17,8 +17,6 @@
 
 package org.killbill.billing.plugin.api.notification;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.UUID;
 
 import org.testng.Assert;
@@ -120,19 +118,5 @@ public class TestPluginTenantConfigurable {
         // simulate TENANT_CONFIG_DELETION
         testTenantConfigurable.put(kbTenantIdA, null);
         Assert.assertTrue(closeableTest.isClosed());
-    }
-
-    private static final class CloseableTest implements Closeable {
-
-        private boolean isClosed = false;
-
-        public boolean isClosed() {
-            return isClosed;
-        }
-
-        @Override
-        public void close() throws IOException {
-            isClosed = true;
-        }
     }
 }
