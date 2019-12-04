@@ -47,13 +47,12 @@ public abstract class PluginTenantConfigurableConfigurationHandler<C> extends Pl
 
     @Override
     protected void configure(@Nullable final UUID kbTenantId) {
+        C configurable = null;
         final Properties properties = getTenantConfigurationAsProperties(kbTenantId);
-        if (properties == null) {
-            // Invalid configuration or tenant not configured, we will default to the global configurable (or previous configuration)
-            return;
-        }
 
-        final C configurable = createConfigurable(properties);
+        if (properties != null) {
+            configurable = createConfigurable(properties);
+        }
         pluginTenantConfigurable.put(kbTenantId, configurable);
     }
 

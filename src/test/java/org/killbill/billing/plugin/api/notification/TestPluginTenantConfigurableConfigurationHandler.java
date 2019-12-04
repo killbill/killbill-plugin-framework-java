@@ -42,6 +42,8 @@ public class TestPluginTenantConfigurableConfigurationHandler {
 
     private TenantUserApi tenantUserApi;
     private PluginTenantConfigurableConfigurationHandlerTest configurationHandler;
+    private PluginTenantConfigurableConfigurationHandlerCloseableTest closableConfigurationHandler;
+    private CloseableTest defaultCloseable;
 
     @BeforeMethod(groups = "fast")
     public void setUp() throws Exception {
@@ -54,6 +56,10 @@ public class TestPluginTenantConfigurableConfigurationHandler {
 
         configurationHandler = new PluginTenantConfigurableConfigurationHandlerTest("test", killbillAPI, logService);
         configurationHandler.setDefaultConfigurable("DEFAULT");
+
+        defaultCloseable = new CloseableTest();
+        closableConfigurationHandler = new PluginTenantConfigurableConfigurationHandlerCloseableTest("closeable", killbillAPI,logService);
+        closableConfigurationHandler.setDefaultConfigurable(defaultCloseable);
     }
 
     @Test(groups = "fast")
@@ -81,11 +87,54 @@ public class TestPluginTenantConfigurableConfigurationHandler {
         Assert.assertEquals(configurationHandler.getConfigurable(null), "DEFAULT");
     }
 
+    @Test(groups = "fast")
+    public void testCloseable() throws Exception {
+        final UUID configuredTenant = UUID.randomUUID();
+        final UUID nonConfiguredTenant = UUID.randomUUID();
+
+        // configure tenants
+        mockTenantKvsCloseable(configuredTenant, ImmutableList.<String>of("CloseableTest"), nonConfiguredTenant, ImmutableList.<String>of());
+        closableConfigurationHandler.configure(configuredTenant);
+
+        final CloseableTest o = closableConfigurationHandler.getConfigurable(configuredTenant);
+        final CloseableTest o2 = closableConfigurationHandler.getConfigurable(nonConfiguredTenant);
+
+        Assert.assertNotEquals(o, defaultCloseable);
+        Assert.assertEquals(o2, defaultCloseable);
+
+        // deconfigure tenants
+        mockTenantKvsCloseable(configuredTenant, ImmutableList.<String>of(), nonConfiguredTenant, ImmutableList.<String>of());
+        closableConfigurationHandler.configure(configuredTenant);
+        Assert.assertTrue(o.isClosed());
+        Assert.assertFalse(defaultCloseable.isClosed());
+    }
+
     private void mockTenantKvs(final UUID kbTenantIdA, final List<String> tenantKvsA, final UUID kbTenantIdB, final List<String> tenantKvsB) throws TenantApiException {
         Mockito.when(tenantUserApi.getTenantValuesForKey(Mockito.anyString(), Mockito.<TenantContext>any())).thenAnswer(new Answer<List<String>>() {
             @Override
             public List<String> answer(final InvocationOnMock invocation) throws Throwable {
                 if (!"PLUGIN_CONFIG_test".equals(invocation.getArguments()[0])) {
+                    return ImmutableList.<String>of();
+                }
+
+                final TenantContext context = (TenantContext) invocation.getArguments()[1];
+                if (kbTenantIdA.equals(context.getTenantId())) {
+                    return tenantKvsA;
+                } else if (kbTenantIdB.equals(context.getTenantId())) {
+                    return tenantKvsB;
+                } else {
+                    return ImmutableList.<String>of();
+                }
+            }
+        });
+    }
+
+
+    private void mockTenantKvsCloseable(final UUID kbTenantIdA, final List<String> tenantKvsA, final UUID kbTenantIdB, final List<String> tenantKvsB) throws TenantApiException {
+        Mockito.when(tenantUserApi.getTenantValuesForKey(Mockito.anyString(), Mockito.<TenantContext>any())).thenAnswer(new Answer<List<String>>() {
+            @Override
+            public List<String> answer(final InvocationOnMock invocation) throws Throwable {
+                if (!"PLUGIN_CONFIG_closeable".equals(invocation.getArguments()[0])) {
                     return ImmutableList.<String>of();
                 }
 
@@ -110,6 +159,18 @@ public class TestPluginTenantConfigurableConfigurationHandler {
         @Override
         protected String createConfigurable(final Properties properties) {
             return properties.getProperty("key");
+        }
+    }
+
+    private static final class PluginTenantConfigurableConfigurationHandlerCloseableTest extends PluginTenantConfigurableConfigurationHandler<CloseableTest> {
+
+        public PluginTenantConfigurableConfigurationHandlerCloseableTest(final String pluginName, final OSGIKillbillAPI osgiKillbillAPI, final OSGIKillbillLogService osgiKillbillLogService) {
+            super(pluginName, osgiKillbillAPI, osgiKillbillLogService);
+        }
+
+        @Override
+        protected CloseableTest createConfigurable(final Properties properties) {
+            return new CloseableTest();
         }
     }
 }
