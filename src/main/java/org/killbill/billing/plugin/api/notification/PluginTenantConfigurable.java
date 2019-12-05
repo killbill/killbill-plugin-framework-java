@@ -60,7 +60,13 @@ public class PluginTenantConfigurable<C> {
 
     public void put(@Nullable final UUID kbTenantId, @Nullable final C configurableForTenant) {
         final String key = getKey(kbTenantId);
-        final C oldConfigurable = perTenantConfigurable.put(key, MoreObjects.firstNonNull(configurableForTenant, defaultConfigurable));
+
+        C oldConfigurable;
+        if (configurableForTenant == null && defaultConfigurable == null) {
+            oldConfigurable = perTenantConfigurable.remove(key);
+        } else {
+            oldConfigurable = perTenantConfigurable.put(key, MoreObjects.firstNonNull(configurableForTenant, defaultConfigurable));
+        }
 
         // Cleanup the old value
         if (oldConfigurable != null && oldConfigurable instanceof Closeable && oldConfigurable != defaultConfigurable) {
