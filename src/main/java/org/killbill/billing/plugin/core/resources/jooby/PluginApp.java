@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2017 Groupon, Inc
- * Copyright 2014-2017 The Billing Project, LLC
+ * Copyright 2014-2020 Groupon, Inc
+ * Copyright 2014-2020 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -23,16 +23,14 @@ import org.jooby.Jooby;
 import org.jooby.json.Jackson;
 import org.killbill.billing.plugin.core.JoobyServlet;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class PluginApp extends Jooby {
 
     public PluginApp() {}
 
-    public PluginApp(final ObjectMapper objectMapper,
+    public PluginApp(final Jackson jackson,
                      final Iterable<Object> services,
                      final Iterable<Class> routeClasses) {
-        use(new Jackson(objectMapper));
+        use(jackson);
 
         for (final Object service : services) {
             bind(service);
