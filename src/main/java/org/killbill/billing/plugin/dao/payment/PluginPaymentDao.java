@@ -238,7 +238,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
         final String country             = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_COUNTRY);
 
         /* Calculate last 4 digits of the credit card number */
-        final String ccLast4 = ccNumber == null ? null : ccNumber.substring(ccNumber.length() - 4, ccNumber.length());
+        final String ccLast4 = (ccNumber == null || ccNumber.isEmpty() || ccNumber.length() < 4)  ? null : ccNumber.substring(ccNumber.length() - 4, ccNumber.length());
 
         /* Calculate the additional data to store */
         final String additionalData = asString(clonedProperties);
