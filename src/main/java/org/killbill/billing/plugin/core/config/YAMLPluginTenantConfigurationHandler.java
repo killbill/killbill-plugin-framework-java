@@ -69,11 +69,13 @@ public abstract class YAMLPluginTenantConfigurationHandler<U, T> extends PluginC
     @Override
     protected void configure(@Nullable final UUID kbTenantId) {
         final String rawConfiguration = getTenantConfigurationAsString(kbTenantId);
+        T configurable = null;
+
         if (rawConfiguration != null) {
             final U configObject = parseRawConfiguration(rawConfiguration);
-            final T configurable = createConfigurable(configObject);
-            pluginTenantConfigurable.put(kbTenantId, configurable);
+            configurable = createConfigurable(configObject);
         }
+        pluginTenantConfigurable.put(kbTenantId, configurable);
     }
 
     protected U parseRawConfiguration(final String rawConfiguration) {

@@ -1,6 +1,6 @@
 /*
- * Copyright 2014-2017 Groupon, Inc
- * Copyright 2014-2017 The Billing Project, LLC
+ * Copyright 2014-2020 Groupon, Inc
+ * Copyright 2014-2020 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -20,6 +20,7 @@ package org.killbill.billing.plugin.core.resources.jooby;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jooby.json.Jackson;
 import org.jooby.servlet.ServerInitializer;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
@@ -37,7 +38,7 @@ import com.typesafe.config.ConfigValueFactory;
 
 public class PluginAppBuilder {
 
-    private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
+    public static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
 
     static {
         DEFAULT_OBJECT_MAPPER.registerModule(new JodaModule());
@@ -47,8 +48,16 @@ public class PluginAppBuilder {
     private final List<Object> services = new LinkedList<Object>();
     private final List<Class> routeClasses = new LinkedList<Class>();
 
-    private ObjectMapper objectMapper;
+    private Jackson jackson;
     private Config config;
+
+    public PluginAppBuilder(final String pluginName) {
+        withConfig(ConfigFactory.empty()
+                                .withValue("application.path", ConfigValueFactory.fromAnyRef(String.format("/plugins/%s/", pluginName)))
+                                .withValue("server.module", ConfigValueFactory.fromAnyRef(ServerInitializer.ServletModule.class.getName())));
+
+        withObjectMapper(DEFAULT_OBJECT_MAPPER);
+    }
 
     public PluginAppBuilder(final String pluginName,
                             final OSGIKillbillAPI killbillAPI,
@@ -56,9 +65,7 @@ public class PluginAppBuilder {
                             final OSGIKillbillDataSource dataSource,
                             final OSGIKillbillClock clock,
                             final OSGIConfigPropertiesService configProperties) {
-        withConfig(ConfigFactory.empty()
-                                .withValue("application.path", ConfigValueFactory.fromAnyRef(String.format("/plugins/%s/", pluginName)))
-                                .withValue("server.module", ConfigValueFactory.fromAnyRef(ServerInitializer.ServletModule.class.getName())));
+        this(pluginName);
 
         withService(killbillAPI);
         withService(logService);
@@ -66,13 +73,16 @@ public class PluginAppBuilder {
         withService(clock);
         withService(configProperties);
 
-        withObjectMapper(DEFAULT_OBJECT_MAPPER);
-
         withRouteClass(PluginHealthcheck.class);
     }
 
     public PluginAppBuilder withObjectMapper(final ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+        this.jackson = new Jackson(objectMapper);
+        return this;
+    }
+
+    public PluginAppBuilder withJackson(final Jackson jackson) {
+        this.jackson = jackson;
         return this;
     }
 
@@ -91,13 +101,13 @@ public class PluginAppBuilder {
         return this;
     }
 
-    public PluginAppBuilder withConfigValue(final String path, final Object value){
+    public PluginAppBuilder withConfigValue(final String path, final Object value) {
         this.config = this.config.withValue(path, ConfigValueFactory.fromAnyRef(value));
         return this;
     }
 
     public PluginApp build() {
-        final PluginApp app = new PluginApp(objectMapper, services, routeClasses);
+        final PluginApp app = new PluginApp(jackson, services, routeClasses);
         app.use(config);
         return app;
     }

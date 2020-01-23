@@ -17,8 +17,6 @@
 
 package org.killbill.billing.plugin.api.notification;
 
-import java.io.Closeable;
-import java.io.IOException;
 import java.util.UUID;
 
 import org.testng.Assert;
@@ -90,17 +88,35 @@ public class TestPluginTenantConfigurable {
         Assert.assertFalse(closeableTestB.isClosed());
     }
 
-    private static final class CloseableTest implements Closeable {
+    @Test (groups = "fast")
+    public void testDeleteWitDefault() {
+        final UUID kbTenantIdA = UUID.randomUUID();
 
-        private boolean isClosed = false;
+        final CloseableTest defaultCloseableTest = new CloseableTest();
+        final PluginTenantConfigurable<CloseableTest> testTenantConfigurable = new PluginTenantConfigurable<CloseableTest>(defaultCloseableTest);
+        final CloseableTest closeableTest = new CloseableTest();
 
-        public boolean isClosed() {
-            return isClosed;
-        }
+        testTenantConfigurable.put(kbTenantIdA, closeableTest);
+        Assert.assertFalse(closeableTest.isClosed());
+        Assert.assertFalse(defaultCloseableTest.isClosed());
 
-        @Override
-        public void close() throws IOException {
-            isClosed = true;
-        }
+        // simulate TENANT_CONFIG_DELETION
+        testTenantConfigurable.put(kbTenantIdA, null);
+        Assert.assertTrue(closeableTest.isClosed());
+        Assert.assertFalse(defaultCloseableTest.isClosed());
+    }
+    @Test (groups = "fast")
+    public void testDeleteWithoutDefault() {
+        final UUID kbTenantIdA = UUID.randomUUID();
+
+        final PluginTenantConfigurable<CloseableTest> testTenantConfigurable = new PluginTenantConfigurable<CloseableTest>();
+        final CloseableTest closeableTest = new CloseableTest();
+
+        testTenantConfigurable.put(kbTenantIdA, closeableTest);
+        Assert.assertFalse(closeableTest.isClosed());
+
+        // simulate TENANT_CONFIG_DELETION
+        testTenantConfigurable.put(kbTenantIdA, null);
+        Assert.assertTrue(closeableTest.isClosed());
     }
 }
