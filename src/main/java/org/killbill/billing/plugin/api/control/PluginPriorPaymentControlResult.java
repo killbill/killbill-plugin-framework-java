@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.killbill.billing.catalog.api.Currency;
-import org.killbill.billing.control.plugin.api.PaymentControlContext;
 import org.killbill.billing.control.plugin.api.PriorPaymentControlResult;
 import org.killbill.billing.payment.api.PluginProperty;
 
@@ -34,16 +33,8 @@ public class PluginPriorPaymentControlResult implements PriorPaymentControlResul
     private final String adjustedPluginName;
     private final Iterable<PluginProperty> adjustedPluginProperties;
 
-    public PluginPriorPaymentControlResult(final PaymentControlContext context) {
-        this(false, context);
-    }
-
-    public PluginPriorPaymentControlResult(final boolean isAborted, final PaymentControlContext context) {
-        this(isAborted, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), null, null);
-    }
-
-    public PluginPriorPaymentControlResult(final Iterable<PluginProperty> adjustedPluginProperties, final PaymentControlContext context) {
-        this(false, context.getAmount(), context.getCurrency(), context.getPaymentMethodId(), null, adjustedPluginProperties);
+    public PluginPriorPaymentControlResult(final boolean isAborted) {
+        this(isAborted, null, null, null, null, null);
     }
 
     public PluginPriorPaymentControlResult(final boolean isAborted,

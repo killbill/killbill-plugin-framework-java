@@ -38,7 +38,7 @@ public class PluginPaymentControlPluginApi extends PluginApi implements PaymentC
 
     @Override
     public PriorPaymentControlResult priorCall(final PaymentControlContext context, final Iterable<PluginProperty> properties) throws PaymentControlApiException {
-        return new PluginPriorPaymentControlResult(context);
+        return new PluginPriorPaymentControlResult(false);
     }
 
     @Override
