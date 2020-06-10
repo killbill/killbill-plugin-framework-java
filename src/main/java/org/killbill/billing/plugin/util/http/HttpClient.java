@@ -172,7 +172,7 @@ public class HttpClient implements Closeable {
             throws InterruptedException, ExecutionException, TimeoutException, IOException, URISyntaxException, InvalidRequest {
         final String url = getUrl(this.url, uri);
 
-        final AsyncHttpClient.BoundRequestBuilder builder = getBuilderWithHeaderAndQuery(verb, headers, queryParams);
+        final AsyncHttpClient.BoundRequestBuilder builder = getBuilderWithHeaderAndQuery(verb, url, headers, queryParams);
         if (!GET.equals(verb) && !HEAD.equals(verb)) {
             if (body != null) {
                 builder.setBody(body);
@@ -248,6 +248,7 @@ public class HttpClient implements Closeable {
 
 
     protected AsyncHttpClient.BoundRequestBuilder getBuilderWithHeaderAndQuery(final String verb,
+                                                                               final String url,
                                                                                final Map<String, String> headers,
                                                                                final Map<String, String> queryParams) {
         final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb, url);
