@@ -57,6 +57,7 @@ public class TestPluginTaxCalculator {
     private Invoice invoice2;
     private InvoiceItem invoice1TaxableItem;
     private InvoiceItem invoice1TaxItem;
+    private InvoiceItem invoice1TaxItem2;
     private InvoiceItem invoice2TaxItem;
     private InvoiceItem invoice1AdjustmentItemForInvoice1TaxableItem;
     private InvoiceItem invoice2AdjustmentItemForInvoice1TaxableItem;
@@ -73,6 +74,7 @@ public class TestPluginTaxCalculator {
         invoice1 = TestUtils.buildInvoice(account);
         invoice1TaxableItem = TestUtils.buildInvoiceItem(invoice1, InvoiceItemType.EXTERNAL_CHARGE, BigDecimal.TEN, null);
         invoice1TaxItem = PluginInvoiceItem.createTaxItem(invoice1TaxableItem, invoice1.getId(), BigDecimal.ONE, "TestNG tax");
+        invoice1TaxItem2 = PluginInvoiceItem.createTaxItem(invoice1TaxableItem, invoice1.getId(), BigDecimal.ONE.negate(), "TestNG tax");
         invoice1AdjustmentItemForInvoice1TaxableItem = PluginInvoiceItem.createAdjustmentItem(invoice1TaxableItem, invoice1.getId(), invoice1TaxableItem.getStartDate(), null, BigDecimal.ONE.negate(), "Mis-billing 1");
 
         Mockito.when(osgiKillbillAPI.getInvoiceUserApi().getInvoiceByInvoiceItem(Mockito.eq(invoice1TaxableItem.getId()), Mockito.<TenantContext>any()))
@@ -88,7 +90,7 @@ public class TestPluginTaxCalculator {
     @Test(groups = "fast")
     public void testComputeWithNewTaxableItemNoAdjustment() throws Exception {
         /*
-         * Scenario A:
+         * Scenario A: simple case of new invoice with new taxable item
          *     $10 Taxable item I1
          */
         invoice1.getInvoiceItems().add(invoice1TaxableItem);
@@ -114,7 +116,7 @@ public class TestPluginTaxCalculator {
     @Test(groups = "fast")
     public void testComputeWithNewTaxableItemAndNewAdjustment() throws Exception {
         /*
-         * Scenario A:
+         * Scenario A: corner case of new invoice with new taxable item and adjustment
          *     $10 Taxable item I1
          *     -$1 Item adjustment I2
          */
@@ -127,13 +129,14 @@ public class TestPluginTaxCalculator {
         Assert.assertEquals(newItemsToTax.get(0).getTaxableItem(), invoice1TaxableItem);
         Assert.assertEquals(newItemsToTax.get(0).getAdjustmentItems().size(), 1);
         Assert.assertEquals(newItemsToTax.get(0).getAdjustmentItems().get(0), invoice1AdjustmentItemForInvoice1TaxableItem);
+        // This tells the plugin that the item needs to be taxed, it's not a simple return
         Assert.assertFalse(newItemsToTax.get(0).isReturnOnly());
 
         /*
          * Scenario B: re-invoice of A (should be idempotent)
          *     $10 Taxable item I1
          *     -$1 Item adjustment I2
-         *      $1 Tax item I2
+         *      $1 Tax item I3
          */
         invoice1.getInvoiceItems().add(invoice1TaxItem);
         newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of(invoice1AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
@@ -144,29 +147,41 @@ public class TestPluginTaxCalculator {
     @Test(groups = "fast")
     public void testComputeWithTaxableItemAndNewAdjustment() throws Exception {
         /*
-         * Scenario A:
+         * Scenario A: simple case of existing taxable item being adjusted
          *     $10 Taxable item I1
          *      $1 Tax item I2
-         *     -$1 Item adjustment I2
+         *     -$1 Item adjustment I3
          */
         invoice1.getInvoiceItems().add(invoice1TaxableItem);
         invoice1.getInvoiceItems().add(invoice1AdjustmentItemForInvoice1TaxableItem);
         invoice1.getInvoiceItems().add(invoice1TaxItem);
-        final List<NewItemToTax> newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of()), tenantContext);
+        List<NewItemToTax> newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of()), tenantContext);
         // 1 item to return
         Assert.assertEquals(newItemsToTax.size(), 1);
         Assert.assertEquals(newItemsToTax.get(0).getInvoice(), invoice1);
         Assert.assertEquals(newItemsToTax.get(0).getTaxableItem(), invoice1TaxableItem);
         Assert.assertEquals(newItemsToTax.get(0).getAdjustmentItems().size(), 1);
         Assert.assertEquals(newItemsToTax.get(0).getAdjustmentItems().get(0), invoice1AdjustmentItemForInvoice1TaxableItem);
-        // Different from the previous scenario!
+        // This is just a return, which is different from the previous scenario!
         Assert.assertTrue(newItemsToTax.get(0).isReturnOnly());
+
+        /*
+         * Scenario B: re-invoice of A (should be idempotent)
+         *     $10 Taxable item I1
+         *      $1 Tax item I2
+         *     -$1 Item adjustment I3
+         *     -$1 Tax item I4
+         */
+        invoice1.getInvoiceItems().add(invoice1TaxItem2);
+        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of(invoice1AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
+        // Nothing to do
+        Assert.assertEquals(newItemsToTax.size(), 0);
     }
 
     @Test(groups = "fast")
     public void testComputeWithRepair() throws Exception {
         /*
-         * Scenario A:
+         * Scenario A: simple case of new invoice with repair on existing taxable item
          *     -$1 Repair I1 (points to taxable item on invoice 1)
          */
         invoice1.getInvoiceItems().add(invoice1TaxableItem);
