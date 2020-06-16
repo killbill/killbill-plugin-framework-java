@@ -1,6 +1,7 @@
 /*
- * Copyright 2014-2019 Groupon, Inc
- * Copyright 2014-2019 The Billing Project, LLC
+ * Copyright 2014-2020 Groupon, Inc
+ * Copyright 2020-2020 Equinix, Inc
+ * Copyright 2014-2020 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -55,6 +56,13 @@ public class PluginInvoiceItem implements InvoiceItem {
     protected final String itemDetails;
     protected final DateTime createdDate;
     protected final DateTime updatedDate;
+
+    public static PluginInvoiceItem createTaxItem(final InvoiceItem model,
+                                                  final UUID invoiceId,
+                                                  final BigDecimal amount,
+                                                  final String description) {
+        return create(model, invoiceId, model.getStartDate(), model.getEndDate(), amount, description, InvoiceItemType.TAX);
+    }
 
     public static PluginInvoiceItem createTaxItem(final InvoiceItem model,
                                                   final UUID invoiceId,

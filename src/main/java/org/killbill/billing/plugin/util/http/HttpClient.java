@@ -1,6 +1,7 @@
 /*
- * Copyright 2017 Groupon, Inc
- * Copyright 2017 The Billing Project, LLC
+ * Copyright 2017-2020 Groupon, Inc
+ * Copyright 2020-2020 Equinix, Inc
+ * Copyright 2017-2020 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -31,10 +32,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClient.BoundRequestBuilder;
 import com.ning.http.client.AsyncHttpClientConfig;
+import com.ning.http.client.HttpResponseBodyPart;
 import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.ProxyServer;
 import com.ning.http.client.Realm;
@@ -50,6 +55,8 @@ import com.google.common.io.CharStreams;
 import com.google.common.net.HttpHeaders;
 
 public class HttpClient implements Closeable {
+
+    private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
     protected static final String APPLICATION_JSON = "application/json";
     protected static final String APPLICATION_XML = "application/xml";
@@ -172,7 +179,7 @@ public class HttpClient implements Closeable {
             throws InterruptedException, ExecutionException, TimeoutException, IOException, URISyntaxException, InvalidRequest {
         final String url = getUrl(this.url, uri);
 
-        final AsyncHttpClient.BoundRequestBuilder builder = getBuilderWithHeaderAndQuery(verb, headers, queryParams);
+        final AsyncHttpClient.BoundRequestBuilder builder = getBuilderWithHeaderAndQuery(verb, url, headers, queryParams);
         if (!GET.equals(verb) && !HEAD.equals(verb)) {
             if (body != null) {
                 builder.setBody(body);
@@ -186,6 +193,16 @@ public class HttpClient implements Closeable {
                                    final Class<T> clazz, final ResponseFormat format) throws IOException, InterruptedException, ExecutionException, TimeoutException, InvalidRequest {
         final Response response;
         final ListenableFuture<Response> futureStatus = builder.execute(new AsyncCompletionHandler<Response>() {
+            @Override
+            public STATE onBodyPartReceived(final HttpResponseBodyPart content) throws Exception {
+                // Useful to log the response body
+                // Request and response headers can be printed out by enabling the DEBUG logger com.ning.http.client.providers.netty.handler
+                if (logger.isDebugEnabled()) {
+                    logger.debug(new String(content.getBodyPartBytes()));
+                }
+                return super.onBodyPartReceived(content);
+            }
+
             @Override
             public Response onCompleted(final Response response) throws Exception {
                 return response;
@@ -248,6 +265,7 @@ public class HttpClient implements Closeable {
 
 
     protected AsyncHttpClient.BoundRequestBuilder getBuilderWithHeaderAndQuery(final String verb,
+                                                                               final String url,
                                                                                final Map<String, String> headers,
                                                                                final Map<String, String> queryParams) {
         final AsyncHttpClient.BoundRequestBuilder builder = prepareBuilder(verb, url);

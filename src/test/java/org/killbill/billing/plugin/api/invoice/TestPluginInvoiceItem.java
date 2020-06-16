@@ -1,6 +1,7 @@
 /*
- * Copyright 2015 Groupon, Inc
- * Copyright 2015 The Billing Project, LLC
+ * Copyright 2015-2020 Groupon, Inc
+ * Copyright 2020-2020 Equinix, Inc
+ * Copyright 2015-2020 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -42,7 +43,7 @@ public class TestPluginInvoiceItem {
 
         invoice1 = TestUtils.buildInvoice(account);
         invoice1TaxableItem = TestUtils.buildInvoiceItem(invoice1, InvoiceItemType.EXTERNAL_CHARGE, BigDecimal.TEN, null);
-        invoice1TaxItem = PluginInvoiceItem.createTaxItem(invoice1TaxableItem, invoice1.getId(), invoice1TaxableItem.getStartDate(), null, BigDecimal.ONE, "TestNG tax");
+        invoice1TaxItem = PluginInvoiceItem.createTaxItem(invoice1TaxableItem, invoice1.getId(), BigDecimal.ONE, "TestNG tax");
         invoice1.getInvoiceItems().add(invoice1TaxableItem);
         invoice1.getInvoiceItems().add(invoice1TaxItem);
     }
