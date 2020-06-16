@@ -64,6 +64,15 @@ public class PluginInvoiceItem implements InvoiceItem {
         return create(model, invoiceId, model.getStartDate(), model.getEndDate(), amount, description, InvoiceItemType.TAX);
     }
 
+    public static PluginInvoiceItem createTaxItem(final InvoiceItem model,
+                                                  final UUID invoiceId,
+                                                  final LocalDate startDate,
+                                                  final LocalDate endDate,
+                                                  final BigDecimal amount,
+                                                  final String description) {
+        return create(model, invoiceId, startDate, endDate, amount, description, InvoiceItemType.TAX);
+    }
+
     public static PluginInvoiceItem createAdjustmentItem(final InvoiceItem model,
                                                          final UUID invoiceId,
                                                          final LocalDate startDate,

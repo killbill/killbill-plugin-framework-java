@@ -92,7 +92,8 @@ public abstract class PluginTaxCalculator {
         }
 
         // Handle REPAIR_ADJ
-        final Collection<UUID> repairAdj = new HashSet<UUID>();
+        // This is the set of taxable items referenced from repair items in this invoice
+        final Collection<UUID> prevLinkedItemdIds = new HashSet<UUID>();
         for (final UUID invoiceItemId : adjustmentsByLinkedId.keySet()) {
             if (allItems.get(invoiceItemId) != null) {
                 // Adjustment points to an item on that new invoice, nothing to do
@@ -122,7 +123,7 @@ public abstract class PluginTaxCalculator {
                 // 2) The repair amount takes into account these item adjustments
                 break;
             }
-            repairAdj.add(invoiceItemId);
+            prevLinkedItemdIds.add(invoiceItemId);
             Preconditions.checkState(foundIt, "Couldn't find linked item %s", invoiceItemId);
         }
 
@@ -155,7 +156,7 @@ public abstract class PluginTaxCalculator {
                 }
             } else {
                 // For repairs, assume the original item was already taxed, so that the caller doesn't have to send us data in alreadyTaxedItemsWithAdjustments spanning on historical invoices
-                final boolean returnOnly = repairAdj.contains(taxableItem.getId());
+                final boolean returnOnly = prevLinkedItemdIds.contains(taxableItem.getId());
 
                 // If adjustmentsAlreadyTakenIntoAccount is null, this means this is a taxable item not yet taxed (missing entry from alreadyTaxedItemsWithAdjustments)
                 newItemsToTax.add(new NewItemToTax(invoicesCache.get(taxableItem.getInvoiceId()),
@@ -170,23 +171,34 @@ public abstract class PluginTaxCalculator {
     /**
      * Create an invoice item of type TAX
      *
-     * @param originalItem original item model
-     * @param invoiceId    invoice id of the new item
-     * @param amount       invoice item amount
-     * @param description  invoice item description
+     * @param originalItem   original item model
+     * @param invoiceId      invoice id of the new item
+     * @param adjustmentItem adjustment item to use for the service period, if returning the item
+     * @param amount         invoice item amount
+     * @param description    invoice item description
      * @return TAX invoice item
      */
     protected InvoiceItem buildTaxItem(final InvoiceItem originalItem,
                                        final UUID invoiceId,
+                                       @Nullable final InvoiceItem adjustmentItem,
                                        final BigDecimal amount,
                                        @Nullable final String description) {
         if (amount == null || BigDecimal.ZERO.compareTo(amount) == 0) {
             return null;
         } else {
-            return PluginInvoiceItem.createTaxItem(originalItem,
-                                                   invoiceId,
-                                                   amount,
-                                                   MoreObjects.firstNonNull(description, "Tax"));
+            if (adjustmentItem != null) {
+                return PluginInvoiceItem.createTaxItem(originalItem,
+                                                       invoiceId,
+                                                       adjustmentItem.getStartDate(),
+                                                       adjustmentItem.getEndDate(),
+                                                       amount,
+                                                       MoreObjects.firstNonNull(description, "Tax"));
+            } else {
+                return PluginInvoiceItem.createTaxItem(originalItem,
+                                                       invoiceId,
+                                                       amount,
+                                                       MoreObjects.firstNonNull(description, "Tax"));
+            }
         }
     }
 
