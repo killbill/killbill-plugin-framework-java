@@ -17,7 +17,10 @@ Kill Bill compatibility
 | 1.2.y             | 0.18.z            |
 | 2.x.y             | 0.19.z            |
 | 3.x.y             | 0.20.z            |
-| 4.x.y             | 0.22.z            |
+| 4.1.y             | 0.22.z            |
+| 4.2.y             | 0.22.z            |
+
+4.2.x has a lot of upgraded dependencies (required for Java 11 support).
 
 Usage
 -----
