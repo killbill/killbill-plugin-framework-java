@@ -1,3 +1,6 @@
+4.2.1
+    Remove dependency on killbill-embeddeddb-common (backward incompatible changes in PluginDao)
+
 4.2.0
     Switch from org.osgi.core to org.apache.felix.framework
 

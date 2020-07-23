@@ -35,7 +35,6 @@ import org.jooq.conf.MappedSchema;
 import org.jooq.conf.RenderMapping;
 import org.jooq.conf.RenderNameStyle;
 import org.jooq.conf.Settings;
-import org.killbill.commons.embeddeddb.EmbeddedDB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,7 +135,7 @@ public class PluginDao {
         }
     }
 
-    public static SQLDialect getSQLDialect(final EmbeddedDB.DBEngine dbEngine) {
+    public static SQLDialect getSQLDialect(final DBEngine dbEngine) {
         switch (dbEngine) {
             case H2:
                 return SQLDialect.H2;
@@ -152,7 +151,7 @@ public class PluginDao {
         }
     }
 
-    public static EmbeddedDB.DBEngine getDBEngine(final DataSource dataSource) throws SQLException {
+    public static DBEngine getDBEngine(final DataSource dataSource) throws SQLException {
         Connection connection = null;
         String databaseProductName;
         try {
@@ -164,15 +163,15 @@ public class PluginDao {
             }
         }
 
-        final EmbeddedDB.DBEngine dbEngine;
+        final DBEngine dbEngine;
         if ("H2".equalsIgnoreCase(databaseProductName)) {
-            dbEngine = EmbeddedDB.DBEngine.H2;
+            dbEngine = DBEngine.H2;
         } else if ("MySQL".equalsIgnoreCase(databaseProductName)) {
-            dbEngine = EmbeddedDB.DBEngine.MYSQL;
+            dbEngine = DBEngine.MYSQL;
         } else if ("PostgreSQL".equalsIgnoreCase(databaseProductName)) {
-            dbEngine = EmbeddedDB.DBEngine.POSTGRESQL;
+            dbEngine = DBEngine.POSTGRESQL;
         } else {
-            dbEngine = EmbeddedDB.DBEngine.GENERIC;
+            dbEngine = DBEngine.GENERIC;
         }
         return dbEngine;
     }
@@ -192,5 +191,13 @@ public class PluginDao {
         } finally {
             conn.close();
         }
+    }
+
+    // Duplicate the enum to avoid pulling in killbill-embeddeddb-common into plugins (lots of dependencies)
+    public enum DBEngine {
+        GENERIC,
+        MYSQL,
+        H2,
+        POSTGRESQL
     }
 }
