@@ -18,7 +18,7 @@
 
 package org.killbill.billing.plugin.util.http;
 
-import com.ning.http.client.Response;
+import org.asynchttpclient.Response;
 
 public class InvalidRequest extends Exception {
 
