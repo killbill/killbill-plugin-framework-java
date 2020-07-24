@@ -27,7 +27,6 @@ import org.joda.time.DateTimeZone;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.payment.api.PaymentMethodPlugin;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.api.TransactionType;
@@ -63,10 +62,9 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
 
     public TestPaymentPluginApi(final OSGIKillbillAPI killbillAPI,
                                 final OSGIConfigPropertiesService configProperties,
-                                final OSGIKillbillLogService logService,
                                 final Clock clock,
                                 final TestPluginPaymentDao dao) {
-        super(killbillAPI, configProperties, logService, clock, dao);
+        super(killbillAPI, configProperties, clock, dao);
         this.dao = dao;
     }
 

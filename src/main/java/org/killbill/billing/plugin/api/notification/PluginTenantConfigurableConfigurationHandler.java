@@ -26,7 +26,6 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 
 public abstract class PluginTenantConfigurableConfigurationHandler<C> extends PluginConfigurationHandler {
 
@@ -34,9 +33,8 @@ public abstract class PluginTenantConfigurableConfigurationHandler<C> extends Pl
     private final PluginTenantConfigurable<C> pluginTenantConfigurable = new PluginTenantConfigurable<C>();
 
     public PluginTenantConfigurableConfigurationHandler(final String pluginName,
-                                                        final OSGIKillbillAPI osgiKillbillAPI,
-                                                        final OSGIKillbillLogService osgiKillbillLogService) {
-        super(pluginName, osgiKillbillAPI, osgiKillbillLogService);
+                                                        final OSGIKillbillAPI osgiKillbillAPI) {
+        super(pluginName, osgiKillbillAPI);
     }
 
     protected abstract C createConfigurable(final Properties properties);

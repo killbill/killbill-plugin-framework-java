@@ -29,7 +29,6 @@ import org.killbill.billing.invoice.plugin.api.OnSuccessInvoiceResult;
 import org.killbill.billing.invoice.plugin.api.PriorInvoiceResult;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.plugin.api.PluginApi;
 import org.killbill.billing.util.callcontext.CallContext;
@@ -39,8 +38,8 @@ import com.google.common.collect.ImmutableList;
 
 public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginApi {
 
-    public PluginInvoicePluginApi(final OSGIKillbillAPI killbillAPI, final OSGIConfigPropertiesService configProperties, final OSGIKillbillLogService logService, final Clock clock) {
-        super(killbillAPI, configProperties, logService, clock);
+    public PluginInvoicePluginApi(final OSGIKillbillAPI killbillAPI, final OSGIConfigPropertiesService configProperties, final Clock clock) {
+        super(killbillAPI, configProperties, clock);
     }
 
     @Override

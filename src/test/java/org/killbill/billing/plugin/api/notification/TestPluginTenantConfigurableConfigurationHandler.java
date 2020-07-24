@@ -25,7 +25,6 @@ import java.util.UUID;
 import org.killbill.billing.account.api.Account;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.plugin.TestUtils;
 import org.killbill.billing.tenant.api.TenantApiException;
 import org.killbill.billing.tenant.api.TenantUserApi;
@@ -53,13 +52,12 @@ public class TestPluginTenantConfigurableConfigurationHandler {
         final Account account = TestUtils.buildAccount(Currency.BTC, "US");
         final OSGIKillbillAPI killbillAPI = TestUtils.buildOSGIKillbillAPI(account);
         Mockito.when(killbillAPI.getTenantUserApi()).thenReturn(tenantUserApi);
-        final OSGIKillbillLogService logService = TestUtils.buildLogService();
 
-        configurationHandler = new PluginTenantConfigurableConfigurationHandlerTest("test", killbillAPI, logService);
+        configurationHandler = new PluginTenantConfigurableConfigurationHandlerTest("test", killbillAPI);
         configurationHandler.setDefaultConfigurable("DEFAULT");
 
         defaultCloseable = new CloseableTest();
-        closableConfigurationHandler = new PluginTenantConfigurableConfigurationHandlerCloseableTest("closeable", killbillAPI,logService);
+        closableConfigurationHandler = new PluginTenantConfigurableConfigurationHandlerCloseableTest("closeable", killbillAPI);
         closableConfigurationHandler.setDefaultConfigurable(defaultCloseable);
     }
 
@@ -153,8 +151,8 @@ public class TestPluginTenantConfigurableConfigurationHandler {
 
     private static final class PluginTenantConfigurableConfigurationHandlerTest extends PluginTenantConfigurableConfigurationHandler<String> {
 
-        public PluginTenantConfigurableConfigurationHandlerTest(final String pluginName, final OSGIKillbillAPI osgiKillbillAPI, final OSGIKillbillLogService osgiKillbillLogService) {
-            super(pluginName, osgiKillbillAPI, osgiKillbillLogService);
+        public PluginTenantConfigurableConfigurationHandlerTest(final String pluginName, final OSGIKillbillAPI osgiKillbillAPI) {
+            super(pluginName, osgiKillbillAPI);
         }
 
         @Override
@@ -165,8 +163,8 @@ public class TestPluginTenantConfigurableConfigurationHandler {
 
     private static final class PluginTenantConfigurableConfigurationHandlerCloseableTest extends PluginTenantConfigurableConfigurationHandler<CloseableTest> {
 
-        public PluginTenantConfigurableConfigurationHandlerCloseableTest(final String pluginName, final OSGIKillbillAPI osgiKillbillAPI, final OSGIKillbillLogService osgiKillbillLogService) {
-            super(pluginName, osgiKillbillAPI, osgiKillbillLogService);
+        public PluginTenantConfigurableConfigurationHandlerCloseableTest(final String pluginName, final OSGIKillbillAPI osgiKillbillAPI) {
+            super(pluginName, osgiKillbillAPI);
         }
 
         @Override

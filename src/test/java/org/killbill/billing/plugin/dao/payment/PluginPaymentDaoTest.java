@@ -33,7 +33,6 @@ import org.killbill.billing.account.api.Account;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.payment.api.Payment;
 import org.killbill.billing.payment.api.PaymentMethodPlugin;
 import org.killbill.billing.payment.api.PluginProperty;
@@ -97,10 +96,9 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
 
         final OSGIKillbillAPI killbillApi = TestUtils.buildOSGIKillbillAPI(account);
         final Payment payment = TestUtils.buildPayment(account.getId(), account.getPaymentMethodId(), account.getCurrency(), killbillApi);
-        final OSGIKillbillLogService logService = TestUtils.buildLogService();
         final OSGIConfigPropertiesService configPropertiesService = Mockito.mock(OSGIConfigPropertiesService.class);
 
-        api = new TestPaymentPluginApi(killbillApi, configPropertiesService, logService, clock, dao);
+        api = new TestPaymentPluginApi(killbillApi, configPropertiesService, clock, dao);
         TestUtils.updateOSGIKillbillAPI(killbillApi, api);
     }
 

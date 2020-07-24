@@ -45,7 +45,6 @@ import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.api.InvoiceItemType;
 import org.killbill.billing.osgi.api.OSGIKillbill;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.payment.api.AdminPaymentApi;
 import org.killbill.billing.payment.api.Payment;
 import org.killbill.billing.payment.api.PaymentApi;
@@ -87,26 +86,6 @@ public abstract class TestUtils {
         final Properties properties = new Properties();
         properties.load(new StringReader(propertiesAsString));
         return properties;
-    }
-
-    public static OSGIKillbillLogService buildLogService() {
-        final OSGIKillbillLogService logService = Mockito.mock(OSGIKillbillLogService.class);
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(final InvocationOnMock invocation) throws Throwable {
-                logger.info(String.valueOf(invocation.getArguments()[1]));
-                return null;
-            }
-        }).when(logService).log(Mockito.anyInt(), Mockito.anyString());
-        Mockito.doAnswer(new Answer<Void>() {
-            @Override
-            public Void answer(final InvocationOnMock invocation) throws Throwable {
-                logger.info(String.valueOf(invocation.getArguments()[1]), (Throwable) invocation.getArguments()[2]);
-                return null;
-            }
-        }).when(logService).log(Mockito.anyInt(), Mockito.anyString(), Mockito.<Throwable>any());
-
-        return logService;
     }
 
     public static String toString(final String resourceName) throws IOException {
@@ -565,7 +544,7 @@ public abstract class TestUtils {
             return Collections.emptyMap();
         }
         try {
-            return OBJECT_MAPPER.readValue(additionalData, new TypeReference<Map<String, ?>>(){});
+            return OBJECT_MAPPER.readValue(additionalData, new TypeReference<Map<String, String>>(){});
         } catch (final IOException exception) {
             throw new IllegalArgumentException("Malformed JSON: " + additionalData, exception);
         }

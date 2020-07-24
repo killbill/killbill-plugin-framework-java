@@ -1,5 +1,7 @@
 4.2.1
     Remove dependency on killbill-embeddeddb-common (backward incompatible changes in PluginDao)
+    Remove usage of OSGIKillbillLogService (slf4j should be used directly instead)
+    Update killbill-oss-parent to 0.144.7
 
 4.2.0
     Switch from org.osgi.core to org.apache.felix.framework

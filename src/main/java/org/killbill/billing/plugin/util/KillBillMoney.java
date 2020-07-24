@@ -30,7 +30,7 @@ public abstract class KillBillMoney {
     private KillBillMoney() {}
 
     public static BigDecimal of(final BigDecimal amount, final Currency currency) {
-        final CurrencyUnit currencyUnit = CurrencyUnit.getInstance(currency.toString());
+        final CurrencyUnit currencyUnit = CurrencyUnit.of(currency.toString());
         return amount.setScale(currencyUnit.getDecimalPlaces(), BigDecimal.ROUND_HALF_UP);
     }
 

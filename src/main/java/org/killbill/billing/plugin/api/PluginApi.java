@@ -46,7 +46,6 @@ import org.killbill.billing.invoice.api.InvoicePayment;
 import org.killbill.billing.invoice.api.InvoiceUserApi;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.osgi.libs.killbill.OSGIServiceNotAvailable;
 import org.killbill.billing.payment.api.InvoicePaymentApi;
 import org.killbill.billing.payment.api.Payment;
@@ -68,7 +67,8 @@ import org.killbill.billing.util.customfield.CustomField;
 import org.killbill.billing.util.tag.Tag;
 import org.killbill.billing.util.tag.TagDefinition;
 import org.killbill.clock.Clock;
-import org.osgi.service.log.LogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.MoreObjects;
@@ -77,6 +77,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 
 public abstract class PluginApi {
+
+    private static final Logger logger = LoggerFactory.getLogger(PluginApi.class);
 
     // See EntitlementService
     protected static final String ENTITLEMENT_SERVICE_NAME = "entitlement-service";
@@ -91,13 +93,11 @@ public abstract class PluginApi {
 
     protected final OSGIKillbillAPI killbillAPI;
     protected final OSGIConfigPropertiesService configProperties;
-    protected final OSGIKillbillLogService logService;
     protected final Clock clock;
 
-    protected PluginApi(final OSGIKillbillAPI killbillAPI, final OSGIConfigPropertiesService configProperties, final OSGIKillbillLogService logService, final Clock clock) {
+    protected PluginApi(final OSGIKillbillAPI killbillAPI, final OSGIConfigPropertiesService configProperties, final Clock clock) {
         this.killbillAPI = killbillAPI;
         this.configProperties = configProperties;
-        this.logService = logService;
         this.clock = clock;
     }
 
@@ -124,7 +124,7 @@ public abstract class PluginApi {
         try {
             return accountUserApi.getAccountById(accountId, context);
         } catch (final AccountApiException e) {
-            logService.log(LogService.LOG_WARNING, "Error retrieving account for id " + accountId, e);
+            logger.warn("Error retrieving account for id {}", accountId, e);
             throw new OSGIServiceNotAvailable(e);
         }
     }
@@ -142,7 +142,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Account creation audit log for id " + accountId);
+        logger.warn("Unable to find Account creation audit log for id {}", accountId);
         return null;
     }
 
@@ -161,7 +161,7 @@ public abstract class PluginApi {
         try {
             return subscriptionApi.getSubscriptionBundlesForAccountId(accountId, context);
         } catch (final SubscriptionApiException e) {
-            logService.log(LogService.LOG_WARNING, "Error retrieving bundles for account id " + accountId, e);
+            logger.warn("Error retrieving bundles for account id {}", accountId, e);
             throw new OSGIServiceNotAvailable(e);
         }
     }
@@ -176,7 +176,7 @@ public abstract class PluginApi {
             }
             return bundles.get(bundles.size() - 1);
         } catch (final SubscriptionApiException e) {
-            logService.log(LogService.LOG_WARNING, "Error retrieving bundles for bundle external key " + bundleExternalKey, e);
+            logger.warn("Error retrieving bundles for bundle external key {}", bundleExternalKey, e);
             throw new OSGIServiceNotAvailable(e);
         }
     }
@@ -194,7 +194,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Bundle creation audit log for id " + bundleId);
+        logger.warn("Unable to find Bundle creation audit log for id {}", bundleId);
         return null;
     }
 
@@ -206,7 +206,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Subscription event creation audit log for id " + subscriptionEventId);
+        logger.warn("Unable to find Subscription event creation audit log for id {}", subscriptionEventId);
         return null;
     }
 
@@ -259,7 +259,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Blocking state creation audit log for id " + blockingStateId);
+        logger.warn("Unable to find Blocking state creation audit log for id {}", blockingStateId);
         return null;
     }
 
@@ -280,7 +280,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Invoice creation audit log for id " + invoiceId);
+        logger.warn("Unable to find Invoice creation audit log for id {}", invoiceId);
         return null;
     }
 
@@ -297,7 +297,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Invoice item creation audit log for id " + invoiceItemId);
+        logger.warn("Unable to find Invoice item creation audit log for id {}", invoiceItemId);
         return null;
     }
 
@@ -323,7 +323,7 @@ public abstract class PluginApi {
             final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
             return catalog.getVersion(catalogEffectiveDate.toDate()).findPlan(invoiceItem.getPlanName());
         } catch (final CatalogApiException e) {
-            logService.log(LogService.LOG_INFO, "Unable to retrieve plan for invoice item " + invoiceItem.getId(), e);
+            logger.info("Unable to retrieve plan for invoice item {}", invoiceItem.getId(), e);
             return null;
         }
     }
@@ -335,7 +335,7 @@ public abstract class PluginApi {
             final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
             return catalog.getVersion(catalogEffectiveDate.toDate()).findPhase(invoiceItem.getPhaseName());
         } catch (final CatalogApiException e) {
-            logService.log(LogService.LOG_INFO, "Unable to retrieve phase for invoice item " + invoiceItem.getId(), e);
+            logger.info("Unable to retrieve phase for invoice item {}", invoiceItem.getId(), e);
             return null;
         }
     }
@@ -349,7 +349,7 @@ public abstract class PluginApi {
         try {
             return catalogUserApi.getCatalog(null, context);
         } catch (final CatalogApiException e) {
-            logService.log(LogService.LOG_INFO, "Unable to retrieve catalog for tenant " + context.getTenantId(), e);
+            logger.info("Unable to retrieve catalog for tenant {}", context.getTenantId(), e);
             return null;
         }
     }
@@ -378,7 +378,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Invoice payment creation audit log for id " + invoicePaymentId);
+        logger.warn("Unable to find Invoice payment creation audit log for id {}", invoicePaymentId);
         return null;
     }
 
@@ -396,7 +396,7 @@ public abstract class PluginApi {
         try {
             return paymentApi.getAccountPayments(accountId, true, false, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
-            logService.log(LogService.LOG_WARNING, "Error retrieving payments for account id " + accountId, e);
+            logger.warn("Error retrieving payments for account id {}", accountId, e);
             throw new OSGIServiceNotAvailable(e);
         }
     }
@@ -409,7 +409,7 @@ public abstract class PluginApi {
             // TODO this will not return deleted payment methods
             return paymentApi.getAccountPaymentMethods(accountId, false, true, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
-            logService.log(LogService.LOG_INFO, "Error retrieving payment methods for accountId " + accountId + ": " + e.getMessage());
+            logger.warn("Error retrieving payment methods for accountId {}", accountId, e);
             throw new OSGIServiceNotAvailable(e);
         }
     }
@@ -420,7 +420,7 @@ public abstract class PluginApi {
         try {
             return paymentApi.getPaymentMethodById(paymentMethodId, true, false, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
-            logService.log(LogService.LOG_INFO, "Error retrieving payment method for paymentMethodId " + paymentMethodId + ": " + e.getMessage());
+            logger.warn("Error retrieving payment method for paymentMethodId {}", paymentMethodId , e);
             throw new OSGIServiceNotAvailable(e);
         }
     }
@@ -433,7 +433,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find payment creation audit log for id " + paymentId);
+        logger.warn("Unable to find payment creation audit log for id {}", paymentId);
         return null;
     }
 
@@ -442,7 +442,7 @@ public abstract class PluginApi {
         try {
             payment = getPaymentUserApi().getPayment(kbPaymentId, false, false, PLUGIN_PROPERTIES, context);
         } catch (final PaymentApiException e) {
-            logService.log(LogService.LOG_INFO, "Error retrieving payment for paymentId " + kbPaymentId + ": " + e.getMessage());
+            logger.warn("Error retrieving payment for paymentId {}", kbPaymentId, e);
             throw new OSGIServiceNotAvailable(e);
         }
 
@@ -481,7 +481,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Field creation audit log for id " + fieldId);
+        logger.warn("Unable to find Field creation audit log for id {}", fieldId);
         return null;
     }
 
@@ -512,7 +512,7 @@ public abstract class PluginApi {
             }
         }
 
-        logService.log(LogService.LOG_WARNING, "Unable to find Tag creation audit log for id " + tagId);
+        logger.warn("Unable to find Tag creation audit log for id {}", tagId);
         return null;
     }
 
