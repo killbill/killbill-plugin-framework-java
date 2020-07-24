@@ -9,7 +9,7 @@ DDL_DIR="`dirname \"$0\"`"
 mysql -u root killbill < "${DDL_DIR}"/ddl.sql
 
 # Download and install the Jooq required plugins in our repo
-JOOQ_VERSION=3.5.0
+JOOQ_VERSION=3.9.1
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.1:get -Dartifact=org.jooq:jooq:$JOOQ_VERSION -DrepoUrl=http://sonatype.org
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.1:get -Dartifact=org.jooq:jooq-meta:$JOOQ_VERSION -DrepoUrl=http://sonatype.org
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.1:get -Dartifact=org.jooq:jooq-codegen:$JOOQ_VERSION -DrepoUrl=http://sonatype.org

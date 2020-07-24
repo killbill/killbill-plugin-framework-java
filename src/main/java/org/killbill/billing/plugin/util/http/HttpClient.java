@@ -47,8 +47,10 @@ import com.ning.http.client.Response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.io.CharStreams;
@@ -134,18 +136,14 @@ public class HttpClient implements Closeable {
     }
 
     protected ObjectMapper createObjectMapper() {
-        final ObjectMapper mapper = new ObjectMapper();
-
-        // Tells the serializer to only include those parameters that are not null
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        // Allow special characters
-        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
-
-        // Write dates using a ISO-8601 compliant notation
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-        return mapper;
+        return JsonMapper.builder()
+                         // Allow special characters
+                         .enable(JsonReadFeature.ALLOW_UNESCAPED_CONTROL_CHARS)
+                         // Write dates using a ISO-8601 compliant notation
+                         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                         // Tells the serializer to only include those parameters that are not null
+                         .serializationInclusion(JsonInclude.Include.NON_NULL)
+                         .build();
     }
 
     @Deprecated
@@ -262,7 +260,6 @@ public class HttpClient implements Closeable {
 
         return builder;
     }
-
 
     protected AsyncHttpClient.BoundRequestBuilder getBuilderWithHeaderAndQuery(final String verb,
                                                                                final String url,
