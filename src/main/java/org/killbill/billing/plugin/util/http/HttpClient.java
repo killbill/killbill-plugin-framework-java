@@ -27,6 +27,7 @@ import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -196,7 +197,7 @@ public class HttpClient implements Closeable {
                 // Useful to log the response body
                 // Request and response headers can be printed out by enabling the DEBUG logger com.ning.http.client.providers.netty.handler
                 if (logger.isDebugEnabled()) {
-                    logger.debug(new String(content.getBodyPartBytes()));
+                    logger.debug(new String(content.getBodyPartBytes(), Charsets.UTF_8));
                 }
                 return super.onBodyPartReceived(content);
             }
@@ -212,6 +213,8 @@ public class HttpClient implements Closeable {
             throw new InvalidRequest("Unauthorized request", response);
         } else if (response != null && response.getStatusCode() >= 400) {
             throw new InvalidRequest("Invalid request", response);
+        } else if (response == null) {
+            throw new InvalidRequest("No response");
         }
 
         return deserializeResponse(response, clazz, format);
@@ -247,9 +250,9 @@ public class HttpClient implements Closeable {
             builder.addHeader(HttpHeaders.CONTENT_TYPE, options.remove(HttpHeaders.CONTENT_TYPE));
         }
 
-        for (final String key : options.keySet()) {
-            if (options.get(key) != null) {
-                builder.addQueryParam(key, options.get(key));
+        for (final Entry<String, String> entry : options.entrySet()) {
+            if (entry.getValue() != null) {
+                builder.addQueryParam(entry.getKey(), entry.getValue());
             }
         }
 
@@ -272,8 +275,8 @@ public class HttpClient implements Closeable {
     }
 
     private void addHeadsOrParams(final Map<String, String> options, final BiConsumer<String, String> consumer) {
-        for (final String key : options.keySet()) {
-            consumer.accept(key, options.get(key));
+        for (final Entry<String, String> entry : options.entrySet()) {
+            consumer.accept(entry.getKey(), entry.getValue());
         }
     }
 

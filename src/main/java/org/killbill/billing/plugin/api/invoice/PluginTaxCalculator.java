@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -128,7 +129,10 @@ public abstract class PluginTaxCalculator {
         }
 
         final List<NewItemToTax> newItemsToTax = new LinkedList<NewItemToTax>();
-        for (final UUID taxableItemId : allTaxableItems.keySet()) {
+        for (final Entry<UUID, InvoiceItem> entry : allTaxableItems.entrySet()) {
+            final UUID taxableItemId = entry.getKey();
+            final InvoiceItem taxableItem = entry.getValue();
+
             // Compute the difference between adjustments already taken into account and new ones
             final Set<UUID> adjustmentsAlreadyTakenIntoAccount = alreadyTaxedItemsWithAdjustments == null ? null : alreadyTaxedItemsWithAdjustments.get(taxableItemId);
             final Collection<UUID> currentAdjustmentIdsForTaxableId = MoreObjects.firstNonNull(adjustmentsByLinkedId.get(taxableItemId), new LinkedList<UUID>());
@@ -142,7 +146,6 @@ public abstract class PluginTaxCalculator {
                 adjustments.add(allItems.get(currentAdjustmentId));
             }
 
-            final InvoiceItem taxableItem = allTaxableItems.get(taxableItemId);
             if (adjustmentsAlreadyTakenIntoAccount != null) {
                 // This item was already taxed: are there additional adjustments to take into account?
                 if (currentAdjustmentIdsForTaxableId.isEmpty()) {

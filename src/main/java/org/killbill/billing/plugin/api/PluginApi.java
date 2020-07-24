@@ -227,7 +227,7 @@ public abstract class PluginApi {
                                                                                                                                                                     new Function<SubscriptionBundle, List<SubscriptionEvent>>() {
                                                                                                                                                                         @Override
                                                                                                                                                                         public List<SubscriptionEvent> apply(final SubscriptionBundle bundle) {
-                                                                                                                                                                            return bundle.getTimeline().getSubscriptionEvents();
+                                                                                                                                                                            return bundle == null ? ImmutableList.<SubscriptionEvent>of() : bundle.getTimeline().getSubscriptionEvents();
                                                                                                                                                                         }
                                                                                                                                                                     }
                                                                                                                                                                    ));
@@ -237,7 +237,8 @@ public abstract class PluginApi {
                                                    new Predicate<SubscriptionEvent>() {
                                                        @Override
                                                        public boolean apply(final SubscriptionEvent event) {
-                                                           return event.getSubscriptionEventType() != null &&
+                                                           return event != null &&
+                                                                  event.getSubscriptionEventType() != null &&
                                                                   // We want events coming from the blocking states table...
                                                                   ObjectType.BLOCKING_STATES.equals(event.getSubscriptionEventType().getObjectType()) &&
                                                                   // ...that are for any service but entitlement
@@ -454,7 +455,7 @@ public abstract class PluginApi {
                                                   new Predicate<PaymentTransaction>() {
                                                       @Override
                                                       public boolean apply(final PaymentTransaction input) {
-                                                          return kbTransactionId.equals(input.getId());
+                                                          return input != null && kbTransactionId.equals(input.getId());
                                                       }
                                                   });
     }

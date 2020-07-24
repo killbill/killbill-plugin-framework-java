@@ -24,6 +24,10 @@ public class InvalidRequest extends Exception {
 
     private final Response response;
 
+    public InvalidRequest(final String errorMessage) {
+        this(errorMessage, null);
+    }
+
     public InvalidRequest(final String errorMessage, final Response response) {
         super(errorMessage);
         this.response = response;
