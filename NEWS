@@ -1,3 +1,6 @@
+4.2.2
+    Update killbill-oss-parent to 0.144.13
+
 4.2.1
     Remove dependency on killbill-embeddeddb-common (backward incompatible changes in PluginDao)
     Remove usage of OSGIKillbillLogService (slf4j should be used directly instead)
