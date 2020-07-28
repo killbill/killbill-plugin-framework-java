@@ -14,7 +14,7 @@ Convenience library to help write Kill Bill plugins.
 | 4.1.y             | 0.22.z            |
 | 4.2.y             | 0.22.z            |
 
-4.2.x has a lot of upgraded dependencies (required for Java 11 support).
+We've upgraded numerous dependencies in 4.2.x (required for Java 11 support).
 
 ## Usage
 
