@@ -2,7 +2,7 @@
 
 # In order to generate the Jooq classes either copy and paste the code below
 # or run this through "sh" like:
-# > sh ./src/test/resources/README.txt
+# > sh ./README.txt
 
 # Load the DDL schema in MySQL
 DDL_DIR="`dirname \"$0\"`"
@@ -21,4 +21,4 @@ MYSQL="$(ls -1 ~/.m2/repository/mysql/mysql-connector-java/*/*jar | sort -r | he
 JARS="$JOOQ/jooq/$JOOQ_VERSION/jooq-$JOOQ_VERSION.jar:$JOOQ/jooq-meta/$JOOQ_VERSION/jooq-meta-$JOOQ_VERSION.jar:$JOOQ/jooq-codegen/$JOOQ_VERSION/jooq-codegen-$JOOQ_VERSION.jar:$MYSQL:.";
 
 # Run Jooq's generation tool
-java -cp $JARS org.jooq.util.GenerationTool src/test/resources/gen.xml
+java -cp $JARS org.jooq.util.GenerationTool gen.xml

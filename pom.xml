@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.144.16</version>
+        <version>0.144.20</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
@@ -246,9 +246,9 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>ddl.sql</exclude>
-                        <exclude>gen.xml</exclude>
-                        <exclude>README.txt</exclude>
+                        <exclude>org/killbill/billing/plugin/ddl.sql</exclude>
+                        <exclude>org/killbill/billing/plugin/gen.xml</exclude>
+                        <exclude>org/killbill/billing/plugin/README.txt</exclude>
                     </excludes>
                 </configuration>
             </plugin>

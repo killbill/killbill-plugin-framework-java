@@ -26,7 +26,7 @@ import org.testng.annotations.BeforeMethod;
 
 public class TestWithEmbeddedDBBase {
 
-    protected static final String DDL_FILE_NAME = "ddl.sql";
+    protected static final String DDL_FILE_NAME = "org/killbill/billing/plugin/ddl.sql";
 
     protected EmbeddedDB embeddedDB;
 
