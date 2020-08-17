@@ -113,14 +113,14 @@ public class TestYAMLPluginTenantConfigurationHandler {
     private static final class YAMLPluginTenantConfigurationHandlerForTestMap extends YAMLPluginTenantConfigurationHandler<Map, Map> {
 
         public YAMLPluginTenantConfigurationHandlerForTestMap(final String configurationKey) {
-            super(null, null, null, configurationKey);
+            super(null, null, configurationKey);
         }
     }
 
     private static final class YAMLPluginTenantConfigurationHandlerForTestPojo extends YAMLPluginTenantConfigurationHandler<PluginConfigForTest, PluginConfigForTest> {
 
         public YAMLPluginTenantConfigurationHandlerForTestPojo(final String configurationKey) {
-            super(null, null, null, configurationKey);
+            super(null, null, configurationKey);
         }
     }
 

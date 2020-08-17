@@ -26,15 +26,14 @@ import org.killbill.billing.control.plugin.api.PaymentControlPluginApi;
 import org.killbill.billing.control.plugin.api.PriorPaymentControlResult;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.plugin.api.PluginApi;
 import org.killbill.clock.Clock;
 
 public class PluginPaymentControlPluginApi extends PluginApi implements PaymentControlPluginApi {
 
-    public PluginPaymentControlPluginApi(final OSGIKillbillAPI killbillAPI, final OSGIConfigPropertiesService configProperties, final OSGIKillbillLogService logService, final Clock clock) {
-        super(killbillAPI, configProperties, logService, clock);
+    public PluginPaymentControlPluginApi(final OSGIKillbillAPI killbillAPI, final OSGIConfigPropertiesService configProperties, final Clock clock) {
+        super(killbillAPI, configProperties, clock);
     }
 
     @Override

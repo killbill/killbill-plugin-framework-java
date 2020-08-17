@@ -19,13 +19,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>killbill-oss-parent</artifactId>
         <groupId>org.kill-bill.billing</groupId>
-        <version>0.143.63</version>
+        <artifactId>killbill-oss-parent</artifactId>
+        <version>0.144.20</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
-    <version>4.2.1-SNAPSHOT</version>
+    <version>4.2.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Kill Bill base OSGI plugin</name>
     <description>Kill Bill base OSGI plugin</description>
@@ -33,12 +33,16 @@
     <scm>
         <connection>scm:git:git://github.com/killbill/killbill-plugin-framework-java.git</connection>
         <developerConnection>scm:git:git@github.com:killbill/killbill-plugin-framework-java.git</developerConnection>
+        <tag>HEAD</tag>
         <url>http://github.com/killbill/killbill-plugin-framework-java/tree/master</url>
     </scm>
     <issueManagement>
         <system>Github</system>
         <url>https://github.com/killbill/killbill-plugin-framework-java/issues</url>
     </issueManagement>
+    <properties>
+        <check.fail-spotbugs>true</check.fail-spotbugs>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -55,7 +59,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -67,23 +70,20 @@
             <artifactId>jackson-datatype-joda</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.ning</groupId>
-            <artifactId>async-http-client</artifactId>
         </dependency>
         <dependency>
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
-            <version>1.3.2</version>
         </dependency>
         <dependency>
             <groupId>io.airlift</groupId>
@@ -106,16 +106,28 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.joda</groupId>
@@ -145,16 +157,12 @@
         <dependency>
             <groupId>org.kill-bill.billing</groupId>
             <artifactId>killbill-platform-osgi-api</artifactId>
-            <scope>runtime</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing</groupId>
             <artifactId>killbill-platform-osgi-bundles-lib-killbill</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.kill-bill.billing</groupId>
-            <artifactId>killbill-platform-osgi-bundles-lib-slf4j-osgi</artifactId>
-            <scope>runtime</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing</groupId>
@@ -184,10 +192,12 @@
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-clock</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-embeddeddb-common</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
@@ -202,19 +212,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.10.19</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <!-- In compile scope for org.osgi.util.tracker.ServiceTracker -->
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.compendium</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.skife.config</groupId>
-            <artifactId>config-magic</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -224,6 +222,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
@@ -235,45 +239,19 @@
             <artifactId>snakeyaml</artifactId>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>jdk18</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>1.8</source>
-                            <target>1.8</target>
-                            <showDeprecation>true</showDeprecation>
-                            <showWarnings>true</showWarnings>
-                            <fork>true</fork>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>jar</goal>
-                                    <goal>test-jar</goal>
-                                </goals>
-                                <configuration>
-                                    <classifier>jdk18</classifier>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <skipIfEmpty>true</skipIfEmpty>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>org/killbill/billing/plugin/ddl.sql</exclude>
+                        <exclude>org/killbill/billing/plugin/gen.xml</exclude>
+                        <exclude>org/killbill/billing/plugin/README.txt</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

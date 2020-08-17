@@ -28,7 +28,6 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.plugin.api.notification.PluginConfigurationHandler;
 import org.killbill.billing.plugin.api.notification.PluginTenantConfigurable;
 import org.slf4j.Logger;
@@ -45,16 +44,14 @@ public abstract class YAMLPluginTenantConfigurationHandler<U, T> extends PluginC
     private final String configurationKey;
 
     public YAMLPluginTenantConfigurationHandler(final String pluginName,
-                                                final OSGIKillbillAPI osgiKillbillAPI,
-                                                final OSGIKillbillLogService osgiKillbillLogService) {
-        this(pluginName, osgiKillbillAPI, osgiKillbillLogService, null);
+                                                final OSGIKillbillAPI osgiKillbillAPI) {
+        this(pluginName, osgiKillbillAPI, null);
     }
 
     public YAMLPluginTenantConfigurationHandler(final String pluginName,
                                                 final OSGIKillbillAPI osgiKillbillAPI,
-                                                final OSGIKillbillLogService osgiKillbillLogService,
                                                 final String configurationKey) {
-        super(pluginName, osgiKillbillAPI, osgiKillbillLogService);
+        super(pluginName, osgiKillbillAPI);
         this.configurationKey = configurationKey;
     }
 

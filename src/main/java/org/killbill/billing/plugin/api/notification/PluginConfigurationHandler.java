@@ -27,23 +27,23 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.plugin.api.PluginTenantContext;
 import org.killbill.billing.tenant.api.TenantApiException;
 import org.killbill.billing.tenant.api.TenantUserApi;
 import org.killbill.billing.util.callcontext.TenantContext;
-import org.osgi.service.log.LogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class PluginConfigurationHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(PluginConfigurationHandler.class);
+
     private final String configKeyName;
     private final OSGIKillbillAPI osgiKillbillAPI;
-    private final OSGIKillbillLogService osgiKillbillLogService;
 
-    public PluginConfigurationHandler(final String pluginName, final OSGIKillbillAPI osgiKillbillAPI, final OSGIKillbillLogService osgiKillbillLogService) {
+    public PluginConfigurationHandler(final String pluginName, final OSGIKillbillAPI osgiKillbillAPI) {
         this.configKeyName = "PLUGIN_CONFIG_" + pluginName;
         this.osgiKillbillAPI = osgiKillbillAPI;
-        this.osgiKillbillLogService = osgiKillbillLogService;
     }
 
     protected abstract void configure(@Nullable UUID kbTenantId);
@@ -65,7 +65,7 @@ public abstract class PluginConfigurationHandler {
             properties.load(new StringReader(tenantConfigurationAsString));
             return properties;
         } catch (final IOException e) {
-            osgiKillbillLogService.log(LogService.LOG_WARNING, "Exception while loading properties for key " + configKeyName, e);
+            logger.warn("Exception while loading properties for key {}", configKeyName, e);
             return null;
         }
     }
@@ -77,7 +77,7 @@ public abstract class PluginConfigurationHandler {
 
         final TenantUserApi tenantUserApi = osgiKillbillAPI.getTenantUserApi();
         if (tenantUserApi == null) {
-            osgiKillbillLogService.log(LogService.LOG_WARNING, "Unable to retrieve TenantUserApi - skipping reconfiguration for key " + configKeyName);
+            logger.warn("Unable to retrieve TenantUserApi - skipping reconfiguration for key {}", configKeyName);
             return null;
         }
 
@@ -86,7 +86,7 @@ public abstract class PluginConfigurationHandler {
             final List<String> values = tenantUserApi.getTenantValuesForKey(configKeyName, context);
             return !values.isEmpty() ? values.get(0) : null;
         } catch (final TenantApiException e) {
-            osgiKillbillLogService.log(LogService.LOG_WARNING, "Exception while retrieving configuration for key " + configKeyName, e);
+            logger.warn("Exception while retrieving configuration for key {}", configKeyName, e);
             return null;
         }
     }

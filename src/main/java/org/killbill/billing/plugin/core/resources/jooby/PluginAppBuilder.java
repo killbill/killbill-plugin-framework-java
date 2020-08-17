@@ -27,7 +27,6 @@ import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillClock;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillDataSource;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.plugin.core.resources.PluginHealthcheck;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,14 +61,12 @@ public class PluginAppBuilder {
 
     public PluginAppBuilder(final String pluginName,
                             final OSGIKillbillAPI killbillAPI,
-                            final OSGIKillbillLogService logService,
                             final OSGIKillbillDataSource dataSource,
                             final OSGIKillbillClock clock,
                             final OSGIConfigPropertiesService configProperties) {
         this(pluginName);
 
         withService(killbillAPI);
-        withService(logService);
         withService(dataSource);
         withService(clock);
         withService(configProperties);

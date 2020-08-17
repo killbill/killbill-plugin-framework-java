@@ -38,9 +38,10 @@ import com.typesafe.config.Config;
 
 public class JoobyServlet extends PluginServlet {
 
-    private final PluginApp app;
+    private static final long serialVersionUID = 1L;
 
-    private final HttpHandler dispatcher;
+    private final transient PluginApp app;
+    private final transient HttpHandler dispatcher;
     private final String tmpdir;
 
     public JoobyServlet(final PluginApp app) {

@@ -29,7 +29,6 @@ import org.jooq.Table;
 import org.jooq.UpdatableRecord;
 import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
-import org.killbill.billing.osgi.libs.killbill.OSGIKillbillLogService;
 import org.killbill.billing.payment.api.PaymentMethodPlugin;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.plugin.api.PaymentMethodInfoPlugin;
@@ -77,10 +76,9 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
 
     public PluginPaymentPluginApi(final OSGIKillbillAPI killbillAPI,
                                   final OSGIConfigPropertiesService configProperties,
-                                  final OSGIKillbillLogService logService,
                                   final Clock clock,
                                   final PluginPaymentDao<RESP_R, RESP_T, PM_R, PM_T> dao) {
-        super(killbillAPI, configProperties, logService, clock);
+        super(killbillAPI, configProperties, clock);
         this.dao = dao;
     }
 

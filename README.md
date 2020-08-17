@@ -1,15 +1,9 @@
-killbill-plugin-framework-java
-==============================
+# killbill-plugin-framework-java
+![Maven Central](https://img.shields.io/maven-central/v/org.kill-bill.billing.plugin.java/killbill-base-plugin?color=blue&label=Maven%20Central)
 
 Convenience library to help write Kill Bill plugins.
 
-Here are some examples to get you started:
-
-* Payment plugin: https://github.com/killbill/killbill-adyen-plugin
-* Routing plugin: https://github.com/killbill/killbill-accertify-plugin
-
-Kill Bill compatibility
------------------------
+## Kill Bill compatibility
 
 | Framework version | Kill Bill version |
 | ----------------: | ----------------: |
@@ -20,45 +14,27 @@ Kill Bill compatibility
 | 4.1.y             | 0.22.z            |
 | 4.2.y             | 0.22.z            |
 
-4.2.x has a lot of upgraded dependencies (required for Java 11 support).
+We've upgraded numerous dependencies in 4.2.x (required for Java 11 support).
 
-Usage
------
+## Usage
 
 Add the library to your plugin:
 
-```
+```xml
 <dependency>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
+    <version>... release version ...</version>
 </dependency>
 <dependency>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
+    <version>... release version ...</version>
     <type>test-jar</type>
     <scope>test</scope>
 </dependency>
 ```
 
-Add the following OSGI Import-Package directives:
+## About
 
-```
-org.killbill.billing.account.api;
-org.killbill.billing.catalog.api;
-org.killbill.billing.invoice.api;
-org.killbill.billing.entitlement.api;
-org.killbill.billing.notification.api;
-org.killbill.billing.notification.plugin.api;
-org.killbill.billing.notification.plugin;
-org.killbill.billing.osgi.api;
-org.killbill.billing.osgi.api.config;
-org.killbill.billing.payment.api;
-org.killbill.billing.payment.plugin.api;
-org.killbill.billing.control.plugin.api;
-org.killbill.billing.tenant.api;
-org.killbill.billing.usage.api;
-org.killbill.billing.util.api;
-org.killbill.billing.currency.plugin.api;
-org.killbill.billing.currency.api;
-org.killbill.billing.security.api;
-```
+Kill Bill is the leading Open-Source Subscription Billing & Payments Platform. For more information about the project, go to https://killbill.io/.

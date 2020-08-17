@@ -34,6 +34,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public abstract class PluginProperties {
 
@@ -67,9 +68,8 @@ public abstract class PluginProperties {
     public static Map<String, String> toStringMap(final Iterable<PluginProperty>... propertiesLists) {
         return Maps.transformValues(toMap(propertiesLists),
                                     new Function<Object, String>() {
-                                        @Nullable
                                         @Override
-                                        public String apply(@Nullable final Object input) {
+                                        public String apply(final Object input) {
                                             return input == null ? null : input.toString();
                                         }
                                     });
@@ -90,7 +90,7 @@ public abstract class PluginProperties {
                                                                 new Predicate<PluginProperty>() {
                                                                     @Override
                                                                     public boolean apply(final PluginProperty input) {
-                                                                        return pluginPropertyName.equals(input.getKey());
+                                                                        return input != null && pluginPropertyName.equals(input.getKey());
                                                                     }
                                                                 }).orNull();
 
@@ -115,7 +115,7 @@ public abstract class PluginProperties {
                                 new Predicate<PluginProperty>() {
                                     @Override
                                     public boolean apply(final PluginProperty input) {
-                                        return key.equals(input.getKey());
+                                        return key != null && key.equals(input.getKey());
                                     }
                                 });
     }
@@ -129,11 +129,12 @@ public abstract class PluginProperties {
                                 new Predicate<PluginProperty>() {
                                     @Override
                                     public boolean apply(final PluginProperty input) {
-                                        return keyPattern.matcher(input.getKey()).matches();
+                                        return input != null && keyPattern.matcher(input.getKey()).matches();
                                     }
                                 });
     }
 
+    @SuppressFBWarnings("WMI_WRONG_MAP_ITERATOR")
     public static List<PluginProperty> buildPluginProperties(@Nullable final Map data) {
         final ImmutableList.Builder<PluginProperty> propertiesBuilder = ImmutableList.builder();
         if (data != null) {
