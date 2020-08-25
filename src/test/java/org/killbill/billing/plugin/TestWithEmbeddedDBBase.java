@@ -32,6 +32,8 @@ public class TestWithEmbeddedDBBase {
 
     @BeforeClass(groups = "slow")
     public void setUpBeforeClass() throws Exception {
+        System.setProperty("org.jooq.no-logo", "true");
+
         embeddedDB = PlatformDBTestingHelper.get().getInstance();
         embeddedDB.initialize();
         embeddedDB.start();

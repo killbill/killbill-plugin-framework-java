@@ -21,6 +21,7 @@ package org.killbill.billing.plugin.dao.payment;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -143,7 +144,7 @@ public class PluginPaymentDaoTest extends TestWithEmbeddedDBBase {
         Assert.assertEquals(record.getCurrency(), currency.name(), "Wrong currency");
         Assert.assertEquals(TestUtils.buildPluginPropertiesMap(record.getAdditionalData()),
                             additionalData, "Wrong additionalData");
-        Assert.assertEquals(record.getCreatedDate().getTime(), timestamp.getMillis(), "Wrong createdDate");
+        Assert.assertEquals(record.getCreatedDate().toInstant(ZoneOffset.UTC).toEpochMilli(), timestamp.getMillis(), "Wrong createdDate");
         Assert.assertEquals(record.getKbTenantId(), kbTenantId.toString(), "Wrong kbTenantId");
 
         final PaymentTransactionInfoPlugin transaction = api.buildPaymentTransactionInfoPlugin(record);

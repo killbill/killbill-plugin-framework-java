@@ -19,6 +19,8 @@
 package org.killbill.billing.plugin.dao.payment;
 
 import java.math.BigDecimal;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,10 +53,10 @@ import org.killbill.clock.Clock;
 import com.google.common.base.Strings;
 
 public class TestPaymentPluginApi
-extends PluginPaymentPluginApi<TestResponsesRecord,
-                               TestResponses,
-                               TestPaymentMethodsRecord,
-                               TestPaymentMethods> {
+        extends PluginPaymentPluginApi<TestResponsesRecord,
+        TestResponses,
+        TestPaymentMethodsRecord,
+        TestPaymentMethods> {
 
     protected final TestPluginPaymentDao dao;
 
@@ -76,7 +78,10 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
     @Override
     protected PaymentTransactionInfoPlugin buildPaymentTransactionInfoPlugin(final TestResponsesRecord record) {
 
-        final DateTime createdDate = new DateTime(record.getCreatedDate(), DateTimeZone.UTC);
+        final DateTime createdDate = new DateTime(record.getCreatedDate()
+                                                        .atZone(ZoneOffset.UTC)
+                                                        .toInstant()
+                                                        .toEpochMilli(), DateTimeZone.UTC);
         final List<PluginProperty> properties = TestUtils.buildPluginProperties(record.getAdditionalData());
 
         return new PluginPaymentTransactionInfoPlugin(UUID.fromString(record.getKbPaymentId()),
@@ -131,7 +136,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
                                                         final Currency currency,
                                                         final Iterable<PluginProperty> properties,
                                                         final CallContext context)
-    throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 
@@ -144,7 +149,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
                                                          final Currency currency,
                                                          final Iterable<PluginProperty> properties,
                                                          final CallContext context)
-    throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 
@@ -157,7 +162,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
                                                        final Currency currency,
                                                        final Iterable<PluginProperty> properties,
                                                        final CallContext context)
-   throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 
@@ -170,7 +175,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
                                                       final Currency currency,
                                                       final Iterable<PluginProperty> properties,
                                                       final CallContext context)
-    throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 
@@ -181,7 +186,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
                                                     final UUID kbPaymentMethodId,
                                                     final Iterable<PluginProperty> properties,
                                                     final CallContext context)
-    throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 
@@ -194,7 +199,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
                                                       final Currency currency,
                                                       final Iterable<PluginProperty> properties,
                                                       final CallContext context)
-    throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 
@@ -203,7 +208,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
                                                                final Iterable<PluginProperty> customFields,
                                                                final Iterable<PluginProperty> properties,
                                                                final CallContext context)
-    throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 
@@ -211,7 +216,7 @@ extends PluginPaymentPluginApi<TestResponsesRecord,
     public GatewayNotification processNotification(final String notification,
                                                    final Iterable<PluginProperty> properties,
                                                    final CallContext context)
-    throws PaymentPluginApiException {
+            throws PaymentPluginApiException {
         throw new PaymentPluginApiException(null, "Unsupported operation");
     }
 }

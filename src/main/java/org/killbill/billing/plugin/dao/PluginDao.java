@@ -33,7 +33,7 @@ import org.joda.time.DateTime;
 import org.jooq.SQLDialect;
 import org.jooq.conf.MappedSchema;
 import org.jooq.conf.RenderMapping;
-import org.jooq.conf.RenderNameStyle;
+import org.jooq.conf.RenderNameCase;
 import org.jooq.conf.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +84,7 @@ public class PluginDao {
                                                                     .withOutput(schema);
                 final RenderMapping renderMapping = new RenderMapping().withSchemata(mappedSchema);
                 this.settings = new Settings().withRenderMapping(renderMapping)
-                                              .withRenderNameStyle(RenderNameStyle.UPPER);
+                                              .withRenderNameCase(RenderNameCase.UPPER);
                 break;
             default:
                 // For MySQL, schema doesn't matter.

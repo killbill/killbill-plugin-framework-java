@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.144.20</version>
+        <version>0.144.24-SNAPSHOT</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
@@ -42,6 +42,8 @@
     </issueManagement>
     <properties>
         <check.fail-spotbugs>true</check.fail-spotbugs>
+        <!-- TODO Temporary until platform is released -->
+        <killbill-platform.version>0.40.1</killbill-platform.version>
     </properties>
     <dependencies>
         <dependency>
@@ -168,6 +170,13 @@
             <groupId>org.kill-bill.billing</groupId>
             <artifactId>killbill-platform-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <!-- TODO Temporary until platform is released -->
+                <exclusion>
+                    <artifactId>HikariCP-java6</artifactId>
+                    <groupId>com.zaxxer</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing.plugin</groupId>
