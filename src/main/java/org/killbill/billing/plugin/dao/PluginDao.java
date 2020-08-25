@@ -23,6 +23,9 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 
@@ -106,6 +109,10 @@ public class PluginDao {
 
     protected static byte fromBoolean(final Boolean bool) {
         return bool ? TRUE : FALSE;
+    }
+
+    protected static LocalDateTime toLocalDateTime(@Nullable final DateTime dateTime) {
+        return dateTime == null ? null : LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getMillis()), ZoneId.of(dateTime.getZone().getID()));
     }
 
     protected static Timestamp toTimestamp(@Nullable final DateTime dateTime) {
