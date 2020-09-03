@@ -19,7 +19,15 @@
 package org.killbill.billing.plugin.dao;
 
 import java.io.ByteArrayInputStream;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
+import javax.sql.DataSource;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.jooq.conf.Settings;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -52,5 +60,26 @@ public class TestPluginDao {
         Assert.assertEquals(settings.getRenderMapping().getSchemata().get(0).getTables().size(), 1);
         Assert.assertEquals(settings.getRenderMapping().getSchemata().get(0).getTables().get(0).getInput(), "AUTHOR");
         Assert.assertEquals(settings.getRenderMapping().getSchemata().get(0).getTables().get(0).getOutput(), "MY_APP__AUTHOR");
+    }
+
+    @Test(groups = "fast")
+    public void testDates() throws Exception {
+        final DateTime jodaDateTime = new DateTime("2020-04-05T12:14:15Z");
+        Assert.assertEquals(PluginDao.toTimestamp(jodaDateTime).toString(), "2020-04-05 12:14:15.0");
+
+        final LocalDateTime localDateTime = PluginDao.toLocalDateTime(jodaDateTime);
+        final DateTime backToJodaDateTime = new DateTime(localDateTime
+                                                                 .atZone(ZoneOffset.UTC)
+                                                                 .toInstant()
+                                                                 .toEpochMilli(), DateTimeZone.UTC);
+        Assert.assertEquals(localDateTime.toString(), "2020-04-05T12:14:15");
+        Assert.assertEquals(jodaDateTime.compareTo(backToJodaDateTime), 0);
+    }
+
+    public static class PluginDaoTest extends PluginDao {
+
+        public PluginDaoTest(final DataSource dataSource) throws SQLException {
+            super(dataSource);
+        }
     }
 }

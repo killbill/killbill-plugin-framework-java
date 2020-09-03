@@ -23,6 +23,9 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 
@@ -33,7 +36,7 @@ import org.joda.time.DateTime;
 import org.jooq.SQLDialect;
 import org.jooq.conf.MappedSchema;
 import org.jooq.conf.RenderMapping;
-import org.jooq.conf.RenderNameStyle;
+import org.jooq.conf.RenderNameCase;
 import org.jooq.conf.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +87,7 @@ public class PluginDao {
                                                                     .withOutput(schema);
                 final RenderMapping renderMapping = new RenderMapping().withSchemata(mappedSchema);
                 this.settings = new Settings().withRenderMapping(renderMapping)
-                                              .withRenderNameStyle(RenderNameStyle.UPPER);
+                                              .withRenderNameCase(RenderNameCase.UPPER);
                 break;
             default:
                 // For MySQL, schema doesn't matter.
@@ -106,6 +109,10 @@ public class PluginDao {
 
     protected static byte fromBoolean(final Boolean bool) {
         return bool ? TRUE : FALSE;
+    }
+
+    protected static LocalDateTime toLocalDateTime(@Nullable final DateTime dateTime) {
+        return dateTime == null ? null : LocalDateTime.ofInstant(Instant.ofEpochMilli(dateTime.getMillis()), ZoneId.of(dateTime.getZone().getID()));
     }
 
     protected static Timestamp toTimestamp(@Nullable final DateTime dateTime) {
