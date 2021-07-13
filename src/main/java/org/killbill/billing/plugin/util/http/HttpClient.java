@@ -1,7 +1,7 @@
 /*
  * Copyright 2014-2020 Groupon, Inc
- * Copyright 2020-2020 Equinix, Inc
- * Copyright 2014-2020 The Billing Project, LLC
+ * Copyright 2020-2021 Equinix, Inc
+ * Copyright 2014-2021 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -77,6 +77,7 @@ public class HttpClient implements Closeable {
     protected static final int DEFAULT_HTTP_TIMEOUT_SEC = 70;
     private static final int DEFAULT_HTTP_CONNECT_TIMEOUT_SEC = 5;
     private static final int DEFAULT_HTTP_READ_TIMEOUT_SEC = 60;
+    private static final int DEFAULT_HTTP_REQUEST_TIMEOUT_SEC = 60;
 
     protected final String username;
     protected final String password;
@@ -85,6 +86,8 @@ public class HttpClient implements Closeable {
     protected final Integer proxyPort;
     protected final AsyncHttpClient httpClient;
     protected final ObjectMapper mapper;
+
+    protected int httpTimeoutSec = DEFAULT_HTTP_TIMEOUT_SEC;
 
     public HttpClient(final String url,
                       final String username,
@@ -97,7 +100,7 @@ public class HttpClient implements Closeable {
         this.password = password;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
-        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_READ_TIMEOUT_SEC * 1000, DEFAULT_HTTP_CONNECT_TIMEOUT_SEC * 1000);
+        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_REQUEST_TIMEOUT_SEC * 1000, DEFAULT_HTTP_READ_TIMEOUT_SEC * 1000, DEFAULT_HTTP_CONNECT_TIMEOUT_SEC * 1000);
         this.mapper = createObjectMapper();
     }
 
@@ -114,16 +117,39 @@ public class HttpClient implements Closeable {
         this.password = password;
         this.proxyHost = proxyHost;
         this.proxyPort = proxyPort;
-        this.httpClient = buildAsyncHttpClient(strictSSL, readTimeoutMs, connectTimeoutMs);
+        this.httpClient = buildAsyncHttpClient(strictSSL, DEFAULT_HTTP_REQUEST_TIMEOUT_SEC * 1000, readTimeoutMs, connectTimeoutMs);
         this.mapper = createObjectMapper();
     }
 
-    private AsyncHttpClient buildAsyncHttpClient(final Boolean strictSSL, final int readTimeoutMs, final int connectTimeoutMs)
+    public HttpClient(final String url,
+                      final String username,
+                      final String password,
+                      final String proxyHost,
+                      final Integer proxyPort,
+                      final Boolean strictSSL,
+                      final int connectTimeoutMs,
+                      final int readTimeoutMs,
+                      final int requestTimeoutMs) throws GeneralSecurityException {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.proxyHost = proxyHost;
+        this.proxyPort = proxyPort;
+        this.httpClient = buildAsyncHttpClient(strictSSL, requestTimeoutMs, readTimeoutMs, connectTimeoutMs);
+        this.mapper = createObjectMapper();
+        this.httpTimeoutSec = requestTimeoutMs / 1000 + 10; // Ensure the timeouts from the AHC library kick-in first
+    }
+
+    private AsyncHttpClient buildAsyncHttpClient(final Boolean strictSSL,
+                                                 final int requestTimeoutMs,
+                                                 final int readTimeoutMs,
+                                                 final int connectTimeoutMs)
             throws GeneralSecurityException {
         final DefaultAsyncHttpClientConfig.Builder cfg = new DefaultAsyncHttpClientConfig.Builder();
         cfg.setUserAgent(USER_AGENT)
            .setConnectTimeout(connectTimeoutMs)
            .setReadTimeout(readTimeoutMs)
+           .setRequestTimeout(requestTimeoutMs)
            .setUseInsecureTrustManager(!strictSSL);
         return new DefaultAsyncHttpClient(cfg.build());
     }
@@ -156,7 +182,7 @@ public class HttpClient implements Closeable {
             }
         }
 
-        return executeAndWait(builder, DEFAULT_HTTP_TIMEOUT_SEC, clazz, ResponseFormat.JSON);
+        return executeAndWait(builder, httpTimeoutSec, clazz, ResponseFormat.JSON);
     }
 
     protected String doCallAndReturnTextResponse(final String verb, final String uri, final String body,
@@ -182,7 +208,7 @@ public class HttpClient implements Closeable {
             }
         }
 
-        return executeAndWait(builder, DEFAULT_HTTP_TIMEOUT_SEC, clazz, format);
+        return executeAndWait(builder, httpTimeoutSec, clazz, format);
     }
 
     protected <T> T executeAndWait(final BoundRequestBuilder builder, final int timeoutSec,
