@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright 2014-2020 Groupon, Inc
-  ~ Copyright 2020-2020 Equinix, Inc
-  ~ Copyright 2014-2020 The Billing Project, LLC
+  ~ Copyright 2020-2021 Equinix, Inc
+  ~ Copyright 2014-2021 The Billing Project, LLC
   ~
   ~ The Billing Project licenses this file to you under the Apache License, version 2.0
   ~ (the "License"); you may not use this file except in compliance with the
@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.144.45</version>
+        <version>0.144.51</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
