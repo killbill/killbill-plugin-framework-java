@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.144.51</version>
+        <version>0.144.53-SNAPSHOT</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
@@ -168,6 +168,13 @@
             <groupId>org.kill-bill.billing</groupId>
             <artifactId>killbill-platform-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <!-- https://github.com/brettwooldridge/HikariCP/issues/1746 -->
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing.plugin</groupId>
