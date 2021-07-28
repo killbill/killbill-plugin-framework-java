@@ -1,5 +1,5 @@
 4.2.13
-    Update killbill-oss-parent to 0.144.54
+    Update killbill-oss-parent to 0.144.55
 
 4.2.12
     Make HttpClient request timeout configurable
