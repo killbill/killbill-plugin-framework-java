@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.144.60</version>
+        <version>0.144.68</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
@@ -42,6 +42,7 @@
     </issueManagement>
     <properties>
         <check.fail-spotbugs>true</check.fail-spotbugs>
+        <check.spotbugs-exclude-filter-file>spotbugs-exclude.xml</check.spotbugs-exclude-filter-file>
     </properties>
     <dependencies>
         <dependency>
@@ -148,6 +149,13 @@
         <dependency>
             <groupId>org.jooq</groupId>
             <artifactId>jooq</artifactId>
+            <exclusions>
+                <exclusion>
+                    <!-- Pulls 1.8.x -->
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing</groupId>
@@ -168,13 +176,6 @@
             <groupId>org.kill-bill.billing</groupId>
             <artifactId>killbill-platform-test</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <!-- https://github.com/brettwooldridge/HikariCP/issues/1746 -->
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing.plugin</groupId>
@@ -210,6 +211,13 @@
             <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-embeddeddb-mysql</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <!-- For mariadb: ignore RequireUpperBoundDeps errors -->
+                <exclusion>
+                    <groupId>org.osgi</groupId>
+                    <artifactId>org.osgi.core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
