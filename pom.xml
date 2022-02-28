@@ -222,13 +222,6 @@
             <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-embeddeddb-mysql</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <!-- For mariadb: ignore RequireUpperBoundDeps errors -->
-                <exclusion>
-                    <groupId>org.osgi</groupId>
-                    <artifactId>org.osgi.core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
