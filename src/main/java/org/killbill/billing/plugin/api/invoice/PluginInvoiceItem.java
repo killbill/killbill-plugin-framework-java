@@ -52,7 +52,7 @@ public class PluginInvoiceItem implements InvoiceItem {
     protected final UUID linkedItemId;
     protected final String usageName;
     protected final String prettyUsageName;
-    protected final Integer quantity;
+    protected final BigDecimal quantity;
     protected final String itemDetails;
     protected final DateTime createdDate;
     protected final DateTime updatedDate;
@@ -141,7 +141,7 @@ public class PluginInvoiceItem implements InvoiceItem {
                              final UUID linkedItemId,
                              final String usageName,
                              final String prettyUsageName,
-                             final Integer quantity,
+                             final BigDecimal quantity,
                              final String itemDetails,
                              final DateTime createdDate,
                              final DateTime updatedDate) {
@@ -290,7 +290,7 @@ public class PluginInvoiceItem implements InvoiceItem {
     }
 
     @Override
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
