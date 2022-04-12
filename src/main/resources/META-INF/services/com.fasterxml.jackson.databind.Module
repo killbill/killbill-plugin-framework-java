@@ -1,0 +1,25 @@
+#This is generated code, edit with caution!
+org.killbill.billing.util.customfield.boilerplate.Module
+org.killbill.billing.security.api.boilerplate.Module
+org.killbill.billing.osgi.api.config.boilerplate.Module
+org.killbill.billing.invoice.api.boilerplate.Module
+org.killbill.billing.currency.api.boilerplate.Module
+org.killbill.billing.util.api.boilerplate.Module
+org.killbill.billing.invoice.api.formatters.boilerplate.Module
+org.killbill.billing.tenant.api.boilerplate.Module
+org.killbill.billing.boilerplate.Module
+org.killbill.billing.usage.api.boilerplate.Module
+org.killbill.billing.catalog.api.rules.boilerplate.Module
+org.killbill.billing.util.audit.boilerplate.Module
+org.killbill.billing.util.nodes.boilerplate.Module
+org.killbill.billing.payment.api.boilerplate.Module
+org.killbill.billing.account.api.boilerplate.Module
+org.killbill.billing.util.entity.boilerplate.Module
+org.killbill.billing.payment.plugin.api.boilerplate.Module
+org.killbill.billing.entitlement.api.boilerplate.Module
+org.killbill.billing.osgi.api.boilerplate.Module
+org.killbill.billing.util.callcontext.boilerplate.Module
+org.killbill.billing.util.tag.boilerplate.Module
+org.killbill.billing.overdue.api.boilerplate.Module
+org.killbill.billing.catalog.api.boilerplate.Module
+
