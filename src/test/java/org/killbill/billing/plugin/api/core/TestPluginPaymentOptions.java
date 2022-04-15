@@ -14,35 +14,35 @@
  * under the License.
  */
 
-package org.killbill.billing.plugin.api;
+package org.killbill.billing.plugin.api.core;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.UUID;
-import javax.annotation.Nullable;
+import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.google.common.collect.ImmutableList;
 
 @Test(groups = { "fast" })
-public class TestPluginTenantContext {
+public class TestPluginPaymentOptions {
 
-    final private UUID accountId = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    final private UUID tenantId = UUID.fromString("00000000-0000-0000-0000-000000000002");
+    final private boolean isExternalPayment = true;
+    final private List<String> paymentControlPluginNames = ImmutableList.<String>of();
 
     @Test
     void builderIsEquivalentToConstructor() {
 
-        PluginTenantContext a = new PluginTenantContext.Builder<>()
-            .withAccountId(accountId)
-            .withTenantId(tenantId)
+        PluginPaymentOptions a = new PluginPaymentOptions.Builder<>()
+            .withIsExternalPayment(isExternalPayment)
+            .withPaymentControlPluginNames(paymentControlPluginNames)
             .build();
 
-        PluginTenantContext b = new PluginTenantContext(accountId, tenantId) ;
+        PluginPaymentOptions b = new PluginPaymentOptions(isExternalPayment, paymentControlPluginNames);
 
         Assert.assertTrue(a.equals(b));
     }
@@ -50,24 +50,23 @@ public class TestPluginTenantContext {
     @Test
     void differentInstances() {
 
-        PluginTenantContext.Builder builder = new PluginTenantContext.Builder<>()
-            .withAccountId(accountId)
-            .withTenantId(tenantId);
+        PluginPaymentOptions.Builder builder = new PluginPaymentOptions.Builder<>()
+            .withIsExternalPayment(isExternalPayment)
+            .withPaymentControlPluginNames(paymentControlPluginNames);
 
-            Assert.assertNotEquals(builder.build(), 
-                    builder.withAccountId(UUID.fromString("00000000-0000-0000-0000-000000000003")).build());
+        Assert.assertNotEquals(builder.build(), builder.withIsExternalPayment(false).build());
     }
 
     @Test
     void callAllGetters() {
 
-        PluginTenantContext a = new PluginTenantContext.Builder<>()
-            .withAccountId(accountId)
-            .withTenantId(tenantId)
+        PluginPaymentOptions a = new PluginPaymentOptions.Builder<>()
+            .withIsExternalPayment(isExternalPayment)
+            .withPaymentControlPluginNames(paymentControlPluginNames)
             .build();
 
-        Assert.assertEquals(a.getAccountId(), accountId);
-        Assert.assertEquals(a.getTenantId(), tenantId);
+        Assert.assertEquals(a.isExternalPayment(), isExternalPayment);
+        Assert.assertEquals(a.getPaymentControlPluginNames(), paymentControlPluginNames);
     }
 
     @Test 
@@ -79,13 +78,13 @@ public class TestPluginTenantContext {
         mapper.registerModule(new JodaModule());
         mapper.findAndRegisterModules();
 
-        PluginTenantContext a = new PluginTenantContext.Builder<>()
-            .withAccountId(accountId)
-            .withTenantId(tenantId)
+        PluginPaymentOptions a = new PluginPaymentOptions.Builder<>()
+            .withIsExternalPayment(isExternalPayment)
+            .withPaymentControlPluginNames(paymentControlPluginNames)
             .build();
 
         String json =  mapper.writeValueAsString(a);;
-        PluginTenantContext b = mapper.readValue(json, PluginTenantContext.class);
+        PluginPaymentOptions b = mapper.readValue(json, PluginPaymentOptions.class);
 
         Assert.assertTrue(a.equals(b));
     }

@@ -19,15 +19,13 @@
 package org.killbill.billing.plugin.api.core;
 
 import java.util.List;
-
-import org.killbill.billing.payment.api.PaymentOptions;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.ImmutableList;
+import org.killbill.billing.payment.api.PaymentOptions;
+import org.killbill.billing.payment.api.boilerplate.PaymentOptionsImp;
 
-public class PluginPaymentOptions implements PaymentOptions {
-
-    private final boolean isExternalPayment;
-    private final List<String> paymentControlPluginNames;
+@JsonDeserialize( builder = PluginPaymentOptions.Builder.class )
+public class PluginPaymentOptions extends PaymentOptionsImp {
 
     public PluginPaymentOptions() {
         this(false, ImmutableList.<String>of());
@@ -38,49 +36,40 @@ public class PluginPaymentOptions implements PaymentOptions {
     }
 
     public PluginPaymentOptions(final boolean isExternalPayment, final List<String> paymentControlPluginNames) {
-        this.isExternalPayment = isExternalPayment;
-        this.paymentControlPluginNames = paymentControlPluginNames;
+        this(new Builder<>()
+        .withIsExternalPayment(isExternalPayment)
+        .withPaymentControlPluginNames(paymentControlPluginNames)
+        .validate());
+
     }
 
-    @Override
-    public boolean isExternalPayment() {
-        return isExternalPayment;
+    protected PluginPaymentOptions(final PluginPaymentOptions.Builder<?> builder) {
+        super(builder);
     }
 
-    @Override
-    public List<String> getPaymentControlPluginNames() {
-        return paymentControlPluginNames;
+    public PluginPaymentOptions(final PluginPaymentOptions that) {
+        super(that);
     }
 
-    @Override
-    public String toString() {
-        return "PluginPaymentOptions{" +
-               "isExternalPayment=" + isExternalPayment +
-               ", paymentControlPluginNames=" + paymentControlPluginNames +
-               '}';
-    }
+    @SuppressWarnings("unchecked")
+    public static class Builder<T extends PluginPaymentOptions.Builder<T>> 
+        extends PaymentOptionsImp.Builder<T> {
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Builder() {
         }
 
-        final PluginPaymentOptions that = (PluginPaymentOptions) o;
-
-        if (isExternalPayment != that.isExternalPayment) {
-            return false;
+        public Builder(final Builder that) {
+            super(that);
         }
-        return paymentControlPluginNames != null ? paymentControlPluginNames.equals(that.paymentControlPluginNames) : that.paymentControlPluginNames == null;
-    }
 
-    @Override
-    public int hashCode() {
-        int result = (isExternalPayment ? 1 : 0);
-        result = 31 * result + (paymentControlPluginNames != null ? paymentControlPluginNames.hashCode() : 0);
-        return result;
+        @Override
+        public Builder validate() {
+            return this;
+        }
+
+        @Override
+        public PluginPaymentOptions build() {
+            return new PluginPaymentOptions(this.validate());
+        }
     }
 }

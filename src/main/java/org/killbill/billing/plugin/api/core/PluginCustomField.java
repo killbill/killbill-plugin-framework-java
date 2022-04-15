@@ -19,141 +19,75 @@
 package org.killbill.billing.plugin.api.core;
 
 import java.util.UUID;
-
 import org.joda.time.DateTime;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.killbill.billing.ObjectType;
 import org.killbill.billing.util.customfield.CustomField;
+import org.killbill.billing.util.customfield.boilerplate.CustomFieldImp;
 
-public class PluginCustomField implements CustomField {
-
-    protected final UUID objectId;
-    protected final ObjectType objectType;
-    protected final String fieldName;
-    protected final String fieldValue;
-    protected final UUID id;
-    protected final DateTime createdDate;
-    protected final DateTime updatedDate;
+@JsonDeserialize( builder = PluginCustomField.Builder.class )
+public class PluginCustomField extends CustomFieldImp {
 
     public PluginCustomField(final UUID objectId,
-                             final ObjectType objectType,
-                             final String fieldName,
-                             final String fieldValue,
-                             final DateTime date) {
+            final ObjectType objectType,
+            final String fieldName,
+            final String fieldValue,
+            final DateTime date) {
         this(objectId,
-             objectType,
-             fieldName,
-             fieldValue,
-             null,
-             date,
-             date);
+                objectType,
+                fieldName,
+                fieldValue,
+                null,
+                date,
+                date);
     }
 
     public PluginCustomField(final UUID objectId,
-                             final ObjectType objectType,
-                             final String fieldName,
-                             final String fieldValue,
-                             final UUID id,
-                             final DateTime createdDate,
-                             final DateTime updatedDate) {
-        this.objectId = objectId;
-        this.objectType = objectType;
-        this.fieldName = fieldName;
-        this.fieldValue = fieldValue;
-        this.id = id;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
+            final ObjectType objectType,
+            final String fieldName,
+            final String fieldValue,
+            final UUID id,
+            final DateTime createdDate,
+            final DateTime updatedDate) {
+
+        this(new Builder<>()
+                .withObjectId(objectId)
+                .withObjectType(objectType)
+                .withFieldName(fieldName)
+                .withFieldValue(fieldValue)
+                .withId(id)
+                .withCreatedDate(createdDate)
+                .withUpdatedDate(updatedDate)
+                .validate());
     }
 
-    @Override
-    public UUID getObjectId() {
-        return objectId;
+    protected PluginCustomField(final PluginCustomField.Builder<?> builder) {
+        super(builder);
     }
 
-    @Override
-    public ObjectType getObjectType() {
-        return objectType;
+    public PluginCustomField(final PluginCustomField that) {
+        super(that);
     }
 
-    @Override
-    public String getFieldName() {
-        return fieldName;
-    }
+    @SuppressWarnings("unchecked")
+    public static class Builder<T extends PluginCustomField.Builder<T>> 
+        extends CustomFieldImp.Builder<T> {
 
-    @Override
-    public String getFieldValue() {
-        return fieldValue;
-    }
-
-    @Override
-    public UUID getId() {
-        return id;
-    }
-
-    @Override
-    public DateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    @Override
-    public DateTime getUpdatedDate() {
-        return updatedDate;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginCustomField{");
-        sb.append("objectId=").append(objectId);
-        sb.append(", objectType=").append(objectType);
-        sb.append(", fieldName='").append(fieldName).append('\'');
-        sb.append(", fieldValue='").append(fieldValue).append('\'');
-        sb.append(", id=").append(id);
-        sb.append(", createdDate=").append(createdDate);
-        sb.append(", updatedDate=").append(updatedDate);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Builder() {
         }
 
-        final PluginCustomField that = (PluginCustomField) o;
+        public Builder(final Builder that) {
+            super(that);
+        }
 
-        if (objectId != null ? !objectId.equals(that.objectId) : that.objectId != null) {
-            return false;
+        @Override
+        public Builder validate() {
+            return this;
         }
-        if (objectType != that.objectType) {
-            return false;
-        }
-        if (fieldName != null ? !fieldName.equals(that.fieldName) : that.fieldName != null) {
-            return false;
-        }
-        if (fieldValue != null ? !fieldValue.equals(that.fieldValue) : that.fieldValue != null) {
-            return false;
-        }
-        if (id != null ? !id.equals(that.id) : that.id != null) {
-            return false;
-        }
-        if (createdDate != null ? createdDate.compareTo(that.createdDate) != 0 : that.createdDate != null) {
-            return false;
-        }
-        return updatedDate != null ? updatedDate.compareTo(that.updatedDate) == 0 : that.updatedDate == null;
-    }
 
-    @Override
-    public int hashCode() {
-        int result = objectId != null ? objectId.hashCode() : 0;
-        result = 31 * result + (objectType != null ? objectType.hashCode() : 0);
-        result = 31 * result + (fieldName != null ? fieldName.hashCode() : 0);
-        result = 31 * result + (fieldValue != null ? fieldValue.hashCode() : 0);
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
-        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        return result;
+        @Override
+        public PluginCustomField build() {
+            return new PluginCustomField(this.validate());
+        }
     }
 }
