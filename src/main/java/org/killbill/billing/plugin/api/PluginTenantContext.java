@@ -19,61 +19,48 @@
 package org.killbill.billing.plugin.api;
 
 import java.util.UUID;
-
 import javax.annotation.Nullable;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.killbill.billing.util.callcontext.TenantContext;
+import org.killbill.billing.util.callcontext.boilerplate.TenantContextImp;
 
-public class PluginTenantContext implements TenantContext {
-
-    protected final UUID accountId;
-    protected final UUID tenantId;
+@JsonDeserialize( builder = PluginTenantContext.Builder.class )
+public class PluginTenantContext extends TenantContextImp {
 
     public PluginTenantContext(@Nullable final UUID accountId, final UUID tenantId) {
-        this.accountId = accountId;
-        this.tenantId = tenantId;
+        this(new Builder<>()
+        .withAccountId(accountId)
+        .withTenantId(tenantId)
+        .validate());
     }
 
-    @Override
-    public UUID getAccountId() {
-        return accountId;
+    protected PluginTenantContext(final PluginTenantContext.Builder<?> builder) {
+        super(builder);
     }
 
-    @Override
-    public UUID getTenantId() {
-        return tenantId;
+    public PluginTenantContext(final PluginTenantContext that) {
+        super(that);
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginTenantContext{");
-        sb.append("accountId=").append(accountId);
-        sb.append(", tenantId=").append(tenantId);
-        sb.append('}');
-        return sb.toString();
-    }
+    @SuppressWarnings("unchecked")
+    public static class Builder<T extends PluginTenantContext.Builder<T>> 
+        extends TenantContextImp.Builder<T> {
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Builder() {
         }
 
-        final PluginTenantContext that = (PluginTenantContext) o;
-
-        if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) {
-            return false;
+        public Builder(final Builder that) {
+            super(that);
         }
-        return tenantId != null ? tenantId.equals(that.tenantId) : that.tenantId == null;
-    }
 
-    @Override
-    public int hashCode() {
-        int result = accountId != null ? accountId.hashCode() : 0;
-        result = 31 * result + (tenantId != null ? tenantId.hashCode() : 0);
-        return result;
+        @Override
+        public Builder validate() {
+            return this;
+        }
+
+        @Override
+        public PluginTenantContext build() {
+            return new PluginTenantContext(this.validate());
+        }
     }
 }
