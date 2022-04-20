@@ -19,15 +19,12 @@ package org.killbill.billing.invoice.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.invoice.api.InvoiceCreationEvent;
 
 @JsonDeserialize( builder = InvoiceCreationEventImp.Builder.class )
-public class InvoiceCreationEventImp implements InvoiceCreationEvent, Serializable {
-
-    private static final long serialVersionUID = 0x16BB71F278A6B022L;
+public class InvoiceCreationEventImp implements InvoiceCreationEvent {
 
 
     public InvoiceCreationEventImp(final InvoiceCreationEventImp that) {
@@ -43,7 +40,6 @@ public class InvoiceCreationEventImp implements InvoiceCreationEvent, Serializab
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final InvoiceCreationEventImp that = (InvoiceCreationEventImp) o;
         return true;
     }
     @Override

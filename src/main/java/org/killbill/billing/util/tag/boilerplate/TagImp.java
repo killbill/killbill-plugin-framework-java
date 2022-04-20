@@ -19,7 +19,6 @@ package org.killbill.billing.util.tag.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,9 +27,7 @@ import org.killbill.billing.ObjectType;
 import org.killbill.billing.util.tag.Tag;
 
 @JsonDeserialize( builder = TagImp.Builder.class )
-public class TagImp implements Tag, Serializable {
-
-    private static final long serialVersionUID = 0x539F63B6FE1DFED5L;
+public class TagImp implements Tag {
 
     protected DateTime createdDate;
     protected UUID id;

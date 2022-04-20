@@ -19,16 +19,13 @@ package org.killbill.billing.util.callcontext.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = TenantContextImp.Builder.class )
-public class TenantContextImp implements TenantContext, Serializable {
-
-    private static final long serialVersionUID = 0x31D7DDF355CBD496L;
+public class TenantContextImp implements TenantContext {
 
     protected UUID accountId;
     protected UUID tenantId;

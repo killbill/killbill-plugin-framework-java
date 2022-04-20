@@ -19,7 +19,6 @@ package org.killbill.billing.util.audit.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,9 +28,7 @@ import org.killbill.billing.util.audit.AuditLog;
 import org.killbill.billing.util.audit.ChangeType;
 
 @JsonDeserialize( builder = AuditLogImp.Builder.class )
-public class AuditLogImp implements AuditLog, Serializable {
-
-    private static final long serialVersionUID = 0x16152909987F8908L;
+public class AuditLogImp implements AuditLog {
 
     protected UUID auditedEntityId;
     protected ObjectType auditedObjectType;

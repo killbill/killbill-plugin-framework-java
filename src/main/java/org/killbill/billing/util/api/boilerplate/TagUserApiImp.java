@@ -19,7 +19,6 @@ package org.killbill.billing.util.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -39,9 +38,7 @@ import org.killbill.billing.util.tag.Tag;
 import org.killbill.billing.util.tag.TagDefinition;
 
 @JsonDeserialize( builder = TagUserApiImp.Builder.class )
-public class TagUserApiImp implements TagUserApi, Serializable {
-
-    private static final long serialVersionUID = 0xEDC141D1F9BD398AL;
+public class TagUserApiImp implements TagUserApi {
 
 
     public TagUserApiImp(final TagUserApiImp that) {
@@ -82,20 +79,20 @@ public class TagUserApiImp implements TagUserApi, Serializable {
         throw new UnsupportedOperationException("createTagDefinition(java.lang.String, java.lang.String, java.util.Set<org.killbill.billing.ObjectType>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public TagDefinition getTagDefinition(final UUID tagDefinitionId, final TenantContext context) {
-        throw new UnsupportedOperationException("getTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
-    public void deleteTagDefinition(final UUID tagDefinitionId, final CallContext context) {
-        throw new UnsupportedOperationException("deleteTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public List<Tag> getTagsForAccountType(final UUID accountId, final ObjectType objectType, final boolean includedDeleted, final TenantContext context) {
+        throw new UnsupportedOperationException("getTagsForAccountType(java.util.UUID, org.killbill.billing.ObjectType, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<Tag> getTagsForAccount(final UUID accountId, final boolean includedDeleted, final TenantContext context) {
         throw new UnsupportedOperationException("getTagsForAccount(java.util.UUID, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public List<Tag> getTagsForAccountType(final UUID accountId, final ObjectType objectType, final boolean includedDeleted, final TenantContext context) {
-        throw new UnsupportedOperationException("getTagsForAccountType(java.util.UUID, org.killbill.billing.ObjectType, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public TagDefinition getTagDefinition(final UUID tagDefinitionId, final TenantContext context) {
+        throw new UnsupportedOperationException("getTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public void deleteTagDefinition(final UUID tagDefinitionId, final CallContext context) {
+        throw new UnsupportedOperationException("deleteTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getTagAuditLogsWithHistoryForId(final UUID tagId, final AuditLevel auditLevel, final TenantContext context) {
@@ -125,7 +122,6 @@ public class TagUserApiImp implements TagUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final TagUserApiImp that = (TagUserApiImp) o;
         return true;
     }
     @Override

@@ -19,7 +19,6 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -38,9 +37,7 @@ import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.util.callcontext.CallContext;
 
 @JsonDeserialize( builder = EntitlementImp.Builder.class )
-public class EntitlementImp implements Entitlement, Serializable {
-
-    private static final long serialVersionUID = 0xA45D9D5CD7043073L;
+public class EntitlementImp implements Entitlement {
 
     protected UUID accountId;
     protected UUID baseEntitlementId;

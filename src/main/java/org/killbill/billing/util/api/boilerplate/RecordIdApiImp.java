@@ -19,7 +19,6 @@ package org.killbill.billing.util.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,9 +27,7 @@ import org.killbill.billing.util.api.RecordIdApi;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = RecordIdApiImp.Builder.class )
-public class RecordIdApiImp implements RecordIdApi, Serializable {
-
-    private static final long serialVersionUID = 0xC0DB0004BC757D37L;
+public class RecordIdApiImp implements RecordIdApi {
 
 
     public RecordIdApiImp(final RecordIdApiImp that) {
@@ -50,7 +47,6 @@ public class RecordIdApiImp implements RecordIdApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final RecordIdApiImp that = (RecordIdApiImp) o;
         return true;
     }
     @Override

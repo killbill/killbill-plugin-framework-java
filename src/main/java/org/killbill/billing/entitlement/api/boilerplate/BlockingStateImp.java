@@ -19,7 +19,6 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,9 +27,7 @@ import org.killbill.billing.entitlement.api.BlockingState;
 import org.killbill.billing.entitlement.api.BlockingStateType;
 
 @JsonDeserialize( builder = BlockingStateImp.Builder.class )
-public class BlockingStateImp implements BlockingState, Serializable {
-
-    private static final long serialVersionUID = 0x31C0C2B0A0CB238AL;
+public class BlockingStateImp implements BlockingState {
 
     protected UUID blockedId;
     protected DateTime createdDate;

@@ -19,7 +19,6 @@ package org.killbill.billing.payment.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -38,9 +37,7 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = InvoicePaymentApiImp.Builder.class )
-public class InvoicePaymentApiImp implements InvoicePaymentApi, Serializable {
-
-    private static final long serialVersionUID = 0xB0A62AA1EE29BD1EL;
+public class InvoicePaymentApiImp implements InvoicePaymentApi {
 
 
     public InvoicePaymentApiImp(final InvoicePaymentApiImp that) {
@@ -49,12 +46,12 @@ public class InvoicePaymentApiImp implements InvoicePaymentApi, Serializable {
     }
     protected InvoicePaymentApiImp() { }
     @Override
-    public InvoicePayment createPurchaseForInvoicePayment(final Account account, final UUID invoiceId, final UUID paymentMethodId, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentExternalKey, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
-        throw new UnsupportedOperationException("createPurchaseForInvoicePayment(org.killbill.billing.account.api.Account, java.util.UUID, java.util.UUID, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public InvoicePayment createCreditForInvoicePayment(final boolean isAdjusted, final Map<UUID, BigDecimal> adjustments, final Account account, final UUID originalPaymentId, final UUID paymentMethodId, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentExternalKey, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
         throw new UnsupportedOperationException("createCreditForInvoicePayment(boolean, java.util.Map<java.util.UUID, java.math.BigDecimal>, org.killbill.billing.account.api.Account, java.util.UUID, java.util.UUID, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public InvoicePayment createPurchaseForInvoicePayment(final Account account, final UUID invoiceId, final UUID paymentMethodId, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentExternalKey, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
+        throw new UnsupportedOperationException("createPurchaseForInvoicePayment(org.killbill.billing.account.api.Account, java.util.UUID, java.util.UUID, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public List<InvoicePayment> getInvoicePayments(final UUID paymentId, final TenantContext context) {
@@ -69,12 +66,12 @@ public class InvoicePaymentApiImp implements InvoicePaymentApi, Serializable {
         throw new UnsupportedOperationException("createChargebackReversalForInvoicePayment(org.killbill.billing.account.api.Account, java.util.UUID, org.joda.time.DateTime, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<InvoicePayment> getInvoicePaymentsByAccount(final UUID accountId, final TenantContext context) {
-        throw new UnsupportedOperationException("getInvoicePaymentsByAccount(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public InvoicePayment createRefundForInvoicePayment(final boolean isAdjusted, final Map<UUID, BigDecimal> adjustments, final Account account, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
         throw new UnsupportedOperationException("createRefundForInvoicePayment(boolean, java.util.Map<java.util.UUID, java.math.BigDecimal>, org.killbill.billing.account.api.Account, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public List<InvoicePayment> getInvoicePaymentsByAccount(final UUID accountId, final TenantContext context) {
+        throw new UnsupportedOperationException("getInvoicePaymentsByAccount(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public InvoicePayment createChargebackForInvoicePayment(final Account account, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
@@ -88,7 +85,6 @@ public class InvoicePaymentApiImp implements InvoicePaymentApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final InvoicePaymentApiImp that = (InvoicePaymentApiImp) o;
         return true;
     }
     @Override

@@ -19,7 +19,6 @@ package org.killbill.billing.osgi.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -27,9 +26,7 @@ import org.killbill.billing.osgi.api.Healthcheck;
 import org.killbill.billing.tenant.api.Tenant;
 
 @JsonDeserialize( builder = HealthcheckImp.Builder.class )
-public class HealthcheckImp implements Healthcheck, Serializable {
-
-    private static final long serialVersionUID = 0xE655C4248CAE949FL;
+public class HealthcheckImp implements Healthcheck {
 
 
     public HealthcheckImp(final HealthcheckImp that) {
@@ -49,7 +46,6 @@ public class HealthcheckImp implements Healthcheck, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final HealthcheckImp that = (HealthcheckImp) o;
         return true;
     }
     @Override

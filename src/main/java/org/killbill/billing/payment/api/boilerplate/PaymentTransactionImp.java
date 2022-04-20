@@ -19,7 +19,6 @@ package org.killbill.billing.payment.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
@@ -32,9 +31,7 @@ import org.killbill.billing.payment.api.TransactionType;
 import org.killbill.billing.payment.plugin.api.PaymentTransactionInfoPlugin;
 
 @JsonDeserialize( builder = PaymentTransactionImp.Builder.class )
-public class PaymentTransactionImp implements PaymentTransaction, Serializable {
-
-    private static final long serialVersionUID = 0x1B067DE9A179213FL;
+public class PaymentTransactionImp implements PaymentTransaction {
 
     protected BigDecimal amount;
     protected DateTime createdDate;

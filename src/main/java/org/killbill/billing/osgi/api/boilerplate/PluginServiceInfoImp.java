@@ -19,15 +19,12 @@ package org.killbill.billing.osgi.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.osgi.api.PluginServiceInfo;
 
 @JsonDeserialize( builder = PluginServiceInfoImp.Builder.class )
-public class PluginServiceInfoImp implements PluginServiceInfo, Serializable {
-
-    private static final long serialVersionUID = 0x673FA98461167B1FL;
+public class PluginServiceInfoImp implements PluginServiceInfo {
 
     protected String registrationName;
     protected String serviceTypeName;

@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.rules.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.BillingPeriod;
@@ -30,9 +29,7 @@ import org.killbill.billing.catalog.api.StaticCatalog;
 import org.killbill.billing.catalog.api.rules.CasePriceList;
 
 @JsonDeserialize( builder = CasePriceListImp.Builder.class )
-public class CasePriceListImp implements CasePriceList, Serializable {
-
-    private static final long serialVersionUID = 0x38E049510E90B5DEL;
+public class CasePriceListImp implements CasePriceList {
 
     protected BillingPeriod billingPeriod;
     protected StaticCatalog catalog;

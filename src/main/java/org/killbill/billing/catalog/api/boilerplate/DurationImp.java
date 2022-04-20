@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.joda.time.DateTime;
@@ -30,9 +29,7 @@ import org.killbill.billing.catalog.api.Duration;
 import org.killbill.billing.catalog.api.TimeUnit;
 
 @JsonDeserialize( builder = DurationImp.Builder.class )
-public class DurationImp implements Duration, Serializable {
-
-    private static final long serialVersionUID = 0x960B032F06518C3EL;
+public class DurationImp implements Duration {
 
     protected int number;
     protected TimeUnit unit;

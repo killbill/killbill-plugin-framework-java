@@ -19,15 +19,12 @@ package org.killbill.billing.tenant.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.tenant.api.TenantData;
 
 @JsonDeserialize( builder = TenantDataImp.Builder.class )
-public class TenantDataImp implements TenantData, Serializable {
-
-    private static final long serialVersionUID = 0x1646CA31F127A6ABL;
+public class TenantDataImp implements TenantData {
 
     protected String apiKey;
     protected String apiSecret;

@@ -19,7 +19,6 @@ package org.killbill.billing.util.audit.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -30,9 +29,7 @@ import org.killbill.billing.util.audit.AccountAuditLogsForObjectType;
 import org.killbill.billing.util.audit.AuditLog;
 
 @JsonDeserialize( builder = AccountAuditLogsImp.Builder.class )
-public class AccountAuditLogsImp implements AccountAuditLogs, Serializable {
-
-    private static final long serialVersionUID = 0xFBF3458749273B1CL;
+public class AccountAuditLogsImp implements AccountAuditLogs {
 
     protected List<AuditLog> auditLogs;
     protected List<AuditLog> auditLogsForAccount;
@@ -91,24 +88,24 @@ public class AccountAuditLogsImp implements AccountAuditLogs, Serializable {
         throw new UnsupportedOperationException("getAuditLogsForInvoicePayment(java.util.UUID) must be implemented.");
     }
     @Override
-    public List<AuditLog> getAuditLogsForPayment(final UUID paymentId) {
-        throw new UnsupportedOperationException("getAuditLogsForPayment(java.util.UUID) must be implemented.");
-    }
-    @Override
     public List<AuditLog> getAuditLogsForInvoice(final UUID invoiceId) {
         throw new UnsupportedOperationException("getAuditLogsForInvoice(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public List<AuditLog> getAuditLogsForPayment(final UUID paymentId) {
+        throw new UnsupportedOperationException("getAuditLogsForPayment(java.util.UUID) must be implemented.");
     }
     @Override
     public List<AuditLog> getAuditLogsForPaymentAttempt(final UUID paymentAttemptId) {
         throw new UnsupportedOperationException("getAuditLogsForPaymentAttempt(java.util.UUID) must be implemented.");
     }
     @Override
-    public List<AuditLog> getAuditLogsForBundle(final UUID bundleId) {
-        throw new UnsupportedOperationException("getAuditLogsForBundle(java.util.UUID) must be implemented.");
-    }
-    @Override
     public List<AuditLog> getAuditLogsForPaymentTransaction(final UUID paymentTransactionId) {
         throw new UnsupportedOperationException("getAuditLogsForPaymentTransaction(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public List<AuditLog> getAuditLogsForBundle(final UUID bundleId) {
+        throw new UnsupportedOperationException("getAuditLogsForBundle(java.util.UUID) must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {

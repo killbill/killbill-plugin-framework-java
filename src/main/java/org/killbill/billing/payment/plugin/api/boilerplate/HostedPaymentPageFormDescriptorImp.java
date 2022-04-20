@@ -19,7 +19,6 @@ package org.killbill.billing.payment.plugin.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,9 +27,7 @@ import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.plugin.api.HostedPaymentPageFormDescriptor;
 
 @JsonDeserialize( builder = HostedPaymentPageFormDescriptorImp.Builder.class )
-public class HostedPaymentPageFormDescriptorImp implements HostedPaymentPageFormDescriptor, Serializable {
-
-    private static final long serialVersionUID = 0xB11ACD0862E725EBL;
+public class HostedPaymentPageFormDescriptorImp implements HostedPaymentPageFormDescriptor {
 
     protected List<PluginProperty> formFields;
     protected String formMethod;

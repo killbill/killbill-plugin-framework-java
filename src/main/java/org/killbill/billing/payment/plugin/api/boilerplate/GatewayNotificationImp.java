@@ -19,7 +19,6 @@ package org.killbill.billing.payment.plugin.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +28,7 @@ import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.plugin.api.GatewayNotification;
 
 @JsonDeserialize( builder = GatewayNotificationImp.Builder.class )
-public class GatewayNotificationImp implements GatewayNotification, Serializable {
-
-    private static final long serialVersionUID = 0x4CAF1439F4E546C7L;
+public class GatewayNotificationImp implements GatewayNotification {
 
     protected String entity;
     protected Map<String, List<String>> headers;

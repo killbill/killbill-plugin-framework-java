@@ -19,7 +19,6 @@ package org.killbill.billing.util.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -35,9 +34,7 @@ import org.killbill.billing.util.customfield.CustomField;
 import org.killbill.billing.util.entity.Pagination;
 
 @JsonDeserialize( builder = CustomFieldUserApiImp.Builder.class )
-public class CustomFieldUserApiImp implements CustomFieldUserApi, Serializable {
-
-    private static final long serialVersionUID = 0xBDAF40CD5C888F3AL;
+public class CustomFieldUserApiImp implements CustomFieldUserApi {
 
 
     public CustomFieldUserApiImp(final CustomFieldUserApiImp that) {
@@ -54,16 +51,16 @@ public class CustomFieldUserApiImp implements CustomFieldUserApi, Serializable {
         throw new UnsupportedOperationException("getCustomFieldsForAccount(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public List<AuditLogWithHistory> getCustomFieldAuditLogsWithHistoryForId(final UUID customFieldId, final AuditLevel auditLevel, final TenantContext context) {
-        throw new UnsupportedOperationException("getCustomFieldAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public void removeCustomFields(final List<CustomField> fields, final CallContext context) {
         throw new UnsupportedOperationException("removeCustomFields(java.util.List<org.killbill.billing.util.customfield.CustomField>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Pagination<CustomField> searchCustomFields(final String fieldName, final String fieldValue, final ObjectType objectType, final Long offset, final Long limit, final TenantContext context) {
         throw new UnsupportedOperationException("searchCustomFields(java.lang.String, java.lang.String, org.killbill.billing.ObjectType, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public List<AuditLogWithHistory> getCustomFieldAuditLogsWithHistoryForId(final UUID customFieldId, final AuditLevel auditLevel, final TenantContext context) {
+        throw new UnsupportedOperationException("getCustomFieldAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<CustomField> getCustomFieldsForAccountType(final UUID accountId, final ObjectType objectType, final TenantContext context) {
@@ -78,12 +75,12 @@ public class CustomFieldUserApiImp implements CustomFieldUserApi, Serializable {
         throw new UnsupportedOperationException("searchCustomFields(java.lang.String, org.killbill.billing.ObjectType, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public void updateCustomFields(final List<CustomField> fields, final CallContext context) {
-        throw new UnsupportedOperationException("updateCustomFields(java.util.List<org.killbill.billing.util.customfield.CustomField>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public Pagination<CustomField> searchCustomFields(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
         throw new UnsupportedOperationException("searchCustomFields(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public void updateCustomFields(final List<CustomField> fields, final CallContext context) {
+        throw new UnsupportedOperationException("updateCustomFields(java.util.List<org.killbill.billing.util.customfield.CustomField>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Pagination<CustomField> getCustomFields(final Long offset, final Long limit, final TenantContext context) {
@@ -97,7 +94,6 @@ public class CustomFieldUserApiImp implements CustomFieldUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final CustomFieldUserApiImp that = (CustomFieldUserApiImp) o;
         return true;
     }
     @Override

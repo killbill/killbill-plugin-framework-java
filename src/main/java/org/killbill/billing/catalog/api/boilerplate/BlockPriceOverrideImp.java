@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
@@ -27,9 +26,7 @@ import org.killbill.billing.catalog.api.BlockPriceOverride;
 import org.killbill.billing.catalog.api.Currency;
 
 @JsonDeserialize( builder = BlockPriceOverrideImp.Builder.class )
-public class BlockPriceOverrideImp implements BlockPriceOverride, Serializable {
-
-    private static final long serialVersionUID = 0x3D35C7641AB97F04L;
+public class BlockPriceOverrideImp implements BlockPriceOverride {
 
     protected Currency currency;
     protected BigDecimal price;

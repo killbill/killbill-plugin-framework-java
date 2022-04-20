@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +29,7 @@ import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
 import org.killbill.billing.catalog.api.UsagePriceOverride;
 
 @JsonDeserialize( builder = PlanPhasePriceOverrideImp.Builder.class )
-public class PlanPhasePriceOverrideImp implements PlanPhasePriceOverride, Serializable {
-
-    private static final long serialVersionUID = 0x7AAF7FEE20AC0469L;
+public class PlanPhasePriceOverrideImp implements PlanPhasePriceOverride {
 
     protected Currency currency;
     protected BigDecimal fixedPrice;

@@ -19,7 +19,6 @@ package org.killbill.billing.util.nodes.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.osgi.api.PluginInfo;
@@ -28,9 +27,7 @@ import org.killbill.billing.util.nodes.NodeCommand;
 import org.killbill.billing.util.nodes.NodeInfo;
 
 @JsonDeserialize( builder = KillbillNodesApiImp.Builder.class )
-public class KillbillNodesApiImp implements KillbillNodesApi, Serializable {
-
-    private static final long serialVersionUID = 0x8FC81437A4796EABL;
+public class KillbillNodesApiImp implements KillbillNodesApi {
 
     protected NodeInfo currentNodeInfo;
     protected Iterable<NodeInfo> nodesInfo;

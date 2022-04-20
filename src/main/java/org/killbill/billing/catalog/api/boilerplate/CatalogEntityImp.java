@@ -19,15 +19,12 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.CatalogEntity;
 
 @JsonDeserialize( builder = CatalogEntityImp.Builder.class )
-public class CatalogEntityImp implements CatalogEntity, Serializable {
-
-    private static final long serialVersionUID = 0x1EAEAFBDB03087E2L;
+public class CatalogEntityImp implements CatalogEntity {
 
     protected String name;
     protected String prettyName;

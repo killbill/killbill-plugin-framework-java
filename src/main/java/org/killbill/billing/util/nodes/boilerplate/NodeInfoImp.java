@@ -19,7 +19,6 @@ package org.killbill.billing.util.nodes.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.joda.time.DateTime;
@@ -27,9 +26,7 @@ import org.killbill.billing.osgi.api.PluginInfo;
 import org.killbill.billing.util.nodes.NodeInfo;
 
 @JsonDeserialize( builder = NodeInfoImp.Builder.class )
-public class NodeInfoImp implements NodeInfo, Serializable {
-
-    private static final long serialVersionUID = 0xF60FCF394C2541BBL;
+public class NodeInfoImp implements NodeInfo {
 
     protected String apiVersion;
     protected DateTime bootTime;

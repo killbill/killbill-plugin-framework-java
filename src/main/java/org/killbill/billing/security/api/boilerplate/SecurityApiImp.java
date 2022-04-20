@@ -19,7 +19,6 @@ package org.killbill.billing.security.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -32,9 +31,7 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = SecurityApiImp.Builder.class )
-public class SecurityApiImp implements SecurityApi, Serializable {
-
-    private static final long serialVersionUID = 0x393376B2A663D474L;
+public class SecurityApiImp implements SecurityApi {
 
     protected boolean isSubjectAuthenticated;
 
@@ -63,12 +60,12 @@ public class SecurityApiImp implements SecurityApi, Serializable {
         throw new UnsupportedOperationException("getCurrentUserPermissions(org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public void logout() {
-        throw new UnsupportedOperationException("logout() must be implemented.");
-    }
-    @Override
     public void login(final Object principal, final Object credentials) {
         throw new UnsupportedOperationException("login(java.lang.Object, java.lang.Object) must be implemented.");
+    }
+    @Override
+    public void logout() {
+        throw new UnsupportedOperationException("logout() must be implemented.");
     }
     @Override
     public List<String> getRoleDefinition(final String role, final TenantContext tenantContext) {
@@ -79,12 +76,12 @@ public class SecurityApiImp implements SecurityApi, Serializable {
         throw new UnsupportedOperationException("updateRoleDefinition(java.lang.String, java.util.List<java.lang.String>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<String> getUserRoles(final String username, final TenantContext tenantContext) {
-        throw new UnsupportedOperationException("getUserRoles(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public void invalidateUser(final String username, final CallContext context) {
         throw new UnsupportedOperationException("invalidateUser(java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public List<String> getUserRoles(final String username, final TenantContext tenantContext) {
+        throw new UnsupportedOperationException("getUserRoles(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void updateUserRoles(final String username, final List<String> roles, final CallContext context) {

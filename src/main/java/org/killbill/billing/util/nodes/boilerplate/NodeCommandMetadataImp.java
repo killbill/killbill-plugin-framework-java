@@ -19,7 +19,6 @@ package org.killbill.billing.util.nodes.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -27,9 +26,7 @@ import org.killbill.billing.util.nodes.NodeCommandMetadata;
 import org.killbill.billing.util.nodes.NodeCommandProperty;
 
 @JsonDeserialize( builder = NodeCommandMetadataImp.Builder.class )
-public class NodeCommandMetadataImp implements NodeCommandMetadata, Serializable {
-
-    private static final long serialVersionUID = 0xD541D122123FD230L;
+public class NodeCommandMetadataImp implements NodeCommandMetadata {
 
     protected List<NodeCommandProperty> properties;
 

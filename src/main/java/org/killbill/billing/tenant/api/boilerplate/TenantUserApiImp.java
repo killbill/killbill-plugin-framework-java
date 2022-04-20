@@ -19,7 +19,6 @@ package org.killbill.billing.tenant.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +32,7 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = TenantUserApiImp.Builder.class )
-public class TenantUserApiImp implements TenantUserApi, Serializable {
-
-    private static final long serialVersionUID = 0x59CEA9C2896AAEABL;
+public class TenantUserApiImp implements TenantUserApi {
 
 
     public TenantUserApiImp(final TenantUserApiImp that) {
@@ -83,7 +80,6 @@ public class TenantUserApiImp implements TenantUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final TenantUserApiImp that = (TenantUserApiImp) o;
         return true;
     }
     @Override

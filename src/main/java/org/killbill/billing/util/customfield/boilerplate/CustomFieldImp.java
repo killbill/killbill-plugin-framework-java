@@ -19,7 +19,6 @@ package org.killbill.billing.util.customfield.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,9 +27,7 @@ import org.killbill.billing.ObjectType;
 import org.killbill.billing.util.customfield.CustomField;
 
 @JsonDeserialize( builder = CustomFieldImp.Builder.class )
-public class CustomFieldImp implements CustomField, Serializable {
-
-    private static final long serialVersionUID = 0x9E64A364C19AB705L;
+public class CustomFieldImp implements CustomField {
 
     protected DateTime createdDate;
     protected String fieldName;

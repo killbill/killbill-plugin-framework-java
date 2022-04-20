@@ -19,7 +19,6 @@ package org.killbill.billing.usage.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -29,9 +28,7 @@ import org.killbill.billing.usage.api.RolledUpUnit;
 import org.killbill.billing.usage.api.RolledUpUsage;
 
 @JsonDeserialize( builder = RolledUpUsageImp.Builder.class )
-public class RolledUpUsageImp implements RolledUpUsage, Serializable {
-
-    private static final long serialVersionUID = 0x4A42500A5E79778BL;
+public class RolledUpUsageImp implements RolledUpUsage {
 
     protected LocalDate end;
     protected List<RolledUpUnit> rolledUpUnits;

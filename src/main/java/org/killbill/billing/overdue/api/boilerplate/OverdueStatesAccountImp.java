@@ -19,7 +19,6 @@ package org.killbill.billing.overdue.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.joda.time.Period;
@@ -27,9 +26,7 @@ import org.killbill.billing.overdue.api.OverdueState;
 import org.killbill.billing.overdue.api.OverdueStatesAccount;
 
 @JsonDeserialize( builder = OverdueStatesAccountImp.Builder.class )
-public class OverdueStatesAccountImp implements OverdueStatesAccount, Serializable {
-
-    private static final long serialVersionUID = 0x4828ABF3F348F92DL;
+public class OverdueStatesAccountImp implements OverdueStatesAccount {
 
     protected Period initialReevaluationInterval;
     protected OverdueState[] states;

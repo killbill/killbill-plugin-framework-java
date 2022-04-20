@@ -20,7 +20,6 @@ package org.killbill.billing.osgi.api.config.boilerplate;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.File;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.osgi.api.config.PluginConfig;
@@ -29,9 +28,7 @@ import org.killbill.billing.osgi.api.config.PluginRubyConfig;
 import org.killbill.billing.osgi.api.config.PluginType;
 
 @JsonDeserialize( builder = PluginRubyConfigImp.Builder.class )
-public class PluginRubyConfigImp implements PluginRubyConfig, Serializable {
-
-    private static final long serialVersionUID = 0x901C01B3EBBA102DL;
+public class PluginRubyConfigImp implements PluginRubyConfig {
 
     protected boolean isDisabled;
     protected boolean isSelectedForStart;

@@ -19,7 +19,6 @@ package org.killbill.billing.invoice.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,9 +26,7 @@ import org.joda.time.DateTime;
 import org.killbill.billing.invoice.api.InvoiceParentChild;
 
 @JsonDeserialize( builder = InvoiceParentChildImp.Builder.class )
-public class InvoiceParentChildImp implements InvoiceParentChild, Serializable {
-
-    private static final long serialVersionUID = 0x84A09113887080CCL;
+public class InvoiceParentChildImp implements InvoiceParentChild {
 
     protected UUID childAccountId;
     protected UUID childInvoiceId;

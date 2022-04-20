@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.rules.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.BillingActionPolicy;
@@ -32,9 +31,7 @@ import org.killbill.billing.catalog.api.StaticCatalog;
 import org.killbill.billing.catalog.api.rules.CaseCancelPolicy;
 
 @JsonDeserialize( builder = CaseCancelPolicyImp.Builder.class )
-public class CaseCancelPolicyImp implements CaseCancelPolicy, Serializable {
-
-    private static final long serialVersionUID = 0xE1E7268A5F18FDA4L;
+public class CaseCancelPolicyImp implements CaseCancelPolicy {
 
     protected BillingActionPolicy billingActionPolicy;
     protected BillingPeriod billingPeriod;

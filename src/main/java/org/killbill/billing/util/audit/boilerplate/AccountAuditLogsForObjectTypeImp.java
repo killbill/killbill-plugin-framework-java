@@ -19,7 +19,6 @@ package org.killbill.billing.util.audit.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,9 +27,7 @@ import org.killbill.billing.util.audit.AccountAuditLogsForObjectType;
 import org.killbill.billing.util.audit.AuditLog;
 
 @JsonDeserialize( builder = AccountAuditLogsForObjectTypeImp.Builder.class )
-public class AccountAuditLogsForObjectTypeImp implements AccountAuditLogsForObjectType, Serializable {
-
-    private static final long serialVersionUID = 0xB3553F1B265966FAL;
+public class AccountAuditLogsForObjectTypeImp implements AccountAuditLogsForObjectType {
 
 
     public AccountAuditLogsForObjectTypeImp(final AccountAuditLogsForObjectTypeImp that) {
@@ -50,7 +47,6 @@ public class AccountAuditLogsForObjectTypeImp implements AccountAuditLogsForObje
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final AccountAuditLogsForObjectTypeImp that = (AccountAuditLogsForObjectTypeImp) o;
         return true;
     }
     @Override

@@ -19,7 +19,6 @@ package org.killbill.billing.payment.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,9 +27,7 @@ import org.killbill.billing.payment.api.PaymentMethodPlugin;
 import org.killbill.billing.payment.api.PluginProperty;
 
 @JsonDeserialize( builder = PaymentMethodPluginImp.Builder.class )
-public class PaymentMethodPluginImp implements PaymentMethodPlugin, Serializable {
-
-    private static final long serialVersionUID = 0x42CEDE7E9AF09E20L;
+public class PaymentMethodPluginImp implements PaymentMethodPlugin {
 
     protected String externalPaymentMethodId;
     protected boolean isDefaultPaymentMethod;

@@ -19,7 +19,6 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -30,9 +29,7 @@ import org.killbill.billing.entitlement.api.SubscriptionBundle;
 import org.killbill.billing.entitlement.api.SubscriptionBundleTimeline;
 
 @JsonDeserialize( builder = SubscriptionBundleImp.Builder.class )
-public class SubscriptionBundleImp implements SubscriptionBundle, Serializable {
-
-    private static final long serialVersionUID = 0x31F82D72491256B4L;
+public class SubscriptionBundleImp implements SubscriptionBundle {
 
     protected UUID accountId;
     protected DateTime createdDate;

@@ -19,7 +19,6 @@ package org.killbill.billing.invoice.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,9 +30,7 @@ import org.killbill.billing.invoice.api.DryRunArguments;
 import org.killbill.billing.invoice.api.DryRunType;
 
 @JsonDeserialize( builder = DryRunArgumentsImp.Builder.class )
-public class DryRunArgumentsImp implements DryRunArguments, Serializable {
-
-    private static final long serialVersionUID = 0xC0A75EB539775834L;
+public class DryRunArgumentsImp implements DryRunArguments {
 
     protected SubscriptionEventType action;
     protected BillingActionPolicy billingActionPolicy;

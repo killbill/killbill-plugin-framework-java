@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.joda.time.DateTime;
@@ -32,9 +31,7 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = CatalogUserApiImp.Builder.class )
-public class CatalogUserApiImp implements CatalogUserApi, Serializable {
-
-    private static final long serialVersionUID = 0x3067F07C17AFFCFAL;
+public class CatalogUserApiImp implements CatalogUserApi {
 
 
     public CatalogUserApiImp(final CatalogUserApiImp that) {
@@ -43,16 +40,16 @@ public class CatalogUserApiImp implements CatalogUserApi, Serializable {
     }
     protected CatalogUserApiImp() { }
     @Override
-    public void addSimplePlan(final SimplePlanDescriptor planDescriptor, final DateTime requestedDate, final CallContext context) {
-        throw new UnsupportedOperationException("addSimplePlan(org.killbill.billing.catalog.api.SimplePlanDescriptor, org.joda.time.DateTime, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public VersionedCatalog getCatalog(final String catalogName, final TenantContext context) {
         throw new UnsupportedOperationException("getCatalog(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public StaticCatalog getCurrentCatalog(final String catalogName, final TenantContext context) {
         throw new UnsupportedOperationException("getCurrentCatalog(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public void addSimplePlan(final SimplePlanDescriptor planDescriptor, final DateTime requestedDate, final CallContext context) {
+        throw new UnsupportedOperationException("addSimplePlan(org.killbill.billing.catalog.api.SimplePlanDescriptor, org.joda.time.DateTime, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public void createDefaultEmptyCatalog(final DateTime effectiveDate, final CallContext callContext) {
@@ -74,7 +71,6 @@ public class CatalogUserApiImp implements CatalogUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final CatalogUserApiImp that = (CatalogUserApiImp) o;
         return true;
     }
     @Override

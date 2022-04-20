@@ -19,15 +19,12 @@ package org.killbill.billing.util.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.util.api.ColumnInfo;
 
 @JsonDeserialize( builder = ColumnInfoImp.Builder.class )
-public class ColumnInfoImp implements ColumnInfo, Serializable {
-
-    private static final long serialVersionUID = 0xECD150FD4BCA919L;
+public class ColumnInfoImp implements ColumnInfo {
 
     protected String columnName;
     protected String dataType;

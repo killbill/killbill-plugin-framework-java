@@ -19,7 +19,6 @@ package org.killbill.billing.payment.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,9 +32,7 @@ import org.killbill.billing.payment.plugin.api.HostedPaymentPageFormDescriptor;
 import org.killbill.billing.util.callcontext.CallContext;
 
 @JsonDeserialize( builder = PaymentGatewayApiImp.Builder.class )
-public class PaymentGatewayApiImp implements PaymentGatewayApi, Serializable {
-
-    private static final long serialVersionUID = 0x87B5E31851B496F9L;
+public class PaymentGatewayApiImp implements PaymentGatewayApi {
 
 
     public PaymentGatewayApiImp(final PaymentGatewayApiImp that) {
@@ -67,7 +64,6 @@ public class PaymentGatewayApiImp implements PaymentGatewayApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final PaymentGatewayApiImp that = (PaymentGatewayApiImp) o;
         return true;
     }
     @Override

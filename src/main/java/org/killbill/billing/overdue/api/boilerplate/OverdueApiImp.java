@@ -19,7 +19,6 @@ package org.killbill.billing.overdue.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,9 +30,7 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = OverdueApiImp.Builder.class )
-public class OverdueApiImp implements OverdueApi, Serializable {
-
-    private static final long serialVersionUID = 0xB51D1B98180BE0EBL;
+public class OverdueApiImp implements OverdueApi {
 
 
     public OverdueApiImp(final OverdueApiImp that) {
@@ -65,7 +62,6 @@ public class OverdueApiImp implements OverdueApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final OverdueApiImp that = (OverdueApiImp) o;
         return true;
     }
     @Override

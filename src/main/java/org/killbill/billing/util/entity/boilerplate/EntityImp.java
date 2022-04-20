@@ -19,7 +19,6 @@ package org.killbill.billing.util.entity.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,9 +26,7 @@ import org.joda.time.DateTime;
 import org.killbill.billing.util.entity.Entity;
 
 @JsonDeserialize( builder = EntityImp.Builder.class )
-public class EntityImp implements Entity, Serializable {
-
-    private static final long serialVersionUID = 0x80416CA1F103FE6FL;
+public class EntityImp implements Entity {
 
     protected DateTime createdDate;
     protected UUID id;
