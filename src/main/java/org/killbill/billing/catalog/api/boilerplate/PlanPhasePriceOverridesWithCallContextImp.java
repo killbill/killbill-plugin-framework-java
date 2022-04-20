@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +27,7 @@ import org.killbill.billing.catalog.api.PlanPhasePriceOverridesWithCallContext;
 import org.killbill.billing.util.callcontext.CallContext;
 
 @JsonDeserialize( builder = PlanPhasePriceOverridesWithCallContextImp.Builder.class )
-public class PlanPhasePriceOverridesWithCallContextImp implements PlanPhasePriceOverridesWithCallContext, Serializable {
+public class PlanPhasePriceOverridesWithCallContextImp implements PlanPhasePriceOverridesWithCallContext {
 
     private static final long serialVersionUID = 0xFEAD7869462749EDL;
 

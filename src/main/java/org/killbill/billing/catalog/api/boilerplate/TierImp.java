@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.InternationalPrice;
@@ -28,7 +27,7 @@ import org.killbill.billing.catalog.api.Tier;
 import org.killbill.billing.catalog.api.TieredBlock;
 
 @JsonDeserialize( builder = TierImp.Builder.class )
-public class TierImp implements Tier, Serializable {
+public class TierImp implements Tier {
 
     private static final long serialVersionUID = 0x920E4CDB395343AEL;
 

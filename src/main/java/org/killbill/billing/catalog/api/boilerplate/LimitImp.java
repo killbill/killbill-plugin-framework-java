@@ -19,14 +19,13 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.Limit;
 import org.killbill.billing.catalog.api.Unit;
 
 @JsonDeserialize( builder = LimitImp.Builder.class )
-public class LimitImp implements Limit, Serializable {
+public class LimitImp implements Limit {
 
     private static final long serialVersionUID = 0xEDC0423E78E935EL;
 

@@ -19,7 +19,6 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +27,7 @@ import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
 import org.killbill.billing.entitlement.api.EntitlementSpecifier;
 
 @JsonDeserialize( builder = EntitlementSpecifierImp.Builder.class )
-public class EntitlementSpecifierImp implements EntitlementSpecifier, Serializable {
+public class EntitlementSpecifierImp implements EntitlementSpecifier {
 
     private static final long serialVersionUID = 0x2216884C686BC006L;
 

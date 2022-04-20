@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.BillingMode;
@@ -34,7 +33,7 @@ import org.killbill.billing.catalog.api.Usage;
 import org.killbill.billing.catalog.api.UsageType;
 
 @JsonDeserialize( builder = UsageImp.Builder.class )
-public class UsageImp implements Usage, Serializable {
+public class UsageImp implements Usage {
 
     private static final long serialVersionUID = 0x11BB994DEC17BA4FL;
 

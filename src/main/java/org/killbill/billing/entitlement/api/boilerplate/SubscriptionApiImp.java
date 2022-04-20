@@ -19,7 +19,6 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +40,7 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.billing.util.entity.Pagination;
 
 @JsonDeserialize( builder = SubscriptionApiImp.Builder.class )
-public class SubscriptionApiImp implements SubscriptionApi, Serializable {
+public class SubscriptionApiImp implements SubscriptionApi {
 
     private static final long serialVersionUID = 0xE8DBB39D0E927238L;
 
@@ -100,12 +99,12 @@ public class SubscriptionApiImp implements SubscriptionApi, Serializable {
         throw new UnsupportedOperationException("getSubscriptionAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public List<SubscriptionBundle> getSubscriptionBundlesForAccountIdAndExternalKey(final UUID accountId, final String externalKey, final TenantContext context) {
-        throw new UnsupportedOperationException("getSubscriptionBundlesForAccountIdAndExternalKey(java.util.UUID, java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public Pagination<SubscriptionBundle> getSubscriptionBundles(final Long offset, final Long limit, final TenantContext context) {
         throw new UnsupportedOperationException("getSubscriptionBundles(java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public List<SubscriptionBundle> getSubscriptionBundlesForAccountIdAndExternalKey(final UUID accountId, final String externalKey, final TenantContext context) {
+        throw new UnsupportedOperationException("getSubscriptionBundlesForAccountIdAndExternalKey(java.util.UUID, java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getSubscriptionBundleAuditLogsWithHistoryForId(final UUID bundleId, final AuditLevel auditLevel, final TenantContext context) {
@@ -123,7 +122,6 @@ public class SubscriptionApiImp implements SubscriptionApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final SubscriptionApiImp that = (SubscriptionApiImp) o;
         return true;
     }
     @Override

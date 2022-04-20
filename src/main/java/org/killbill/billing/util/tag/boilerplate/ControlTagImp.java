@@ -19,7 +19,6 @@ package org.killbill.billing.util.tag.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +28,7 @@ import org.killbill.billing.util.tag.ControlTag;
 import org.killbill.billing.util.tag.ControlTagType;
 
 @JsonDeserialize( builder = ControlTagImp.Builder.class )
-public class ControlTagImp implements ControlTag, Serializable {
+public class ControlTagImp implements ControlTag {
 
     private static final long serialVersionUID = 0xEF4996C6C6B04CDDL;
 

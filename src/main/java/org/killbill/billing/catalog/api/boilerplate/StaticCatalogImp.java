@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -40,7 +39,7 @@ import org.killbill.billing.catalog.api.Unit;
 import org.killbill.billing.catalog.api.rules.PlanRules;
 
 @JsonDeserialize( builder = StaticCatalogImp.Builder.class )
-public class StaticCatalogImp implements StaticCatalog, Serializable {
+public class StaticCatalogImp implements StaticCatalog {
 
     private static final long serialVersionUID = 0xE722A02C87A2AC87L;
 
@@ -114,24 +113,24 @@ public class StaticCatalogImp implements StaticCatalog, Serializable {
         return this.units;
     }
     @Override
-    public Plan createOrFindPlan(final PlanSpecifier spec, final PlanPhasePriceOverridesWithCallContext overrides) {
-        throw new UnsupportedOperationException("createOrFindPlan(org.killbill.billing.catalog.api.PlanSpecifier, org.killbill.billing.catalog.api.PlanPhasePriceOverridesWithCallContext) must be implemented.");
-    }
-    @Override
     public Plan findPlan(final String name) {
         throw new UnsupportedOperationException("findPlan(java.lang.String) must be implemented.");
+    }
+    @Override
+    public Plan createOrFindPlan(final PlanSpecifier spec, final PlanPhasePriceOverridesWithCallContext overrides) {
+        throw new UnsupportedOperationException("createOrFindPlan(org.killbill.billing.catalog.api.PlanSpecifier, org.killbill.billing.catalog.api.PlanPhasePriceOverridesWithCallContext) must be implemented.");
     }
     @Override
     public List<Listing> getAvailableAddOnListings(final String baseProductName, final String priceListName) {
         throw new UnsupportedOperationException("getAvailableAddOnListings(java.lang.String, java.lang.String) must be implemented.");
     }
     @Override
-    public Product findProduct(final String name) {
-        throw new UnsupportedOperationException("findProduct(java.lang.String) must be implemented.");
-    }
-    @Override
     public PlanPhase findPhase(final String name) {
         throw new UnsupportedOperationException("findPhase(java.lang.String) must be implemented.");
+    }
+    @Override
+    public Product findProduct(final String name) {
+        throw new UnsupportedOperationException("findProduct(java.lang.String) must be implemented.");
     }
     @Override
     public PriceList findPriceList(final String name) {

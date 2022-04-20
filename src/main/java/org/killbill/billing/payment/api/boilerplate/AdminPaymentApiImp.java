@@ -19,7 +19,6 @@ package org.killbill.billing.payment.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.payment.api.AdminPaymentApi;
@@ -31,7 +30,7 @@ import org.killbill.billing.payment.api.TransactionStatus;
 import org.killbill.billing.util.callcontext.CallContext;
 
 @JsonDeserialize( builder = AdminPaymentApiImp.Builder.class )
-public class AdminPaymentApiImp implements AdminPaymentApi, Serializable {
+public class AdminPaymentApiImp implements AdminPaymentApi {
 
     private static final long serialVersionUID = 0xCF79686F682D667FL;
 
@@ -53,7 +52,6 @@ public class AdminPaymentApiImp implements AdminPaymentApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final AdminPaymentApiImp that = (AdminPaymentApiImp) o;
         return true;
     }
     @Override

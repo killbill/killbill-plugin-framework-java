@@ -19,13 +19,12 @@ package org.killbill.billing.osgi.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.osgi.api.OSGIPluginProperties;
 
 @JsonDeserialize( builder = OSGIPluginPropertiesImp.Builder.class )
-public class OSGIPluginPropertiesImp implements OSGIPluginProperties, Serializable {
+public class OSGIPluginPropertiesImp implements OSGIPluginProperties {
 
     private static final long serialVersionUID = 0xBA59CD1E61252620L;
 
@@ -43,7 +42,6 @@ public class OSGIPluginPropertiesImp implements OSGIPluginProperties, Serializab
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final OSGIPluginPropertiesImp that = (OSGIPluginPropertiesImp) o;
         return true;
     }
     @Override

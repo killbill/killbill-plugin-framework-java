@@ -19,7 +19,6 @@ package org.killbill.billing.tenant.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,7 +26,7 @@ import org.joda.time.DateTime;
 import org.killbill.billing.tenant.api.Tenant;
 
 @JsonDeserialize( builder = TenantImp.Builder.class )
-public class TenantImp implements Tenant, Serializable {
+public class TenantImp implements Tenant {
 
     private static final long serialVersionUID = 0x498EFABC439B2F67L;
 

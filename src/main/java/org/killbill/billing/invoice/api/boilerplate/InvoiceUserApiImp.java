@@ -20,7 +20,6 @@ package org.killbill.billing.invoice.api.boilerplate;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.IOException;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,7 +43,7 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.billing.util.entity.Pagination;
 
 @JsonDeserialize( builder = InvoiceUserApiImp.Builder.class )
-public class InvoiceUserApiImp implements InvoiceUserApi, Serializable {
+public class InvoiceUserApiImp implements InvoiceUserApi {
 
     private static final long serialVersionUID = 0x43B28676FD363526L;
 
@@ -55,24 +54,24 @@ public class InvoiceUserApiImp implements InvoiceUserApi, Serializable {
     }
     protected InvoiceUserApiImp() { }
     @Override
-    public void transferChildCreditToParent(final UUID childAccountId, final CallContext context) {
-        throw new UnsupportedOperationException("transferChildCreditToParent(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public List<InvoiceItem> insertExternalCharges(final UUID accountId, final LocalDate effectiveDate, final Iterable<InvoiceItem> charges, final boolean autoCommit, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("insertExternalCharges(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.invoice.api.InvoiceItem>, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public void transferChildCreditToParent(final UUID childAccountId, final CallContext context) {
+        throw new UnsupportedOperationException("transferChildCreditToParent(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public String getInvoiceAsHTML(final UUID invoiceId, final TenantContext context) {
         throw new UnsupportedOperationException("getInvoiceAsHTML(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Pagination<Invoice> searchInvoices(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
-        throw new UnsupportedOperationException("searchInvoices(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public Invoice getInvoiceByPayment(final UUID paymentId, final TenantContext context) {
         throw new UnsupportedOperationException("getInvoiceByPayment(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public Pagination<Invoice> searchInvoices(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
+        throw new UnsupportedOperationException("searchInvoices(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<Invoice> getInvoicesByAccount(final UUID accountId, final boolean includesMigrated, final boolean includeVoidedInvoices, final TenantContext context) {
@@ -194,7 +193,6 @@ public class InvoiceUserApiImp implements InvoiceUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final InvoiceUserApiImp that = (InvoiceUserApiImp) o;
         return true;
     }
     @Override

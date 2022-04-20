@@ -19,7 +19,6 @@ package org.killbill.billing.util.callcontext.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +28,7 @@ import org.killbill.billing.util.callcontext.CallOrigin;
 import org.killbill.billing.util.callcontext.UserType;
 
 @JsonDeserialize( builder = CallContextImp.Builder.class )
-public class CallContextImp implements CallContext, Serializable {
+public class CallContextImp implements CallContext {
 
     private static final long serialVersionUID = 0xC2DEFB0ADAB50F6AL;
 

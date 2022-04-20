@@ -19,7 +19,6 @@ package org.killbill.billing.osgi.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.account.api.AccountUserApi;
@@ -46,7 +45,7 @@ import org.killbill.billing.util.api.TagUserApi;
 import org.killbill.billing.util.nodes.KillbillNodesApi;
 
 @JsonDeserialize( builder = OSGIKillbillImp.Builder.class )
-public class OSGIKillbillImp implements OSGIKillbill, Serializable {
+public class OSGIKillbillImp implements OSGIKillbill {
 
     private static final long serialVersionUID = 0x95EB15ABC31DA206L;
 

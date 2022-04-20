@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +30,7 @@ import org.killbill.billing.catalog.api.SimplePlanDescriptor;
 import org.killbill.billing.catalog.api.TimeUnit;
 
 @JsonDeserialize( builder = SimplePlanDescriptorImp.Builder.class )
-public class SimplePlanDescriptorImp implements SimplePlanDescriptor, Serializable {
+public class SimplePlanDescriptorImp implements SimplePlanDescriptor {
 
     private static final long serialVersionUID = 0x87AD39BFF808A74BL;
 

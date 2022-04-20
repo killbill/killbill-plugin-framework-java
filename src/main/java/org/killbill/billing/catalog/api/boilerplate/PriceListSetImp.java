@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +27,7 @@ import org.killbill.billing.catalog.api.PriceListSet;
 import org.killbill.billing.catalog.api.StaticCatalog;
 
 @JsonDeserialize( builder = PriceListSetImp.Builder.class )
-public class PriceListSetImp implements PriceListSet, Serializable {
+public class PriceListSetImp implements PriceListSet {
 
     private static final long serialVersionUID = 0x7F145FE5CA67CC48L;
 

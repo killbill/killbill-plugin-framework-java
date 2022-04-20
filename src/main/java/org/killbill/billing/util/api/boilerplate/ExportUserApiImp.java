@@ -20,7 +20,6 @@ package org.killbill.billing.util.api.boilerplate;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +28,7 @@ import org.killbill.billing.util.api.ExportUserApi;
 import org.killbill.billing.util.callcontext.CallContext;
 
 @JsonDeserialize( builder = ExportUserApiImp.Builder.class )
-public class ExportUserApiImp implements ExportUserApi, Serializable {
+public class ExportUserApiImp implements ExportUserApi {
 
     private static final long serialVersionUID = 0x34EA044484F07B17L;
 
@@ -55,7 +54,6 @@ public class ExportUserApiImp implements ExportUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final ExportUserApiImp that = (ExportUserApiImp) o;
         return true;
     }
     @Override

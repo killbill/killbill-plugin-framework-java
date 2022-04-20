@@ -19,7 +19,6 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,7 +27,7 @@ import org.killbill.billing.catalog.api.PhaseType;
 import org.killbill.billing.entitlement.api.EntitlementAOStatusDryRun;
 
 @JsonDeserialize( builder = EntitlementAOStatusDryRunImp.Builder.class )
-public class EntitlementAOStatusDryRunImp implements EntitlementAOStatusDryRun, Serializable {
+public class EntitlementAOStatusDryRunImp implements EntitlementAOStatusDryRun {
 
     private static final long serialVersionUID = 0xFA53649A6CD7E597L;
 

@@ -19,7 +19,6 @@ package org.killbill.billing.tenant.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = TenantUserApiImp.Builder.class )
-public class TenantUserApiImp implements TenantUserApi, Serializable {
+public class TenantUserApiImp implements TenantUserApi {
 
     private static final long serialVersionUID = 0x59CEA9C2896AAEABL;
 
@@ -68,12 +67,12 @@ public class TenantUserApiImp implements TenantUserApi, Serializable {
         throw new UnsupportedOperationException("getTenantValuesForKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Tenant getTenantById(final UUID tenantId) {
-        throw new UnsupportedOperationException("getTenantById(java.util.UUID) must be implemented.");
-    }
-    @Override
     public Map<String, List<String>> searchTenantKeyValues(final String searchKey, final TenantContext context) {
         throw new UnsupportedOperationException("searchTenantKeyValues(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public Tenant getTenantById(final UUID tenantId) {
+        throw new UnsupportedOperationException("getTenantById(java.util.UUID) must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {
@@ -83,7 +82,6 @@ public class TenantUserApiImp implements TenantUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final TenantUserApiImp that = (TenantUserApiImp) o;
         return true;
     }
     @Override

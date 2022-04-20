@@ -19,14 +19,13 @@ package org.killbill.billing.util.nodes.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.util.nodes.NodeCommand;
 import org.killbill.billing.util.nodes.NodeCommandMetadata;
 
 @JsonDeserialize( builder = NodeCommandImp.Builder.class )
-public class NodeCommandImp implements NodeCommand, Serializable {
+public class NodeCommandImp implements NodeCommand {
 
     private static final long serialVersionUID = 0xACC5A6CA0AF22EEFL;
 

@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.rules.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.BillingAlignment;
@@ -32,7 +31,7 @@ import org.killbill.billing.catalog.api.StaticCatalog;
 import org.killbill.billing.catalog.api.rules.CaseBillingAlignment;
 
 @JsonDeserialize( builder = CaseBillingAlignmentImp.Builder.class )
-public class CaseBillingAlignmentImp implements CaseBillingAlignment, Serializable {
+public class CaseBillingAlignmentImp implements CaseBillingAlignment {
 
     private static final long serialVersionUID = 0xD6A4C0E45541455L;
 

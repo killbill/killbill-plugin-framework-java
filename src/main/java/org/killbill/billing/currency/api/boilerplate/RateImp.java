@@ -19,7 +19,6 @@ package org.killbill.billing.currency.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
@@ -28,7 +27,7 @@ import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.currency.api.Rate;
 
 @JsonDeserialize( builder = RateImp.Builder.class )
-public class RateImp implements Rate, Serializable {
+public class RateImp implements Rate {
 
     private static final long serialVersionUID = 0xCA692346157DBC69L;
 

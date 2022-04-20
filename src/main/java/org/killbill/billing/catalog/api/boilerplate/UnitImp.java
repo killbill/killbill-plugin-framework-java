@@ -19,13 +19,12 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.Unit;
 
 @JsonDeserialize( builder = UnitImp.Builder.class )
-public class UnitImp implements Unit, Serializable {
+public class UnitImp implements Unit {
 
     private static final long serialVersionUID = 0xA4C176CA323A34E3L;
 

@@ -19,7 +19,6 @@ package org.killbill.billing.util.audit.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -30,7 +29,7 @@ import org.killbill.billing.util.audit.AccountAuditLogsForObjectType;
 import org.killbill.billing.util.audit.AuditLog;
 
 @JsonDeserialize( builder = AccountAuditLogsImp.Builder.class )
-public class AccountAuditLogsImp implements AccountAuditLogs, Serializable {
+public class AccountAuditLogsImp implements AccountAuditLogs {
 
     private static final long serialVersionUID = 0xFBF3458749273B1CL;
 
@@ -99,12 +98,12 @@ public class AccountAuditLogsImp implements AccountAuditLogs, Serializable {
         throw new UnsupportedOperationException("getAuditLogsForInvoice(java.util.UUID) must be implemented.");
     }
     @Override
-    public List<AuditLog> getAuditLogsForPaymentAttempt(final UUID paymentAttemptId) {
-        throw new UnsupportedOperationException("getAuditLogsForPaymentAttempt(java.util.UUID) must be implemented.");
-    }
-    @Override
     public List<AuditLog> getAuditLogsForBundle(final UUID bundleId) {
         throw new UnsupportedOperationException("getAuditLogsForBundle(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public List<AuditLog> getAuditLogsForPaymentAttempt(final UUID paymentAttemptId) {
+        throw new UnsupportedOperationException("getAuditLogsForPaymentAttempt(java.util.UUID) must be implemented.");
     }
     @Override
     public List<AuditLog> getAuditLogsForPaymentTransaction(final UUID paymentTransactionId) {

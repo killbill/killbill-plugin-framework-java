@@ -19,7 +19,6 @@ package org.killbill.billing.account.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,7 +26,7 @@ import org.joda.time.DateTime;
 import org.killbill.billing.account.api.AccountEmail;
 
 @JsonDeserialize( builder = AccountEmailImp.Builder.class )
-public class AccountEmailImp implements AccountEmail, Serializable {
+public class AccountEmailImp implements AccountEmail {
 
     private static final long serialVersionUID = 0x89ADE56213E92CA8L;
 

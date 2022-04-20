@@ -20,7 +20,6 @@ package org.killbill.billing.util.api.boilerplate;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,7 @@ import org.killbill.billing.util.api.ColumnInfo;
 import org.killbill.billing.util.api.DatabaseExportOutputStream;
 
 @JsonDeserialize( builder = DatabaseExportOutputStreamImp.Builder.class )
-public class DatabaseExportOutputStreamImp implements DatabaseExportOutputStream, Serializable {
+public class DatabaseExportOutputStreamImp implements DatabaseExportOutputStream {
 
     private static final long serialVersionUID = 0x400EFAC84C0DD8B3L;
 
@@ -55,7 +54,6 @@ public class DatabaseExportOutputStreamImp implements DatabaseExportOutputStream
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final DatabaseExportOutputStreamImp that = (DatabaseExportOutputStreamImp) o;
         return true;
     }
     @Override

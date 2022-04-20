@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +27,7 @@ import org.killbill.billing.catalog.api.UsagePriceOverride;
 import org.killbill.billing.catalog.api.UsageType;
 
 @JsonDeserialize( builder = UsagePriceOverrideImp.Builder.class )
-public class UsagePriceOverrideImp implements UsagePriceOverride, Serializable {
+public class UsagePriceOverrideImp implements UsagePriceOverride {
 
     private static final long serialVersionUID = 0x8569E26A79BC90A8L;
 

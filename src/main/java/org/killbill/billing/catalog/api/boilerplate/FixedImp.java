@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.Fixed;
@@ -27,7 +26,7 @@ import org.killbill.billing.catalog.api.FixedType;
 import org.killbill.billing.catalog.api.InternationalPrice;
 
 @JsonDeserialize( builder = FixedImp.Builder.class )
-public class FixedImp implements Fixed, Serializable {
+public class FixedImp implements Fixed {
 
     private static final long serialVersionUID = 0xE56482B05D5C48E9L;
 

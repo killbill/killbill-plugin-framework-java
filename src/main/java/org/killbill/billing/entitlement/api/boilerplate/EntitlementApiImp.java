@@ -19,7 +19,6 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +36,7 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 
 @JsonDeserialize( builder = EntitlementApiImp.Builder.class )
-public class EntitlementApiImp implements EntitlementApi, Serializable {
+public class EntitlementApiImp implements EntitlementApi {
 
     private static final long serialVersionUID = 0x377EE5F1D9AD91C2L;
 
@@ -56,24 +55,24 @@ public class EntitlementApiImp implements EntitlementApi, Serializable {
         throw new UnsupportedOperationException("getAllEntitlementsForBundle(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Entitlement getEntitlementForId(final UUID id, final TenantContext context) {
-        throw new UnsupportedOperationException("getEntitlementForId(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public void resume(final UUID bundleId, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("resume(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Entitlement getEntitlementForId(final UUID id, final TenantContext context) {
+        throw new UnsupportedOperationException("getEntitlementForId(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<EntitlementAOStatusDryRun> getDryRunStatusForChange(final UUID bundleId, final String targetProductName, final LocalDate effectiveDate, final TenantContext context) {
         throw new UnsupportedOperationException("getDryRunStatusForChange(java.util.UUID, java.lang.String, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public void pause(final UUID bundleId, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("pause(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public UUID transferEntitlements(final UUID sourceAccountId, final UUID destAccountId, final String bundleExternalKey, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("transferEntitlements(java.util.UUID, java.util.UUID, java.lang.String, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public void pause(final UUID bundleId, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("pause(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public UUID transferEntitlementsOverrideBillingPolicy(final UUID sourceAccountId, final UUID destAccountId, final String bundleExternalKey, final LocalDate effectiveDate, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -103,7 +102,6 @@ public class EntitlementApiImp implements EntitlementApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final EntitlementApiImp that = (EntitlementApiImp) o;
         return true;
     }
     @Override

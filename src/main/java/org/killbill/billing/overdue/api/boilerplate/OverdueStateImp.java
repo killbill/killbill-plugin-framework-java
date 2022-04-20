@@ -19,7 +19,6 @@ package org.killbill.billing.overdue.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.Duration;
@@ -29,7 +28,7 @@ import org.killbill.billing.overdue.api.OverdueCondition;
 import org.killbill.billing.overdue.api.OverdueState;
 
 @JsonDeserialize( builder = OverdueStateImp.Builder.class )
-public class OverdueStateImp implements OverdueState, Serializable {
+public class OverdueStateImp implements OverdueState {
 
     private static final long serialVersionUID = 0x3CF6E8406781974EL;
 

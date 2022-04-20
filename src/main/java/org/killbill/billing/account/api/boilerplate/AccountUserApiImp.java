@@ -19,7 +19,6 @@ package org.killbill.billing.account.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -36,7 +35,7 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.billing.util.entity.Pagination;
 
 @JsonDeserialize( builder = AccountUserApiImp.Builder.class )
-public class AccountUserApiImp implements AccountUserApi, Serializable {
+public class AccountUserApiImp implements AccountUserApi {
 
     private static final long serialVersionUID = 0xC633864CD6FD2567L;
 
@@ -47,20 +46,20 @@ public class AccountUserApiImp implements AccountUserApi, Serializable {
     }
     protected AccountUserApiImp() { }
     @Override
-    public Account getAccountById(final UUID accountId, final TenantContext context) {
-        throw new UnsupportedOperationException("getAccountById(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public void updateAccount(final UUID accountId, final AccountData accountData, final CallContext context) {
         throw new UnsupportedOperationException("updateAccount(java.util.UUID, org.killbill.billing.account.api.AccountData, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<Account> getChildrenAccounts(final UUID parentAccountId, final TenantContext context) {
-        throw new UnsupportedOperationException("getChildrenAccounts(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public Account getAccountById(final UUID accountId, final TenantContext context) {
+        throw new UnsupportedOperationException("getAccountById(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AccountEmail> getEmails(final UUID accountId, final TenantContext context) {
         throw new UnsupportedOperationException("getEmails(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public List<Account> getChildrenAccounts(final UUID parentAccountId, final TenantContext context) {
+        throw new UnsupportedOperationException("getChildrenAccounts(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getEmailAuditLogsWithHistoryForId(final UUID accountEmailId, final AuditLevel auditLevel, final TenantContext context) {
@@ -75,20 +74,20 @@ public class AccountUserApiImp implements AccountUserApi, Serializable {
         throw new UnsupportedOperationException("updateAccount(java.lang.String, org.killbill.billing.account.api.AccountData, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public UUID getIdFromKey(final String externalKey, final TenantContext context) {
-        throw new UnsupportedOperationException("getIdFromKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public Account getAccountByKey(final String key, final TenantContext context) {
         throw new UnsupportedOperationException("getAccountByKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public List<AuditLogWithHistory> getAuditLogsWithHistoryForId(final UUID accountId, final AuditLevel auditLevel, final TenantContext context) {
-        throw new UnsupportedOperationException("getAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public UUID getIdFromKey(final String externalKey, final TenantContext context) {
+        throw new UnsupportedOperationException("getIdFromKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void removeEmail(final UUID accountId, final AccountEmail email, final CallContext context) {
         throw new UnsupportedOperationException("removeEmail(java.util.UUID, org.killbill.billing.account.api.AccountEmail, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public List<AuditLogWithHistory> getAuditLogsWithHistoryForId(final UUID accountId, final AuditLevel auditLevel, final TenantContext context) {
+        throw new UnsupportedOperationException("getAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public Pagination<Account> searchAccounts(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
@@ -114,7 +113,6 @@ public class AccountUserApiImp implements AccountUserApi, Serializable {
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final AccountUserApiImp that = (AccountUserApiImp) o;
         return true;
     }
     @Override

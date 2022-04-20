@@ -19,7 +19,6 @@ package org.killbill.billing.osgi.api.config.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.osgi.api.config.PluginConfigServiceApi;
@@ -27,7 +26,7 @@ import org.killbill.billing.osgi.api.config.PluginJavaConfig;
 import org.killbill.billing.osgi.api.config.PluginRubyConfig;
 
 @JsonDeserialize( builder = PluginConfigServiceApiImp.Builder.class )
-public class PluginConfigServiceApiImp implements PluginConfigServiceApi, Serializable {
+public class PluginConfigServiceApiImp implements PluginConfigServiceApi {
 
     private static final long serialVersionUID = 0x7FA95CF314C588A6L;
 
@@ -38,12 +37,12 @@ public class PluginConfigServiceApiImp implements PluginConfigServiceApi, Serial
     }
     protected PluginConfigServiceApiImp() { }
     @Override
-    public PluginJavaConfig getPluginJavaConfig(final long bundleId) {
-        throw new UnsupportedOperationException("getPluginJavaConfig(long) must be implemented.");
-    }
-    @Override
     public PluginRubyConfig getPluginRubyConfig(final long bundleId) {
         throw new UnsupportedOperationException("getPluginRubyConfig(long) must be implemented.");
+    }
+    @Override
+    public PluginJavaConfig getPluginJavaConfig(final long bundleId) {
+        throw new UnsupportedOperationException("getPluginJavaConfig(long) must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {
@@ -53,7 +52,6 @@ public class PluginConfigServiceApiImp implements PluginConfigServiceApi, Serial
         if ( ( o == null ) || ( this.getClass() != o.getClass() ) ) {
             return false;
         }
-        final PluginConfigServiceApiImp that = (PluginConfigServiceApiImp) o;
         return true;
     }
     @Override

@@ -19,7 +19,6 @@ package org.killbill.billing.invoice.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,7 +34,7 @@ import org.killbill.billing.invoice.api.InvoicePayment;
 import org.killbill.billing.invoice.api.InvoiceStatus;
 
 @JsonDeserialize( builder = InvoiceImp.Builder.class )
-public class InvoiceImp implements Invoice, Serializable {
+public class InvoiceImp implements Invoice {
 
     private static final long serialVersionUID = 0x1911E930E2A49165L;
 

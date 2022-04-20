@@ -19,7 +19,6 @@ package org.killbill.billing.usage.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -27,7 +26,7 @@ import org.joda.time.LocalDate;
 import org.killbill.billing.usage.api.RawUsageRecord;
 
 @JsonDeserialize( builder = RawUsageRecordImp.Builder.class )
-public class RawUsageRecordImp implements RawUsageRecord, Serializable {
+public class RawUsageRecordImp implements RawUsageRecord {
 
     private static final long serialVersionUID = 0x2D20F369B815B918L;
 

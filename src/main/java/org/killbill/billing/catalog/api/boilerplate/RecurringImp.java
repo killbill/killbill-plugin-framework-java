@@ -19,7 +19,6 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.BillingPeriod;
@@ -27,7 +26,7 @@ import org.killbill.billing.catalog.api.InternationalPrice;
 import org.killbill.billing.catalog.api.Recurring;
 
 @JsonDeserialize( builder = RecurringImp.Builder.class )
-public class RecurringImp implements Recurring, Serializable {
+public class RecurringImp implements Recurring {
 
     private static final long serialVersionUID = 0x43536F908E82DDF9L;
 
