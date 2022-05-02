@@ -1,7 +1,7 @@
 /*
  * Copyright 2014-2020 Groupon, Inc
- * Copyright 2020-2020 Equinix, Inc
- * Copyright 2014-2020 The Billing Project, LLC
+ * Copyright 2020-2022 Equinix, Inc
+ * Copyright 2014-2022 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -18,22 +18,23 @@
 
 package org.killbill.billing.plugin.util.http;
 
-import org.asynchttpclient.Response;
+import java.io.InputStream;
+import java.net.http.HttpResponse;
 
 public class InvalidRequest extends Exception {
 
-    private final Response response;
+    private final HttpResponse<InputStream> response;
 
     public InvalidRequest(final String errorMessage) {
         this(errorMessage, null);
     }
 
-    public InvalidRequest(final String errorMessage, final Response response) {
+    public InvalidRequest(final String errorMessage, final HttpResponse<InputStream> response) {
         super(errorMessage);
         this.response = response;
     }
 
-    public Response getResponse() {
+    public HttpResponse<InputStream> getResponse() {
         return response;
     }
 }
