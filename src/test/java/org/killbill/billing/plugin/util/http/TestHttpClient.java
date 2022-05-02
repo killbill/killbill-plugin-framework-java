@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.GeneralSecurityException;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -73,6 +75,33 @@ public class TestHttpClient {
         final Car newCar = client.doCall(car);
         Assert.assertEquals(newCar.color, car.color);
         Assert.assertEquals(newCar.type, car.type);
+    }
+
+    @Test(groups = "slow") // Could be fast but we've never mixed groups historically in the same file
+    public void testURIBuilder() throws Exception {
+        final MyPluginClient client = new MyPluginClient();
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something", Map.of()).toString(),
+                            "http://127.0.0.1:8080/plugins/something");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something?a=", Map.of()).toString(),
+                            "http://127.0.0.1:8080/plugins/something?a=");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something?a=b", Map.of()).toString(),
+                            "http://127.0.0.1:8080/plugins/something?a=b");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something", Map.of("a", "")).toString(),
+                            "http://127.0.0.1:8080/plugins/something?a=");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something", Map.of("a", "b")).toString(),
+                            "http://127.0.0.1:8080/plugins/something?a=b");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something?a=b", Map.of("c", "d")).toString(),
+                            "http://127.0.0.1:8080/plugins/something?a=b&c=d");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something", Map.of("a", "with space")).toString(),
+                            "http://127.0.0.1:8080/plugins/something?a=with%20space");
+
+        // For tests stability, use TreeMap (ordering)
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something?a=b", new TreeMap<>(Map.of("c", "d", "e", "f"))).toString(),
+                            "http://127.0.0.1:8080/plugins/something?a=b&c=d&e=f");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something", new TreeMap<>(Map.of("Atitle", "? and the Mysterians", "Csimple", ""))).toString(),
+                            "http://127.0.0.1:8080/plugins/something?Atitle=%3F%20and%20the%20Mysterians&Csimple=");
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something", new TreeMap<>(Map.of("Atitle", "? and the Mysterians", "Bdescription", "上海+中國", "Csimple", ""))).toString(),
+                            "http://127.0.0.1:8080/plugins/something?Atitle=%3F%20and%20the%20Mysterians&Bdescription=%E4%B8%8A%E6%B5%B7%2B%E4%B8%AD%E5%9C%8B&Csimple=");
     }
 
     // Typical usage example (see Avatax plugin for instance)

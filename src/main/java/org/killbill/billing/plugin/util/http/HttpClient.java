@@ -28,12 +28,10 @@ import java.net.PasswordAuthentication;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -50,6 +48,7 @@ import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
@@ -240,7 +239,8 @@ public class HttpClient implements Closeable {
         return builder;
     }
 
-    private URI getURI(final String url, final Map<String, String> queryParams) throws URISyntaxException {
+    @VisibleForTesting
+    URI getURI(final String url, final Map<String, String> queryParams) throws URISyntaxException {
         if (url == null) {
             throw new URISyntaxException("(null)", "HttpClient URL misconfigured");
         }
@@ -250,21 +250,29 @@ public class HttpClient implements Closeable {
             u = new URI(String.format("%s%s", this.url, url));
         }
 
-        final StringBuilder sb = new StringBuilder(u.getQuery() == null ? "" : u.getQuery());
-        if (sb.length() > 0) {
-            sb.append('&');
+        if (queryParams.isEmpty()) {
+            return u;
         }
+
+        final StringBuilder sb = new StringBuilder(u.getQuery() == null ? "" : u.getQuery());
         queryParams.keySet().forEach(name -> {
-            sb.append(URLEncoder.encode(name, StandardCharsets.UTF_8));
+            if (sb.length() > 0) {
+                sb.append('&');
+            }
+            sb.append(UTF8UrlEncoder.encode(name));
             sb.append('=');
-            sb.append(URLEncoder.encode(queryParams.get(name), StandardCharsets.UTF_8));
+            sb.append(UTF8UrlEncoder.encode(queryParams.get(name)));
         });
+
         final String query = sb.toString();
 
-        return new URI(u.getScheme(),
-                       u.getAuthority(),
-                       u.getPath(),
-                       query,
-                       u.getFragment());
+        return new URI(URIUtils.buildURI(u.getScheme(),
+                                         u.getUserInfo(),
+                                         u.getHost(),
+                                         u.getPort(),
+                                         u.getAuthority(),
+                                         u.getPath(),
+                                         query,
+                                         u.getFragment()));
     }
 }
