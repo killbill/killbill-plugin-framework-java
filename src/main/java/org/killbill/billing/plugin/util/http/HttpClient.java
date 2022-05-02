@@ -53,6 +53,8 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.common.base.Charsets;
 import com.google.common.io.CharStreams;
 
+import static org.killbill.billing.plugin.util.http.ResponseFormat.RAW;
+
 public class HttpClient implements Closeable {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClient.class);
@@ -206,6 +208,11 @@ public class HttpClient implements Closeable {
     }
 
     protected <T> T deserializeResponse(final HttpResponse<InputStream> response, final Class<T> clazz, final ResponseFormat format) throws IOException {
+        if (format == RAW) {
+            // Don't close the stream!
+            return (T) response.body();
+        }
+
         try (final InputStream in = response.body()) {
             switch (format) {
                 case TEXT:
