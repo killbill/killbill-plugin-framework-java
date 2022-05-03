@@ -271,7 +271,7 @@ public class HttpClient implements Closeable {
                                          u.getHost(),
                                          u.getPort(),
                                          u.getAuthority(),
-                                         u.getPath(),
+                                         u.getRawPath(), // Keep the raw path (don't decode it)
                                          query,
                                          u.getFragment()));
     }
