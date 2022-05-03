@@ -20,5 +20,6 @@ package org.killbill.billing.plugin.util.http;
 
 public enum ResponseFormat {
     JSON,
+    RAW,
     TEXT
 }
