@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.TreeMap;
@@ -94,6 +95,16 @@ public class TestHttpClient {
                             "http://127.0.0.1:8080/plugins/something?a=b&c=d");
         Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something", Map.of("a", "with space")).toString(),
                             "http://127.0.0.1:8080/plugins/something?a=with%20space");
+
+        // Spaces in path
+        Assert.assertEquals(client.getURI("http://127.0.0.1:8080/1.0/kb/tags/search/Suspends%20payments%20until%20removed.", Map.of("a", "b")).toString(),
+                            "http://127.0.0.1:8080/1.0/kb/tags/search/Suspends%20payments%20until%20removed.?a=b");
+        try {
+            client.getURI("http://127.0.0.1:8080/1.0/kb/tags/search/Suspends payments until removed.", Map.of());
+            Assert.fail("Paths must be encoded");
+        } catch (final URISyntaxException e) {
+            Assert.assertNotNull(e);
+        }
 
         // For tests stability, use TreeMap (ordering)
         Assert.assertEquals(client.getURI("http://127.0.0.1:8080/plugins/something?a=b", new TreeMap<>(Map.of("c", "d", "e", "f"))).toString(),
