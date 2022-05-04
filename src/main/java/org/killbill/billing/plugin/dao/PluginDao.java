@@ -173,7 +173,7 @@ public class PluginDao {
         final DBEngine dbEngine;
         if ("H2".equalsIgnoreCase(databaseProductName)) {
             dbEngine = DBEngine.H2;
-        } else if ("MySQL".equalsIgnoreCase(databaseProductName)) {
+        } else if ("MySQL".equalsIgnoreCase(databaseProductName) || ("MariaDB".equalsIgnoreCase(databaseProductName))) {
             dbEngine = DBEngine.MYSQL;
         } else if ("PostgreSQL".equalsIgnoreCase(databaseProductName)) {
             dbEngine = DBEngine.POSTGRESQL;
