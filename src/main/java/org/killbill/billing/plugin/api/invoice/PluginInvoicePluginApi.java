@@ -1,7 +1,7 @@
 /*
  * Copyright 2014-2020 Groupon, Inc
- * Copyright 2020-2020 Equinix, Inc
- * Copyright 2014-2020 The Billing Project, LLC
+ * Copyright 2020-2022 Equinix, Inc
+ * Copyright 2014-2022 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -23,6 +23,7 @@ import java.util.List;
 import org.killbill.billing.invoice.api.Invoice;
 import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.plugin.api.InvoiceContext;
+import org.killbill.billing.invoice.plugin.api.InvoiceGroupingResult;
 import org.killbill.billing.invoice.plugin.api.InvoicePluginApi;
 import org.killbill.billing.invoice.plugin.api.OnFailureInvoiceResult;
 import org.killbill.billing.invoice.plugin.api.OnSuccessInvoiceResult;
@@ -50,6 +51,11 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
     @Override
     public List<InvoiceItem> getAdditionalInvoiceItems(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final CallContext context) {
         return ImmutableList.<InvoiceItem>of();
+    }
+
+    @Override
+    public InvoiceGroupingResult getInvoiceGrouping(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final CallContext context) {
+        return null;
     }
 
     @Override
