@@ -54,7 +54,7 @@ public class TestPluginInvoiceItem {
     private final String prettyProductName = "TestPrettyProductName";
     private final String prettyUsageName = "TestPrettyUsageName";
     private final String productName = "TestProductName";
-    private final Integer quantity = 1;
+    private final BigDecimal quantity = BigDecimal.ONE;
     private final BigDecimal rate = new BigDecimal("4.2");
     private final LocalDate startDate = new LocalDate("2011-11-11");
     private final UUID subscriptionId = UUID.fromString("00000000-0000-0000-0000-000000000001");
