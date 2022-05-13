@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -61,12 +61,12 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("transferChildCreditToParent(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Pagination<Invoice> searchInvoices(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
-        throw new UnsupportedOperationException("searchInvoices(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public Invoice getInvoiceByPayment(final UUID paymentId, final TenantContext context) {
         throw new UnsupportedOperationException("getInvoiceByPayment(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public Pagination<Invoice> searchInvoices(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
+        throw new UnsupportedOperationException("searchInvoices(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public String getInvoiceAsHTML(final UUID invoiceId, final TenantContext context) {
@@ -129,12 +129,12 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("getInvoices(java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public InvoiceItem getCreditById(final UUID creditId, final TenantContext context) {
-        throw new UnsupportedOperationException("getCreditById(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public List<InvoiceItem> insertCredits(final UUID accountId, final LocalDate effectiveDate, final Iterable<InvoiceItem> creditItems, final boolean autoCommit, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("insertCredits(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.invoice.api.InvoiceItem>, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public InvoiceItem getCreditById(final UUID creditId, final TenantContext context) {
+        throw new UnsupportedOperationException("getCreditById(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public InvoiceItem insertInvoiceItemAdjustment(final UUID accountId, final UUID invoiceId, final UUID invoiceItemId, final LocalDate effectiveDate, final String description, final String itemDetails, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -145,16 +145,24 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("getInvoice(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
+    public Iterable<Invoice> triggerInvoiceGroupGeneration(final UUID accountId, final LocalDate targetDate, final CallContext context) {
+        throw new UnsupportedOperationException("triggerInvoiceGroupGeneration(java.util.UUID, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public List<Invoice> getInvoicesByGroup(final UUID accountId, final UUID groupId, final TenantContext context) {
+        throw new UnsupportedOperationException("getInvoicesByGroup(java.util.UUID, java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
     public void voidInvoice(final UUID invoiceId, final CallContext context) {
         throw new UnsupportedOperationException("voidInvoice(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<AuditLogWithHistory> getInvoiceAuditLogsWithHistoryForId(final UUID invoiceId, final AuditLevel auditLevel, final TenantContext context) {
-        throw new UnsupportedOperationException("getInvoiceAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public List<Invoice> getInvoicesByAccount(final UUID accountId, final LocalDate fromDate, final LocalDate upToDate, final boolean includeVoidedInvoices, final TenantContext context) {
         throw new UnsupportedOperationException("getInvoicesByAccount(java.util.UUID, org.joda.time.LocalDate, org.joda.time.LocalDate, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public List<AuditLogWithHistory> getInvoiceAuditLogsWithHistoryForId(final UUID invoiceId, final AuditLevel auditLevel, final TenantContext context) {
+        throw new UnsupportedOperationException("getInvoiceAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void tagInvoiceAsWrittenOff(final UUID invoiceId, final CallContext context) {

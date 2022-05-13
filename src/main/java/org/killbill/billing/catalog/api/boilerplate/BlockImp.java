@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -20,6 +20,7 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.Block;
@@ -31,9 +32,9 @@ import org.killbill.billing.catalog.api.Unit;
 @JsonDeserialize( builder = BlockImp.Builder.class )
 public class BlockImp implements Block {
 
-    protected Double minTopUpCredit;
+    protected BigDecimal minTopUpCredit;
     protected InternationalPrice price;
-    protected Double size;
+    protected BigDecimal size;
     protected BlockType type;
     protected Unit unit;
 
@@ -53,7 +54,7 @@ public class BlockImp implements Block {
     }
     protected BlockImp() { }
     @Override
-    public Double getMinTopUpCredit() {
+    public BigDecimal getMinTopUpCredit() {
         return this.minTopUpCredit;
     }
     @Override
@@ -61,7 +62,7 @@ public class BlockImp implements Block {
         return this.price;
     }
     @Override
-    public Double getSize() {
+    public BigDecimal getSize() {
         return this.size;
     }
     @Override
@@ -81,13 +82,13 @@ public class BlockImp implements Block {
             return false;
         }
         final BlockImp that = (BlockImp) o;
-        if( !Objects.equals(this.minTopUpCredit, that.minTopUpCredit) ) {
+        if( ( this.minTopUpCredit != null ) ? ( 0 != this.minTopUpCredit.compareTo(that.minTopUpCredit) ) : ( that.minTopUpCredit != null ) ) {
             return false;
         }
         if( !Objects.equals(this.price, that.price) ) {
             return false;
         }
-        if( !Objects.equals(this.size, that.size) ) {
+        if( ( this.size != null ) ? ( 0 != this.size.compareTo(that.size) ) : ( that.size != null ) ) {
             return false;
         }
         if( !Objects.equals(this.type, that.type) ) {
@@ -128,9 +129,9 @@ public class BlockImp implements Block {
     @SuppressWarnings("unchecked")
     public static class Builder<T extends BlockImp.Builder<T>> {
 
-        protected Double minTopUpCredit;
+        protected BigDecimal minTopUpCredit;
         protected InternationalPrice price;
-        protected Double size;
+        protected BigDecimal size;
         protected BlockType type;
         protected Unit unit;
 
@@ -142,7 +143,7 @@ public class BlockImp implements Block {
             this.type = that.type;
             this.unit = that.unit;
         }
-        public T withMinTopUpCredit(final Double minTopUpCredit) {
+        public T withMinTopUpCredit(final BigDecimal minTopUpCredit) {
             this.minTopUpCredit = minTopUpCredit;
             return (T) this;
         }
@@ -150,7 +151,7 @@ public class BlockImp implements Block {
             this.price = price;
             return (T) this;
         }
-        public T withSize(final Double size) {
+        public T withSize(final BigDecimal size) {
             this.size = size;
             return (T) this;
         }

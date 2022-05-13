@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -79,16 +79,16 @@ public class PaymentApiImp implements PaymentApi {
         throw new UnsupportedOperationException("getPaymentAttemptAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public UUID addPaymentMethodWithPaymentControl(final Account account, final String paymentMethodExternalKey, final String pluginName, final boolean setDefault, final PaymentMethodPlugin paymentMethodInfo, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
-        throw new UnsupportedOperationException("addPaymentMethodWithPaymentControl(org.killbill.billing.account.api.Account, java.lang.String, java.lang.String, boolean, org.killbill.billing.payment.api.PaymentMethodPlugin, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public Payment getPaymentByExternalKey(final String paymentExternalKey, final boolean withPluginInfo, final boolean withAttempts, final Iterable<PluginProperty> properties, final TenantContext context) {
+        throw new UnsupportedOperationException("getPaymentByExternalKey(java.lang.String, boolean, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public Payment createCapture(final Account account, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("createCapture(org.killbill.billing.account.api.Account, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Payment getPaymentByExternalKey(final String paymentExternalKey, final boolean withPluginInfo, final boolean withAttempts, final Iterable<PluginProperty> properties, final TenantContext context) {
-        throw new UnsupportedOperationException("getPaymentByExternalKey(java.lang.String, boolean, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public UUID addPaymentMethodWithPaymentControl(final Account account, final String paymentMethodExternalKey, final String pluginName, final boolean setDefault, final PaymentMethodPlugin paymentMethodInfo, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
+        throw new UnsupportedOperationException("addPaymentMethodWithPaymentControl(org.killbill.billing.account.api.Account, java.lang.String, java.lang.String, boolean, org.killbill.billing.payment.api.PaymentMethodPlugin, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getPaymentAuditLogsWithHistoryForId(final UUID paymentId, final AuditLevel auditLevel, final TenantContext context) {
@@ -151,16 +151,16 @@ public class PaymentApiImp implements PaymentApi {
         throw new UnsupportedOperationException("addPaymentMethod(org.killbill.billing.account.api.Account, java.lang.String, java.lang.String, boolean, org.killbill.billing.payment.api.PaymentMethodPlugin, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Payment createCredit(final Account account, final UUID paymentMethodId, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentExternalKey, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("createCredit(org.killbill.billing.account.api.Account, java.util.UUID, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public void setDefaultPaymentMethod(final Account account, final UUID paymentMethodId, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("setDefaultPaymentMethod(org.killbill.billing.account.api.Account, java.util.UUID, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public void cancelScheduledPaymentTransaction(final String paymentTransactionExternalKey, final CallContext context) {
         throw new UnsupportedOperationException("cancelScheduledPaymentTransaction(java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public void setDefaultPaymentMethod(final Account account, final UUID paymentMethodId, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("setDefaultPaymentMethod(org.killbill.billing.account.api.Account, java.util.UUID, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public Payment createCredit(final Account account, final UUID paymentMethodId, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentExternalKey, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("createCredit(org.killbill.billing.account.api.Account, java.util.UUID, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Payment createAuthorization(final Account account, final UUID paymentMethodId, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentExternalKey, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -171,12 +171,12 @@ public class PaymentApiImp implements PaymentApi {
         throw new UnsupportedOperationException("getPaymentMethods(java.lang.Long, java.lang.Long, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Pagination<PaymentMethod> searchPaymentMethods(final String searchKey, final Long offset, final Long limit, final boolean withPluginInfo, final Iterable<PluginProperty> properties, final TenantContext context) {
-        throw new UnsupportedOperationException("searchPaymentMethods(java.lang.String, java.lang.Long, java.lang.Long, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public Payment createVoid(final Account account, final UUID paymentId, final DateTime effectiveDate, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("createVoid(org.killbill.billing.account.api.Account, java.util.UUID, org.joda.time.DateTime, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Pagination<PaymentMethod> searchPaymentMethods(final String searchKey, final Long offset, final Long limit, final boolean withPluginInfo, final Iterable<PluginProperty> properties, final TenantContext context) {
+        throw new UnsupportedOperationException("searchPaymentMethods(java.lang.String, java.lang.Long, java.lang.Long, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void deletePaymentMethod(final Account account, final UUID paymentMethodId, final boolean deleteDefaultPaymentMethodWithAutoPayOff, final boolean forceDefaultPaymentMethodDeletion, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -203,16 +203,16 @@ public class PaymentApiImp implements PaymentApi {
         throw new UnsupportedOperationException("searchPayments(java.lang.String, java.lang.Long, java.lang.Long, java.lang.String, boolean, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Payment createChargebackReversal(final Account account, final UUID paymentId, final DateTime effectiveDate, final String paymentTransactionExternalKey, final CallContext context) {
-        throw new UnsupportedOperationException("createChargebackReversal(org.killbill.billing.account.api.Account, java.util.UUID, org.joda.time.DateTime, java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public List<PaymentMethod> getAccountPaymentMethods(final UUID accountId, final boolean includedInactive, final boolean withPluginInfo, final Iterable<PluginProperty> properties, final TenantContext context) {
+        throw new UnsupportedOperationException("getAccountPaymentMethods(java.util.UUID, boolean, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public Payment notifyPendingTransactionOfStateChangedWithPaymentControl(final Account account, final UUID paymentTransactionId, final boolean isSuccess, final PaymentOptions paymentOptions, final CallContext context) {
         throw new UnsupportedOperationException("notifyPendingTransactionOfStateChangedWithPaymentControl(org.killbill.billing.account.api.Account, java.util.UUID, boolean, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<PaymentMethod> getAccountPaymentMethods(final UUID accountId, final boolean includedInactive, final boolean withPluginInfo, final Iterable<PluginProperty> properties, final TenantContext context) {
-        throw new UnsupportedOperationException("getAccountPaymentMethods(java.util.UUID, boolean, boolean, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public Payment createChargebackReversal(final Account account, final UUID paymentId, final DateTime effectiveDate, final String paymentTransactionExternalKey, final CallContext context) {
+        throw new UnsupportedOperationException("createChargebackReversal(org.killbill.billing.account.api.Account, java.util.UUID, org.joda.time.DateTime, java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Pagination<Payment> getPayments(final Long offset, final Long limit, final boolean withPluginInfo, final boolean withAttempts, final Iterable<PluginProperty> properties, final TenantContext context) {

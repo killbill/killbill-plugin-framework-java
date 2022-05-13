@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -20,6 +20,7 @@ package org.killbill.billing.usage.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
@@ -29,7 +30,7 @@ import org.killbill.billing.usage.api.RawUsageRecord;
 @JsonDeserialize( builder = RawUsageRecordImp.Builder.class )
 public class RawUsageRecordImp implements RawUsageRecord {
 
-    protected Long amount;
+    protected BigDecimal amount;
     protected LocalDate date;
     protected UUID subscriptionId;
     protected String trackingId;
@@ -51,7 +52,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
     }
     protected RawUsageRecordImp() { }
     @Override
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return this.amount;
     }
     @Override
@@ -79,7 +80,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
             return false;
         }
         final RawUsageRecordImp that = (RawUsageRecordImp) o;
-        if( !Objects.equals(this.amount, that.amount) ) {
+        if( ( this.amount != null ) ? ( 0 != this.amount.compareTo(that.amount) ) : ( that.amount != null ) ) {
             return false;
         }
         if( ( this.date != null ) ? ( 0 != this.date.compareTo(that.date) ) : ( that.date != null ) ) {
@@ -136,7 +137,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
     @SuppressWarnings("unchecked")
     public static class Builder<T extends RawUsageRecordImp.Builder<T>> {
 
-        protected Long amount;
+        protected BigDecimal amount;
         protected LocalDate date;
         protected UUID subscriptionId;
         protected String trackingId;
@@ -150,7 +151,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
             this.trackingId = that.trackingId;
             this.unitType = that.unitType;
         }
-        public T withAmount(final Long amount) {
+        public T withAmount(final BigDecimal amount) {
             this.amount = amount;
             return (T) this;
         }

@@ -16,32 +16,30 @@
  *  under the License.
  */
 
-package org.killbill.billing.payment.api.boilerplate;
+package org.killbill.billing.osgi.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Arrays;
 import java.util.Objects;
-import org.killbill.billing.payment.api.AdminPaymentApi;
-import org.killbill.billing.payment.api.Payment;
-import org.killbill.billing.payment.api.PaymentApiException;
-import org.killbill.billing.payment.api.PaymentTransaction;
-import org.killbill.billing.payment.api.PluginProperty;
-import org.killbill.billing.payment.api.TransactionStatus;
-import org.killbill.billing.util.callcontext.CallContext;
+import org.killbill.billing.osgi.api.ServiceDiscoveryRegistry;
 
-@JsonDeserialize( builder = AdminPaymentApiImp.Builder.class )
-public class AdminPaymentApiImp implements AdminPaymentApi {
+@JsonDeserialize( builder = ServiceDiscoveryRegistryImp.Builder.class )
+public class ServiceDiscoveryRegistryImp implements ServiceDiscoveryRegistry {
 
 
-    public AdminPaymentApiImp(final AdminPaymentApiImp that) {
+    public ServiceDiscoveryRegistryImp(final ServiceDiscoveryRegistryImp that) {
     }
-    protected AdminPaymentApiImp(final AdminPaymentApiImp.Builder<?> builder) {
+    protected ServiceDiscoveryRegistryImp(final ServiceDiscoveryRegistryImp.Builder<?> builder) {
     }
-    protected AdminPaymentApiImp() { }
+    protected ServiceDiscoveryRegistryImp() { }
     @Override
-    public void fixPaymentTransactionState(final Payment payment, final PaymentTransaction paymentTransaction, final TransactionStatus transactionStatus, final String lastSuccessPaymentState, final String currentPaymentStateName, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("fixPaymentTransactionState(org.killbill.billing.payment.api.Payment, org.killbill.billing.payment.api.PaymentTransaction, org.killbill.billing.payment.api.TransactionStatus, java.lang.String, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public void unregister() {
+        throw new UnsupportedOperationException("unregister() must be implemented.");
+    }
+    @Override
+    public void register() {
+        throw new UnsupportedOperationException("register() must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {
@@ -67,20 +65,20 @@ public class AdminPaymentApiImp implements AdminPaymentApi {
     }
 
     @SuppressWarnings("unchecked")
-    public static class Builder<T extends AdminPaymentApiImp.Builder<T>> {
+    public static class Builder<T extends ServiceDiscoveryRegistryImp.Builder<T>> {
 
 
         public Builder() { }
         public Builder(final Builder that) {
         }
-        public T source(final AdminPaymentApi that) {
+        public T source(final ServiceDiscoveryRegistry that) {
             return (T) this;
         }
         protected Builder validate() {
           return this;
         }
-        public AdminPaymentApiImp build() {
-            return new AdminPaymentApiImp(this.validate());
+        public ServiceDiscoveryRegistryImp build() {
+            return new ServiceDiscoveryRegistryImp(this.validate());
         }
     }
 }

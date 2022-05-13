@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -20,6 +20,7 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.Limit;
@@ -28,8 +29,8 @@ import org.killbill.billing.catalog.api.Unit;
 @JsonDeserialize( builder = LimitImp.Builder.class )
 public class LimitImp implements Limit {
 
-    protected Double max;
-    protected Double min;
+    protected BigDecimal max;
+    protected BigDecimal min;
     protected Unit unit;
 
     public LimitImp(final LimitImp that) {
@@ -44,11 +45,11 @@ public class LimitImp implements Limit {
     }
     protected LimitImp() { }
     @Override
-    public Double getMax() {
+    public BigDecimal getMax() {
         return this.max;
     }
     @Override
-    public Double getMin() {
+    public BigDecimal getMin() {
         return this.min;
     }
     @Override
@@ -56,8 +57,8 @@ public class LimitImp implements Limit {
         return this.unit;
     }
     @Override
-    public boolean compliesWith(final double value) {
-        throw new UnsupportedOperationException("compliesWith(double) must be implemented.");
+    public boolean compliesWith(final BigDecimal value) {
+        throw new UnsupportedOperationException("compliesWith(java.math.BigDecimal) must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {
@@ -68,10 +69,10 @@ public class LimitImp implements Limit {
             return false;
         }
         final LimitImp that = (LimitImp) o;
-        if( !Objects.equals(this.max, that.max) ) {
+        if( ( this.max != null ) ? ( 0 != this.max.compareTo(that.max) ) : ( that.max != null ) ) {
             return false;
         }
-        if( !Objects.equals(this.min, that.min) ) {
+        if( ( this.min != null ) ? ( 0 != this.min.compareTo(that.min) ) : ( that.min != null ) ) {
             return false;
         }
         if( !Objects.equals(this.unit, that.unit) ) {
@@ -103,8 +104,8 @@ public class LimitImp implements Limit {
     @SuppressWarnings("unchecked")
     public static class Builder<T extends LimitImp.Builder<T>> {
 
-        protected Double max;
-        protected Double min;
+        protected BigDecimal max;
+        protected BigDecimal min;
         protected Unit unit;
 
         public Builder() { }
@@ -113,11 +114,11 @@ public class LimitImp implements Limit {
             this.min = that.min;
             this.unit = that.unit;
         }
-        public T withMax(final Double max) {
+        public T withMax(final BigDecimal max) {
             this.max = max;
             return (T) this;
         }
-        public T withMin(final Double min) {
+        public T withMin(final BigDecimal min) {
             this.min = min;
             return (T) this;
         }

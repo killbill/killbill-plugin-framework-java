@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -30,9 +30,9 @@ import org.killbill.billing.catalog.api.TieredBlockPriceOverride;
 public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
 
     protected Currency currency;
-    protected Double max;
+    protected BigDecimal max;
     protected BigDecimal price;
-    protected Double size;
+    protected BigDecimal size;
     protected String unitName;
 
     public TieredBlockPriceOverrideImp(final TieredBlockPriceOverrideImp that) {
@@ -55,7 +55,7 @@ public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
         return this.currency;
     }
     @Override
-    public Double getMax() {
+    public BigDecimal getMax() {
         return this.max;
     }
     @Override
@@ -63,7 +63,7 @@ public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
         return this.price;
     }
     @Override
-    public Double getSize() {
+    public BigDecimal getSize() {
         return this.size;
     }
     @Override
@@ -82,13 +82,13 @@ public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
         if( !Objects.equals(this.currency, that.currency) ) {
             return false;
         }
-        if( !Objects.equals(this.max, that.max) ) {
+        if( ( this.max != null ) ? ( 0 != this.max.compareTo(that.max) ) : ( that.max != null ) ) {
             return false;
         }
         if( ( this.price != null ) ? ( 0 != this.price.compareTo(that.price) ) : ( that.price != null ) ) {
             return false;
         }
-        if( !Objects.equals(this.size, that.size) ) {
+        if( ( this.size != null ) ? ( 0 != this.size.compareTo(that.size) ) : ( that.size != null ) ) {
             return false;
         }
         if( !Objects.equals(this.unitName, that.unitName) ) {
@@ -132,9 +132,9 @@ public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
     public static class Builder<T extends TieredBlockPriceOverrideImp.Builder<T>> {
 
         protected Currency currency;
-        protected Double max;
+        protected BigDecimal max;
         protected BigDecimal price;
-        protected Double size;
+        protected BigDecimal size;
         protected String unitName;
 
         public Builder() { }
@@ -149,7 +149,7 @@ public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
             this.currency = currency;
             return (T) this;
         }
-        public T withMax(final Double max) {
+        public T withMax(final BigDecimal max) {
             this.max = max;
             return (T) this;
         }
@@ -157,7 +157,7 @@ public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
             this.price = price;
             return (T) this;
         }
-        public T withSize(final Double size) {
+        public T withSize(final BigDecimal size) {
             this.size = size;
             return (T) this;
         }

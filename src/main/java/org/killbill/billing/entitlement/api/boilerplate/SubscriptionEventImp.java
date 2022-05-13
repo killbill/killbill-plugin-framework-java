@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
-import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 import org.killbill.billing.catalog.api.BillingPeriod;
 import org.killbill.billing.catalog.api.Plan;
 import org.killbill.billing.catalog.api.PlanPhase;
@@ -35,7 +35,7 @@ import org.killbill.billing.entitlement.api.SubscriptionEventType;
 @JsonDeserialize( builder = SubscriptionEventImp.Builder.class )
 public class SubscriptionEventImp implements SubscriptionEvent {
 
-    protected LocalDate effectiveDate;
+    protected DateTime effectiveDate;
     protected UUID entitlementId;
     protected UUID id;
     protected boolean isBlockedBilling;
@@ -96,7 +96,7 @@ public class SubscriptionEventImp implements SubscriptionEvent {
     }
     protected SubscriptionEventImp() { }
     @Override
-    public LocalDate getEffectiveDate() {
+    public DateTime getEffectiveDate() {
         return this.effectiveDate;
     }
     @Override
@@ -313,7 +313,7 @@ public class SubscriptionEventImp implements SubscriptionEvent {
     @SuppressWarnings("unchecked")
     public static class Builder<T extends SubscriptionEventImp.Builder<T>> {
 
-        protected LocalDate effectiveDate;
+        protected DateTime effectiveDate;
         protected UUID entitlementId;
         protected UUID id;
         protected boolean isBlockedBilling;
@@ -353,7 +353,7 @@ public class SubscriptionEventImp implements SubscriptionEvent {
             this.serviceStateName = that.serviceStateName;
             this.subscriptionEventType = that.subscriptionEventType;
         }
-        public T withEffectiveDate(final LocalDate effectiveDate) {
+        public T withEffectiveDate(final DateTime effectiveDate) {
             this.effectiveDate = effectiveDate;
             return (T) this;
         }

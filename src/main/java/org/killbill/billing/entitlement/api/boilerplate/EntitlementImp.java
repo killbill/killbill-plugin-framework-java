@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -46,8 +46,8 @@ public class EntitlementImp implements Entitlement {
     protected String bundleExternalKey;
     protected UUID bundleId;
     protected DateTime createdDate;
-    protected LocalDate effectiveEndDate;
-    protected LocalDate effectiveStartDate;
+    protected DateTime effectiveEndDate;
+    protected DateTime effectiveStartDate;
     protected String externalKey;
     protected UUID id;
     protected PlanPhase lastActivePhase;
@@ -125,11 +125,11 @@ public class EntitlementImp implements Entitlement {
         return this.createdDate;
     }
     @Override
-    public LocalDate getEffectiveEndDate() {
+    public DateTime getEffectiveEndDate() {
         return this.effectiveEndDate;
     }
     @Override
-    public LocalDate getEffectiveStartDate() {
+    public DateTime getEffectiveStartDate() {
         return this.effectiveStartDate;
     }
     @Override
@@ -191,6 +191,10 @@ public class EntitlementImp implements Entitlement {
     @Override
     public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("cancelEntitlementWithPolicyOverrideBillingPolicy(org.killbill.billing.entitlement.api.Entitlement.EntitlementActionPolicy, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Entitlement cancelEntitlementWithDate(final DateTime entitlementEffectiveDate, final DateTime billingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("cancelEntitlementWithDate(org.joda.time.DateTime, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement cancelEntitlementWithDate(final LocalDate effectiveDate, final boolean overrideBillingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -362,8 +366,8 @@ public class EntitlementImp implements Entitlement {
         protected String bundleExternalKey;
         protected UUID bundleId;
         protected DateTime createdDate;
-        protected LocalDate effectiveEndDate;
-        protected LocalDate effectiveStartDate;
+        protected DateTime effectiveEndDate;
+        protected DateTime effectiveStartDate;
         protected String externalKey;
         protected UUID id;
         protected PlanPhase lastActivePhase;
@@ -420,11 +424,11 @@ public class EntitlementImp implements Entitlement {
             this.createdDate = createdDate;
             return (T) this;
         }
-        public T withEffectiveEndDate(final LocalDate effectiveEndDate) {
+        public T withEffectiveEndDate(final DateTime effectiveEndDate) {
             this.effectiveEndDate = effectiveEndDate;
             return (T) this;
         }
-        public T withEffectiveStartDate(final LocalDate effectiveStartDate) {
+        public T withEffectiveStartDate(final DateTime effectiveStartDate) {
             this.effectiveStartDate = effectiveStartDate;
             return (T) this;
         }

@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -84,16 +84,16 @@ public class TagUserApiImp implements TagUserApi {
         throw new UnsupportedOperationException("getTagsForAccountType(java.util.UUID, org.killbill.billing.ObjectType, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public List<Tag> getTagsForAccount(final UUID accountId, final boolean includedDeleted, final TenantContext context) {
-        throw new UnsupportedOperationException("getTagsForAccount(java.util.UUID, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public void deleteTagDefinition(final UUID tagDefinitionId, final CallContext context) {
+        throw new UnsupportedOperationException("deleteTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public TagDefinition getTagDefinition(final UUID tagDefinitionId, final TenantContext context) {
         throw new UnsupportedOperationException("getTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public void deleteTagDefinition(final UUID tagDefinitionId, final CallContext context) {
-        throw new UnsupportedOperationException("deleteTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public List<Tag> getTagsForAccount(final UUID accountId, final boolean includedDeleted, final TenantContext context) {
+        throw new UnsupportedOperationException("getTagsForAccount(java.util.UUID, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getTagAuditLogsWithHistoryForId(final UUID tagId, final AuditLevel auditLevel, final TenantContext context) {
