@@ -22,114 +22,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.killbill.billing.payment.api.PluginProperty;
-import org.killbill.billing.payment.plugin.api.GatewayNotification;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.killbill.billing.payment.api.PluginProperty;
+import org.killbill.billing.payment.plugin.api.GatewayNotification;
+import org.killbill.billing.payment.plugin.api.boilerplate.GatewayNotificationImp;
 
-public class PluginGatewayNotification implements GatewayNotification {
-
-    protected final UUID kbPaymentId;
-    protected final int status;
-    protected final String entity;
-    protected final Map<String, List<String>> headers;
-    protected final List<PluginProperty> properties;
+@JsonDeserialize( builder = PluginGatewayNotification.Builder.class )
+public class PluginGatewayNotification extends GatewayNotificationImp {
 
     public PluginGatewayNotification(final String entity) {
         this(null,
-             200,
-             entity,
-             ImmutableMap.<String, List<String>>of(),
-             ImmutableList.<PluginProperty>of());
+                200,
+                entity,
+                ImmutableMap.<String, List<String>>of(),
+                ImmutableList.<PluginProperty>of());
     }
 
     public PluginGatewayNotification(final UUID kbPaymentId,
-                                     final int status,
-                                     final String entity,
-                                     final Map<String, List<String>> headers,
-                                     final List<PluginProperty> properties) {
-        this.kbPaymentId = kbPaymentId;
-        this.status = status;
-        this.entity = entity;
-        this.headers = headers;
-        this.properties = properties;
+            final int status,
+            final String entity,
+            final Map<String, List<String>> headers,
+            final List<PluginProperty> properties) {
+        this(new Builder<>()
+                .withKbPaymentId(kbPaymentId)
+                .withStatus(status)
+                .withEntity(entity)
+                .withHeaders(headers)
+                .withProperties(properties)
+                .validate());
     }
 
-    @Override
-    public UUID getKbPaymentId() {
-        return kbPaymentId;
+    protected PluginGatewayNotification(final PluginGatewayNotification.Builder<?> builder) {
+        super(builder);
     }
 
-    @Override
-    public int getStatus() {
-        return status;
+    public PluginGatewayNotification(final PluginGatewayNotification that) {
+        super(that);
     }
 
-    @Override
-    public String getEntity() {
-        return entity;
-    }
+    @SuppressWarnings("unchecked")
+    public static class Builder<T extends PluginGatewayNotification.Builder<T>> 
+        extends GatewayNotificationImp.Builder<T> {
 
-    @Override
-    public Map<String, List<String>> getHeaders() {
-        return headers;
-    }
-
-    @Override
-    public List<PluginProperty> getProperties() {
-        return properties;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginGatewayNotification{");
-        sb.append("kbPaymentId=").append(kbPaymentId);
-        sb.append(", status=").append(status);
-        sb.append(", entity='").append(entity).append('\'');
-        sb.append(", headers=").append(headers);
-        sb.append(", properties=").append(properties);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Builder() {
+            this.withStatus(200);
+            this.withHeaders(ImmutableMap.<String, List<String>>of());
+            this.withProperties(ImmutableList.<PluginProperty>of());
         }
 
-        final PluginGatewayNotification that = (PluginGatewayNotification) o;
-
-        if (status != that.status) {
-            return false;
-        }
-        if (entity != null ? !entity.equals(that.entity) : that.entity != null) {
-            return false;
-        }
-        if (headers != null ? !headers.equals(that.headers) : that.headers != null) {
-            return false;
-        }
-        if (kbPaymentId != null ? !kbPaymentId.equals(that.kbPaymentId) : that.kbPaymentId != null) {
-            return false;
-        }
-        if (properties != null ? !properties.equals(that.properties) : that.properties != null) {
-            return false;
+        public Builder(final Builder that) {
+            super(that);
         }
 
-        return true;
-    }
+        @Override
+        public Builder validate() {
+          return this;
+        }
 
-    @Override
-    public int hashCode() {
-        int result = kbPaymentId != null ? kbPaymentId.hashCode() : 0;
-        result = 31 * result + status;
-        result = 31 * result + (entity != null ? entity.hashCode() : 0);
-        result = 31 * result + (headers != null ? headers.hashCode() : 0);
-        result = 31 * result + (properties != null ? properties.hashCode() : 0);
-        return result;
+        @Override
+        public PluginGatewayNotification build() {
+            return new PluginGatewayNotification(validate());
+        }
     }
 }

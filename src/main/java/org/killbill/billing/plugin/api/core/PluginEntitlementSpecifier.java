@@ -19,88 +19,55 @@
 package org.killbill.billing.plugin.api.core;
 
 import java.util.List;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.killbill.billing.catalog.api.PlanPhasePriceOverride;
 import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
 import org.killbill.billing.entitlement.api.EntitlementSpecifier;
+import org.killbill.billing.entitlement.api.boilerplate.EntitlementSpecifierImp;
 
-public class PluginEntitlementSpecifier implements EntitlementSpecifier {
-
-    private final PlanPhaseSpecifier planPhaseSpecifier;
-    private final Integer billCycleDay;
-    private final String externalKey;
-    private final List<PlanPhasePriceOverride> overrides;
+@JsonDeserialize( builder = PluginEntitlementSpecifier.Builder.class )
+public class PluginEntitlementSpecifier extends EntitlementSpecifierImp {
 
     public PluginEntitlementSpecifier(final PlanPhaseSpecifier planPhaseSpecifier,
-                                      final Integer billCycleDay,
-                                      final String externalKey,
-                                      final List<PlanPhasePriceOverride> overrides) {
-        this.planPhaseSpecifier = planPhaseSpecifier;
-        this.billCycleDay = billCycleDay;
-        this.externalKey = externalKey;
-        this.overrides = overrides;
+            final Integer billCycleDay,
+            final String externalKey,
+            final List<PlanPhasePriceOverride> overrides) {
+
+        this(new Builder<>()
+                .withPlanPhaseSpecifier(planPhaseSpecifier)
+                .withBillCycleDay(billCycleDay)
+                .withExternalKey(externalKey)
+                .withOverrides(overrides)
+                .validate());
     }
 
-    @Override
-    public PlanPhaseSpecifier getPlanPhaseSpecifier() {
-        return planPhaseSpecifier;
+    protected PluginEntitlementSpecifier(final PluginEntitlementSpecifier.Builder<?> builder) {
+        super(builder);
     }
 
-    @Override
-    public Integer getBillCycleDay() {
-        return billCycleDay;
+    public PluginEntitlementSpecifier(final PluginEntitlementSpecifier that) {
+        super(that);
     }
 
-    @Override
-    public String getExternalKey() {
-        return externalKey;
-    }
+    @SuppressWarnings("unchecked")
+    public static class Builder<T extends PluginEntitlementSpecifier.Builder<T>> 
+        extends EntitlementSpecifierImp.Builder<T> {
 
-    @Override
-    public List<PlanPhasePriceOverride> getOverrides() {
-        return overrides;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginEntitlementSpecifier{");
-        sb.append("planPhaseSpecifier=").append(planPhaseSpecifier);
-        sb.append(", billCycleDay=").append(billCycleDay);
-        sb.append(", externalKey=").append(externalKey);
-        sb.append(", overrides=").append(overrides);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Builder() {
         }
 
-        final PluginEntitlementSpecifier that = (PluginEntitlementSpecifier) o;
+        public Builder(final Builder that) {
+            super(that);
+        }
 
-        if (planPhaseSpecifier != null ? !planPhaseSpecifier.equals(that.planPhaseSpecifier) : that.planPhaseSpecifier != null) {
-            return false;
+        @Override
+        public Builder validate() {
+            return this;
         }
-        if (billCycleDay != null ? !billCycleDay.equals(that.billCycleDay) : that.billCycleDay != null) {
-            return false;
-        }
-        if (externalKey != null ? !externalKey.equals(that.externalKey) : that.externalKey != null) {
-            return false;
-        }
-        return overrides != null ? overrides.equals(that.overrides) : that.overrides == null;
-    }
 
-    @Override
-    public int hashCode() {
-        int result = planPhaseSpecifier != null ? planPhaseSpecifier.hashCode() : 0;
-        result = 31 * result + (billCycleDay != null ? billCycleDay.hashCode() : 0);
-        result = 31 * result + (externalKey != null ? externalKey.hashCode() : 0);
-        result = 31 * result + (overrides != null ? overrides.hashCode() : 0);
-        return result;
+        @Override
+        public PluginEntitlementSpecifier build() {
+            return new PluginEntitlementSpecifier(this.validate());
+        }
     }
 }
