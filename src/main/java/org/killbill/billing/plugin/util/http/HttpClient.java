@@ -32,9 +32,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -77,6 +79,8 @@ public class HttpClient implements Closeable {
     protected final String url;
     protected final java.net.http.HttpClient httpClient;
     protected final ObjectMapper mapper;
+
+    protected PasswordAuthentication passwordAuthentication;
 
     protected int httpTimeoutSec = DEFAULT_HTTP_TIMEOUT_SEC;
 
@@ -128,10 +132,11 @@ public class HttpClient implements Closeable {
                                                                                  .connectTimeout(Duration.of(connectTimeoutMs, ChronoUnit.MILLIS));
 
         if (username != null && password != null) {
+            this.passwordAuthentication = new PasswordAuthentication(username, password.toCharArray());
             builder.authenticator(new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password.toCharArray());
+                    return passwordAuthentication;
                 }
             });
         }
@@ -231,6 +236,13 @@ public class HttpClient implements Closeable {
                                                                      .method(verb, BodyPublishers.noBody()); // Body overridden later on
 
         builder.header("User-Agent", USER_AGENT);
+
+        if (passwordAuthentication != null) {
+            // Force authentication, regardless if we were challenged
+            final String userName = passwordAuthentication.getUserName();
+            final String password = String.valueOf(passwordAuthentication.getPassword());
+            builder.header("Authorization", "Basic " + Base64.getEncoder().encodeToString((userName + ":" + password).getBytes(StandardCharsets.UTF_8)));
+        }
 
         for (final Entry<String, String> entry : headers.entrySet()) {
             builder.headers(entry.getKey(), entry.getValue());
