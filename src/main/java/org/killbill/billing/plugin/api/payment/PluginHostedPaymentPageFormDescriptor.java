@@ -23,24 +23,19 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.common.collect.ImmutableList;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.plugin.api.HostedPaymentPageFormDescriptor;
+import org.killbill.billing.payment.plugin.api.boilerplate.HostedPaymentPageFormDescriptorImp;
 import org.killbill.billing.plugin.util.http.QueryComputer;
 import org.killbill.billing.plugin.util.http.URIUtils;
 
-import com.google.common.collect.ImmutableList;
-
-public class PluginHostedPaymentPageFormDescriptor implements HostedPaymentPageFormDescriptor {
+@JsonDeserialize( builder = PluginHostedPaymentPageFormDescriptor.Builder.class )
+public class PluginHostedPaymentPageFormDescriptor extends HostedPaymentPageFormDescriptorImp {
 
     public static final String GET = "GET";
     public static final String POST = "POST";
-
-    private final UUID kbAccountId;
-    private final String formMethod;
-    private final String formUrl;
-    private final List<PluginProperty> formFields;
-    private final List<PluginProperty> properties;
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formUrl) {
         this(kbAccountId, GET, formUrl, ImmutableList.<PluginProperty>of());
@@ -54,108 +49,63 @@ public class PluginHostedPaymentPageFormDescriptor implements HostedPaymentPageF
         this(kbAccountId, formMethod, formUrl, formFields, ImmutableList.<PluginProperty>of());
     }
 
-    public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId,
-                                                 final String formMethod,
-                                                 final String formUrl,
-                                                 final List<PluginProperty> formFields,
-                                                 final List<PluginProperty> properties) {
-        this.kbAccountId = kbAccountId;
-        this.formMethod = formMethod;
-        this.formUrl = formUrl;
-        this.formFields = formFields;
-        this.properties = properties;
-    }
-
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formUrl, final Map<String, String> queryParams) throws URISyntaxException {
         this(kbAccountId, GET, formUrl, queryParams);
     }
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formMethod, final String formUrl, final Map<String, String> queryParams) throws URISyntaxException {
+        this(kbAccountId,formMethod, toFullUrl(formUrl, queryParams), ImmutableList.<PluginProperty>of(), ImmutableList.<PluginProperty>of());
+    }
+
+    public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId,
+                                                 final String formMethod,
+                                                 final String formUrl,
+                                                 final List<PluginProperty> formFields,
+                                                 final List<PluginProperty> properties) {
+
+      this(new Builder<>()
+        .withKbAccountId(kbAccountId)
+        .withFormMethod(formMethod)
+        .withFormUrl(formUrl)
+        .withFormFields(formFields)
+        .withProperties(properties)
+        .validate());
+    }
+
+    protected PluginHostedPaymentPageFormDescriptor(final PluginHostedPaymentPageFormDescriptor.Builder<?> builder) {
+        super(builder);
+    }
+
+    public PluginHostedPaymentPageFormDescriptor(final PluginHostedPaymentPageFormDescriptor that) {
+        super(that);
+    }
+
+    private static String toFullUrl(final String formUrl, final Map<String, String> queryParams) throws URISyntaxException {
         final URI rawUrl = new URI(formUrl);
         final String fullQueryString = QueryComputer.URL_ENCODING_ENABLED_QUERY_COMPUTER.computeFullQueryString(rawUrl.getQuery(), queryParams);
         final String fullUrl = URIUtils.buildURI(rawUrl.getScheme(), rawUrl.getUserInfo(), rawUrl.getHost(), rawUrl.getPort(), rawUrl.getAuthority(), rawUrl.getPath(), fullQueryString, rawUrl.getFragment());
-
-        this.kbAccountId = kbAccountId;
-        this.formMethod = formMethod;
-        this.formUrl = fullUrl;
-        this.formFields = ImmutableList.<PluginProperty>of();
-        this.properties = ImmutableList.<PluginProperty>of();
+        return fullUrl;
     }
 
-    @Override
-    public UUID getKbAccountId() {
-        return kbAccountId;
-    }
+    @SuppressWarnings("unchecked")
+    public static class Builder<T extends PluginHostedPaymentPageFormDescriptor.Builder<T>> 
+        extends HostedPaymentPageFormDescriptorImp.Builder<T> {
 
-    @Override
-    public String getFormMethod() {
-        return formMethod;
-    }
-
-    @Override
-    public String getFormUrl() {
-        return formUrl;
-    }
-
-    @Override
-    public List<PluginProperty> getFormFields() {
-        return formFields;
-    }
-
-    @Override
-    public List<PluginProperty> getProperties() {
-        return properties;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginHostedPaymentPageFormDescriptor{");
-        sb.append("kbAccountId=").append(kbAccountId);
-        sb.append(", formMethod='").append(formMethod).append('\'');
-        sb.append(", formUrl='").append(formUrl).append('\'');
-        sb.append(", formFields=").append(formFields);
-        sb.append(", properties=").append(properties);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Builder() {
         }
 
-        final PluginHostedPaymentPageFormDescriptor that = (PluginHostedPaymentPageFormDescriptor) o;
-
-        if (formFields != null ? !formFields.equals(that.formFields) : that.formFields != null) {
-            return false;
-        }
-        if (formMethod != null ? !formMethod.equals(that.formMethod) : that.formMethod != null) {
-            return false;
-        }
-        if (formUrl != null ? !formUrl.equals(that.formUrl) : that.formUrl != null) {
-            return false;
-        }
-        if (kbAccountId != null ? !kbAccountId.equals(that.kbAccountId) : that.kbAccountId != null) {
-            return false;
-        }
-        if (properties != null ? !properties.equals(that.properties) : that.properties != null) {
-            return false;
+        public Builder(final Builder that) {
+            super(that);
         }
 
-        return true;
-    }
+        @Override
+        public Builder validate() {
+            return this;
+        }
 
-    @Override
-    public int hashCode() {
-        int result = kbAccountId != null ? kbAccountId.hashCode() : 0;
-        result = 31 * result + (formMethod != null ? formMethod.hashCode() : 0);
-        result = 31 * result + (formUrl != null ? formUrl.hashCode() : 0);
-        result = 31 * result + (formFields != null ? formFields.hashCode() : 0);
-        result = 31 * result + (properties != null ? properties.hashCode() : 0);
-        return result;
+        @Override
+        public PluginHostedPaymentPageFormDescriptor build() {
+            return new PluginHostedPaymentPageFormDescriptor(this.validate());
+        }
     }
 }

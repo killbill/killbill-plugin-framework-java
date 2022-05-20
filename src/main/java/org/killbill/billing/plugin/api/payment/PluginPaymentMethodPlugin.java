@@ -20,91 +20,54 @@ package org.killbill.billing.plugin.api.payment;
 
 import java.util.List;
 import java.util.UUID;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.killbill.billing.payment.api.PaymentMethodPlugin;
 import org.killbill.billing.payment.api.PluginProperty;
+import org.killbill.billing.payment.api.boilerplate.PaymentMethodPluginImp;
 
-public class PluginPaymentMethodPlugin implements PaymentMethodPlugin {
-
-    protected final UUID kbPaymentMethodId;
-    protected final String externalPaymentMethodId;
-    protected final boolean isDefaultPaymentMethod;
-    protected final List<PluginProperty> properties;
+@JsonDeserialize( builder = PluginPaymentMethodPlugin.Builder.class )
+public class PluginPaymentMethodPlugin extends PaymentMethodPluginImp {
 
     public PluginPaymentMethodPlugin(final UUID kbPaymentMethodId,
-                                     final String externalPaymentMethodId,
-                                     final boolean isDefaultPaymentMethod,
-                                     final List<PluginProperty> properties) {
-        this.kbPaymentMethodId = kbPaymentMethodId;
-        this.externalPaymentMethodId = externalPaymentMethodId;
-        this.isDefaultPaymentMethod = isDefaultPaymentMethod;
-        this.properties = properties;
+            final String externalPaymentMethodId,
+            final boolean isDefaultPaymentMethod,
+            final List<PluginProperty> properties) {
+
+        this(new Builder<>()
+                .withKbPaymentMethodId(kbPaymentMethodId)
+                .withExternalPaymentMethodId(externalPaymentMethodId)
+                .withIsDefaultPaymentMethod(isDefaultPaymentMethod)
+                .withProperties(properties)
+                .validate());
     }
 
-    @Override
-    public UUID getKbPaymentMethodId() {
-        return kbPaymentMethodId;
+    protected PluginPaymentMethodPlugin(final PluginPaymentMethodPlugin.Builder<?> builder) {
+        super(builder);
     }
 
-    @Override
-    public String getExternalPaymentMethodId() {
-        return externalPaymentMethodId;
+    public PluginPaymentMethodPlugin(final PluginPaymentMethodPlugin that) {
+        super(that);
     }
 
-    @Override
-    public boolean isDefaultPaymentMethod() {
-        return isDefaultPaymentMethod;
-    }
+    @SuppressWarnings("unchecked")
+    public static class Builder<T extends PluginPaymentMethodPlugin.Builder<T>> 
+        extends PaymentMethodPluginImp.Builder<T> {
 
-    @Override
-    public List<PluginProperty> getProperties() {
-        return properties;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("PluginPaymentMethodPlugin{");
-        sb.append("kbPaymentMethodId=").append(kbPaymentMethodId);
-        sb.append(", externalPaymentMethodId='").append(externalPaymentMethodId).append('\'');
-        sb.append(", isDefaultPaymentMethod=").append(isDefaultPaymentMethod);
-        sb.append(", properties=").append(properties);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+        public Builder() {
         }
 
-        final PluginPaymentMethodPlugin that = (PluginPaymentMethodPlugin) o;
-
-        if (isDefaultPaymentMethod != that.isDefaultPaymentMethod) {
-            return false;
-        }
-        if (externalPaymentMethodId != null ? !externalPaymentMethodId.equals(that.externalPaymentMethodId) : that.externalPaymentMethodId != null) {
-            return false;
-        }
-        if (kbPaymentMethodId != null ? !kbPaymentMethodId.equals(that.kbPaymentMethodId) : that.kbPaymentMethodId != null) {
-            return false;
-        }
-        if (properties != null ? !properties.equals(that.properties) : that.properties != null) {
-            return false;
+        public Builder(final Builder that) {
+            super(that);
         }
 
-        return true;
-    }
+        @Override
+        public Builder validate() {
+            return this;
+        }
 
-    @Override
-    public int hashCode() {
-        int result = kbPaymentMethodId != null ? kbPaymentMethodId.hashCode() : 0;
-        result = 31 * result + (externalPaymentMethodId != null ? externalPaymentMethodId.hashCode() : 0);
-        result = 31 * result + (isDefaultPaymentMethod ? 1 : 0);
-        result = 31 * result + (properties != null ? properties.hashCode() : 0);
-        return result;
+        @Override
+        public PluginPaymentMethodPlugin build() {
+            return new PluginPaymentMethodPlugin(this.validate());
+        }
     }
 }
