@@ -22,9 +22,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.Authenticator;
 import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,9 +30,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Base64;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -78,6 +78,9 @@ public class HttpClient implements Closeable {
     protected final java.net.http.HttpClient httpClient;
     protected final ObjectMapper mapper;
 
+    protected final String username;
+    protected final String password;
+
     protected int httpTimeoutSec = DEFAULT_HTTP_TIMEOUT_SEC;
 
     public HttpClient(final String url,
@@ -87,7 +90,9 @@ public class HttpClient implements Closeable {
                       final Integer proxyPort,
                       final boolean strictSSL) throws GeneralSecurityException {
         this.url = url;
-        this.httpClient = buildHttpClient(strictSSL, DEFAULT_HTTP_CONNECT_TIMEOUT_SEC * 1000, username, password, proxyHost, proxyPort);
+        this.username = username;
+        this.password = password;
+        this.httpClient = buildHttpClient(strictSSL, DEFAULT_HTTP_CONNECT_TIMEOUT_SEC * 1000, proxyHost, proxyPort);
         this.mapper = createObjectMapper();
     }
 
@@ -99,7 +104,9 @@ public class HttpClient implements Closeable {
                       final boolean strictSSL,
                       final int connectTimeoutMs) throws GeneralSecurityException {
         this.url = url;
-        this.httpClient = buildHttpClient(strictSSL, connectTimeoutMs, username, password, proxyHost, proxyPort);
+        this.username = username;
+        this.password = password;
+        this.httpClient = buildHttpClient(strictSSL, connectTimeoutMs, proxyHost, proxyPort);
         this.mapper = createObjectMapper();
     }
 
@@ -112,29 +119,20 @@ public class HttpClient implements Closeable {
                       final int connectTimeoutMs,
                       final int requestTimeoutMs) throws GeneralSecurityException {
         this.url = url;
-        this.httpClient = buildHttpClient(strictSSL, connectTimeoutMs, username, password, proxyHost, proxyPort);
+        this.username = username;
+        this.password = password;
+        this.httpClient = buildHttpClient(strictSSL, connectTimeoutMs, proxyHost, proxyPort);
         this.mapper = createObjectMapper();
         this.httpTimeoutSec = requestTimeoutMs;
     }
 
     private java.net.http.HttpClient buildHttpClient(final boolean strictSSL,
                                                      final int connectTimeoutMs,
-                                                     @Nullable final String username,
-                                                     @Nullable final String password,
                                                      @Nullable final String proxyHost,
                                                      @Nullable final Integer proxyPort) throws GeneralSecurityException {
         final java.net.http.HttpClient.Builder builder = java.net.http.HttpClient.newBuilder()
                                                                                  .sslContext(SslUtils.getInstance().getSSLContext(!strictSSL))
                                                                                  .connectTimeout(Duration.of(connectTimeoutMs, ChronoUnit.MILLIS));
-
-        if (username != null && password != null) {
-            builder.authenticator(new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(username, password.toCharArray());
-                }
-            });
-        }
 
         if (proxyHost != null && proxyPort != null) {
             builder.proxy(ProxySelector.of(new InetSocketAddress(proxyHost, proxyPort)));
@@ -231,6 +229,13 @@ public class HttpClient implements Closeable {
                                                                      .method(verb, BodyPublishers.noBody()); // Body overridden later on
 
         builder.header("User-Agent", USER_AGENT);
+
+        if (username != null && password != null) {
+            // Force authentication, regardless if we were challenged
+            // Note: on JDK-17, this header won't be set if a PasswordAuthentication is set, see jdk.internal.net.http.common.Utils.CONTEXT_RESTRICTED.
+            // On JDK-11, it worked because of JDK-8263442 (https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8263442).
+            builder.header("Authorization", "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8)));
+        }
 
         for (final Entry<String, String> entry : headers.entrySet()) {
             builder.headers(entry.getKey(), entry.getValue());
