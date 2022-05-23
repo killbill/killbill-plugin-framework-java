@@ -89,14 +89,6 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("getInvoiceItemsByParentInvoice(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Invoice triggerDryRunInvoiceGeneration(final UUID accountId, final LocalDate targetDate, final DryRunArguments dryRunArguments, final CallContext context) {
-        throw new UnsupportedOperationException("triggerDryRunInvoiceGeneration(java.util.UUID, org.joda.time.LocalDate, org.killbill.billing.invoice.api.DryRunArguments, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
-    public Invoice triggerInvoiceGeneration(final UUID accountId, final LocalDate targetDate, final CallContext context) {
-        throw new UnsupportedOperationException("triggerInvoiceGeneration(java.util.UUID, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public List<AuditLogWithHistory> getInvoicePaymentAuditLogsWithHistoryForId(final UUID invoicePaymentId, final AuditLevel auditLevel, final TenantContext context) {
         throw new UnsupportedOperationException("getInvoicePaymentAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
@@ -125,6 +117,10 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("getInvoiceByNumber(java.lang.Integer, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
+    public Invoice triggerInvoiceGeneration(final UUID accountId, final LocalDate targetDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("triggerInvoiceGeneration(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
     public Pagination<Invoice> getInvoices(final Long offset, final Long limit, final TenantContext context) {
         throw new UnsupportedOperationException("getInvoices(java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
@@ -141,12 +137,12 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("insertInvoiceItemAdjustment(java.util.UUID, java.util.UUID, java.util.UUID, org.joda.time.LocalDate, java.lang.String, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Invoice getInvoice(final UUID invoiceId, final TenantContext context) {
-        throw new UnsupportedOperationException("getInvoice(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public Iterable<Invoice> triggerInvoiceGroupGeneration(final UUID accountId, final LocalDate targetDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("triggerInvoiceGroupGeneration(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Iterable<Invoice> triggerInvoiceGroupGeneration(final UUID accountId, final LocalDate targetDate, final CallContext context) {
-        throw new UnsupportedOperationException("triggerInvoiceGroupGeneration(java.util.UUID, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public Invoice getInvoice(final UUID invoiceId, final TenantContext context) {
+        throw new UnsupportedOperationException("getInvoice(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<Invoice> getInvoicesByGroup(final UUID accountId, final UUID groupId, final TenantContext context) {
@@ -155,6 +151,10 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
     @Override
     public void voidInvoice(final UUID invoiceId, final CallContext context) {
         throw new UnsupportedOperationException("voidInvoice(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Invoice triggerDryRunInvoiceGeneration(final UUID accountId, final LocalDate targetDate, final DryRunArguments dryRunArguments, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("triggerDryRunInvoiceGeneration(java.util.UUID, org.joda.time.LocalDate, org.killbill.billing.invoice.api.DryRunArguments, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public List<Invoice> getInvoicesByAccount(final UUID accountId, final LocalDate fromDate, final LocalDate upToDate, final boolean includeVoidedInvoices, final TenantContext context) {

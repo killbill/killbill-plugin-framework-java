@@ -189,6 +189,10 @@ public class EntitlementImp implements Entitlement {
         throw new UnsupportedOperationException("undoChangePlan(java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
+    public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final DateTime effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("changePlanWithDate(org.killbill.billing.entitlement.api.EntitlementSpecifier, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
     public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("cancelEntitlementWithPolicyOverrideBillingPolicy(org.killbill.billing.entitlement.api.Entitlement.EntitlementActionPolicy, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }

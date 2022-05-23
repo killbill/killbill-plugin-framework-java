@@ -220,12 +220,16 @@ public class SubscriptionImp implements Subscription {
         throw new UnsupportedOperationException("undoChangePlan(java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("cancelEntitlementWithPolicyOverrideBillingPolicy(org.killbill.billing.entitlement.api.Entitlement.EntitlementActionPolicy, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final DateTime effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("changePlanWithDate(org.killbill.billing.entitlement.api.EntitlementSpecifier, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement cancelEntitlementWithDate(final DateTime entitlementEffectiveDate, final DateTime billingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("cancelEntitlementWithDate(org.joda.time.DateTime, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("cancelEntitlementWithPolicyOverrideBillingPolicy(org.killbill.billing.entitlement.api.Entitlement.EntitlementActionPolicy, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement cancelEntitlementWithDate(final LocalDate effectiveDate, final boolean overrideBillingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
