@@ -18,11 +18,13 @@
 package org.killbill.billing.plugin.util.http;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -56,6 +58,21 @@ public class TestHttpClient {
                 }
             }
         });
+        server.createContext("/secure/", new HttpHandler() {
+            @Override
+            public void handle(final HttpExchange exchange) throws IOException {
+                final List<String> authorizationHeaders = exchange.getRequestHeaders().get("Authorization");
+                if (authorizationHeaders.size() == 1) {
+                    final String authorization = authorizationHeaders.get(0);
+                    // aladdin:opensesame
+                    if ("Basic YWxhZGRpbjpvcGVuc2VzYW1l".equals(authorization)) {
+                        exchange.sendResponseHeaders(200, 0);
+                        return;
+                    }
+                }
+                exchange.sendResponseHeaders(401, 0);
+            }
+        });
         server.start();
     }
 
@@ -64,6 +81,14 @@ public class TestHttpClient {
         if (server != null) {
             server.stop(0);
         }
+    }
+
+    @Test(groups = "slow")
+    public void testAuthRequest() throws Exception {
+        final MyPluginClient client = new MyPluginClient();
+
+        final InputStream response = client.doAuth();
+        Assert.assertEquals(response.available(), 0);
     }
 
     @Test(groups = "slow")
@@ -119,9 +144,9 @@ public class TestHttpClient {
     public class MyPluginClient extends HttpClient {
 
         public MyPluginClient() throws GeneralSecurityException {
-            super("http://" + server.getAddress().getHostString() + ":" + server.getAddress().getPort() + "/test",
-                  null,
-                  null,
+            super("http://" + server.getAddress().getHostString() + ":" + server.getAddress().getPort(),
+                  "aladdin",
+                  "opensesame",
                   null,
                   null,
                   false);
@@ -129,12 +154,22 @@ public class TestHttpClient {
 
         public Car doCall(final Car car) throws Exception {
             return doCall(POST,
-                          url + "/check",
+                          url + "/test/check",
                           mapper.writeValueAsString(car),
                           ImmutableMap.<String, String>of("nocache", "1"),
                           ImmutableMap.<String, String>of("X-Plugin-Client", "12345"),
                           Car.class,
                           ResponseFormat.JSON);
+        }
+
+        public InputStream doAuth() throws Exception {
+            return doCall(GET,
+                          url + "/secure/",
+                          null,
+                          ImmutableMap.<String, String>of("nocache", "1"),
+                          ImmutableMap.<String, String>of("X-Plugin-Client", "12345"),
+                          InputStream.class,
+                          ResponseFormat.RAW);
         }
     }
 
