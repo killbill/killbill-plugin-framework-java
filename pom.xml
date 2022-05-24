@@ -44,7 +44,7 @@
         <check.fail-spotbugs>true</check.fail-spotbugs>
         <check.spotbugs-exclude-filter-file>spotbugs-exclude.xml</check.spotbugs-exclude-filter-file>
         <!-- Temporary, until we get rid of SNAPSHOT dependencies on 0.23.x -->
-        <killbill-platform.version>0.41.0-2931e45-SNAPSHOT</killbill-platform.version>
+        <killbill-platform.version>0.41.0-c61468e-SNAPSHOT</killbill-platform.version>
     </properties>
     <dependencies>
         <dependency>
