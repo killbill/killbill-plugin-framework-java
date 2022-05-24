@@ -1,5 +1,4 @@
 /*
- * Copyright 2014-2020 Groupon, Inc
  * Copyright 2020-2022 Equinix, Inc
  * Copyright 2014-2022 The Billing Project, LLC
  *
@@ -18,7 +17,23 @@
 
 package org.killbill.billing.plugin.api.invoice;
 
-import org.killbill.billing.invoice.plugin.api.OnFailureInvoiceResult;
+import org.killbill.billing.invoice.plugin.api.InvoiceResult;
+import org.killbill.billing.payment.api.PluginProperty;
 
-public class PluginOnFailureInvoiceResult extends PluginInvoiceResult implements OnFailureInvoiceResult {
+public class PluginInvoiceResult implements InvoiceResult {
+
+    final Iterable<PluginProperty> adjustedPluginProperties;
+
+    public PluginInvoiceResult() {
+        this(null);
+    }
+
+    public PluginInvoiceResult(final Iterable<PluginProperty> adjustedPluginProperties) {
+        this.adjustedPluginProperties = adjustedPluginProperties;
+    }
+
+    @Override
+    public Iterable<PluginProperty> getAdjustedPluginProperties() {
+        return adjustedPluginProperties;
+    }
 }
