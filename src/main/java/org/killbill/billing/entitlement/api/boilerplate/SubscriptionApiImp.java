@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.killbill.billing.OrderingType;
 import org.killbill.billing.entitlement.api.BlockingState;
@@ -76,6 +77,10 @@ public class SubscriptionApiImp implements SubscriptionApi {
     @Override
     public Subscription getSubscriptionForExternalKey(final String externalKey, final TenantContext context) {
         throw new UnsupportedOperationException("getSubscriptionForExternalKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public void addBlockingState(final BlockingState blockingState, final DateTime effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("addBlockingState(org.killbill.billing.entitlement.api.BlockingState, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public SubscriptionBundle getSubscriptionBundle(final UUID bundleId, final TenantContext context) {
