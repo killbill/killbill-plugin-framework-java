@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.145.3-4fcefb5-SNAPSHOT</version>
+        <version>0.145.3-016b634-SNAPSHOT</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
@@ -44,8 +44,6 @@
         <check.fail-spotbugs>true</check.fail-spotbugs>
         <check.spotbugs-exclude-filter-file>spotbugs-exclude.xml</check.spotbugs-exclude-filter-file>
         <killbill-api.version>0.54.0-a0d09d2-SNAPSHOT</killbill-api.version>
-        <!-- Temporary, until we get rid of SNAPSHOT dependencies on 0.23.x -->
-        <killbill-platform.version>0.41.0-c61468e-SNAPSHOT</killbill-platform.version>
     </properties>
     <dependencies>
         <dependency>
