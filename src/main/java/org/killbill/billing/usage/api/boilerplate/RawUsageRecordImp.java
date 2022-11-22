@@ -18,20 +18,19 @@
 
 package org.killbill.billing.usage.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
-import org.joda.time.LocalDate;
+
+import org.joda.time.DateTime;
 import org.killbill.billing.usage.api.RawUsageRecord;
 
 @JsonDeserialize( builder = RawUsageRecordImp.Builder.class )
 public class RawUsageRecordImp implements RawUsageRecord {
 
     protected BigDecimal amount;
-    protected LocalDate date;
+    protected DateTime date;
     protected UUID subscriptionId;
     protected String trackingId;
     protected String unitType;
@@ -56,7 +55,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
         return this.amount;
     }
     @Override
-    public LocalDate getDate() {
+    public DateTime getDate() {
         return this.date;
     }
     @Override
@@ -138,7 +137,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
     public static class Builder<T extends RawUsageRecordImp.Builder<T>> {
 
         protected BigDecimal amount;
-        protected LocalDate date;
+        protected DateTime date;
         protected UUID subscriptionId;
         protected String trackingId;
         protected String unitType;
@@ -155,7 +154,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
             this.amount = amount;
             return (T) this;
         }
-        public T withDate(final LocalDate date) {
+        public T withDate(final DateTime date) {
             this.date = date;
             return (T) this;
         }
