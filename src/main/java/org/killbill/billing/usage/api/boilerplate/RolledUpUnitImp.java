@@ -18,10 +18,8 @@
 
 package org.killbill.billing.usage.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.usage.api.RolledUpUnit;
 

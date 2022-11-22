@@ -18,9 +18,7 @@
 
 package org.killbill.billing.entitlement.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.PlanPhasePriceOverride;
@@ -34,18 +32,21 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
     protected String externalKey;
     protected List<PlanPhasePriceOverride> overrides;
     protected PlanPhaseSpecifier planPhaseSpecifier;
+    protected Integer quantity;
 
     public EntitlementSpecifierImp(final EntitlementSpecifierImp that) {
         this.billCycleDay = that.billCycleDay;
         this.externalKey = that.externalKey;
         this.overrides = that.overrides;
         this.planPhaseSpecifier = that.planPhaseSpecifier;
+        this.quantity = that.quantity;
     }
     protected EntitlementSpecifierImp(final EntitlementSpecifierImp.Builder<?> builder) {
         this.billCycleDay = builder.billCycleDay;
         this.externalKey = builder.externalKey;
         this.overrides = builder.overrides;
         this.planPhaseSpecifier = builder.planPhaseSpecifier;
+        this.quantity = builder.quantity;
     }
     protected EntitlementSpecifierImp() { }
     @Override
@@ -63,6 +64,10 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
     @Override
     public PlanPhaseSpecifier getPlanPhaseSpecifier() {
         return this.planPhaseSpecifier;
+    }
+    @Override
+    public Integer getQuantity() {
+        return quantity;
     }
     @Override
     public boolean equals(final Object o) {
@@ -85,6 +90,9 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
         if( !Objects.equals(this.planPhaseSpecifier, that.planPhaseSpecifier) ) {
             return false;
         }
+        if( !Objects.equals(this.quantity, that.quantity) ) {
+            return false;
+        }
         return true;
     }
     @Override
@@ -94,6 +102,7 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
         result = ( 31 * result ) + Objects.hashCode(this.externalKey);
         result = ( 31 * result ) + Objects.hashCode(this.overrides);
         result = ( 31 * result ) + Objects.hashCode(this.planPhaseSpecifier);
+        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         return result;
     }
     @Override
@@ -112,6 +121,8 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
         sb.append("overrides=").append(this.overrides);
         sb.append(", ");
         sb.append("planPhaseSpecifier=").append(this.planPhaseSpecifier);
+        sb.append(", ");
+        sb.append("quantity=").append(this.quantity);
         sb.append("}");
         return sb.toString();
     }
@@ -123,6 +134,7 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
         protected String externalKey;
         protected List<PlanPhasePriceOverride> overrides;
         protected PlanPhaseSpecifier planPhaseSpecifier;
+        protected Integer quantity;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -130,6 +142,7 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
             this.externalKey = that.externalKey;
             this.overrides = that.overrides;
             this.planPhaseSpecifier = that.planPhaseSpecifier;
+            this.quantity = that.quantity;
         }
         public T withBillCycleDay(final Integer billCycleDay) {
             this.billCycleDay = billCycleDay;
@@ -147,11 +160,16 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
             this.planPhaseSpecifier = planPhaseSpecifier;
             return (T) this;
         }
+        public T withQuantity(final Integer quantity) {
+            this.quantity = quantity;
+            return (T) this;
+        }
         public T source(final EntitlementSpecifier that) {
             this.billCycleDay = that.getBillCycleDay();
             this.externalKey = that.getExternalKey();
             this.overrides = that.getOverrides();
             this.planPhaseSpecifier = that.getPlanPhaseSpecifier();
+            this.quantity = that.getQuantity();
             return (T) this;
         }
         protected Builder validate() {

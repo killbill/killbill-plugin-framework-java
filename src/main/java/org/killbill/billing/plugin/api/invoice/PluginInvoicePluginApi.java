@@ -18,10 +18,7 @@
 
 package org.killbill.billing.plugin.api.invoice;
 
-import java.util.List;
-
 import org.killbill.billing.invoice.api.Invoice;
-import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.plugin.api.AdditionalItemsResult;
 import org.killbill.billing.invoice.plugin.api.InvoiceContext;
 import org.killbill.billing.invoice.plugin.api.InvoiceGroupingResult;
@@ -35,8 +32,6 @@ import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.plugin.api.PluginApi;
 import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.clock.Clock;
-
-import com.google.common.collect.ImmutableList;
 
 public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginApi {
 
