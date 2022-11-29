@@ -18,22 +18,21 @@
 
 package org.killbill.billing.usage.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import org.joda.time.LocalDate;
+
+import org.joda.time.DateTime;
 import org.killbill.billing.usage.api.RolledUpUnit;
 import org.killbill.billing.usage.api.RolledUpUsage;
 
 @JsonDeserialize( builder = RolledUpUsageImp.Builder.class )
 public class RolledUpUsageImp implements RolledUpUsage {
 
-    protected LocalDate end;
+    protected DateTime end;
     protected List<RolledUpUnit> rolledUpUnits;
-    protected LocalDate start;
+    protected DateTime start;
     protected UUID subscriptionId;
 
     public RolledUpUsageImp(final RolledUpUsageImp that) {
@@ -50,7 +49,7 @@ public class RolledUpUsageImp implements RolledUpUsage {
     }
     protected RolledUpUsageImp() { }
     @Override
-    public LocalDate getEnd() {
+    public DateTime getEnd() {
         return this.end;
     }
     @Override
@@ -58,7 +57,7 @@ public class RolledUpUsageImp implements RolledUpUsage {
         return this.rolledUpUnits;
     }
     @Override
-    public LocalDate getStart() {
+    public DateTime getStart() {
         return this.start;
     }
     @Override
@@ -115,9 +114,9 @@ public class RolledUpUsageImp implements RolledUpUsage {
     @SuppressWarnings("unchecked")
     public static class Builder<T extends RolledUpUsageImp.Builder<T>> {
 
-        protected LocalDate end;
+        protected DateTime end;
         protected List<RolledUpUnit> rolledUpUnits;
-        protected LocalDate start;
+        protected DateTime start;
         protected UUID subscriptionId;
 
         public Builder() { }
@@ -127,7 +126,7 @@ public class RolledUpUsageImp implements RolledUpUsage {
             this.start = that.start;
             this.subscriptionId = that.subscriptionId;
         }
-        public T withEnd(final LocalDate end) {
+        public T withEnd(final DateTime end) {
             this.end = end;
             return (T) this;
         }
@@ -135,7 +134,7 @@ public class RolledUpUsageImp implements RolledUpUsage {
             this.rolledUpUnits = rolledUpUnits;
             return (T) this;
         }
-        public T withStart(final LocalDate start) {
+        public T withStart(final DateTime start) {
             this.start = start;
             return (T) this;
         }

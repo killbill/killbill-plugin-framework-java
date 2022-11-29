@@ -18,9 +18,7 @@
 
 package org.killbill.billing.entitlement.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -65,6 +63,7 @@ public class SubscriptionImp implements Subscription {
     protected Entitlement.EntitlementState state;
     protected List<SubscriptionEvent> subscriptionEvents;
     protected DateTime updatedDate;
+    protected Integer quantity;
 
     public SubscriptionImp(final SubscriptionImp that) {
         this.accountId = that.accountId;
@@ -89,6 +88,7 @@ public class SubscriptionImp implements Subscription {
         this.state = that.state;
         this.subscriptionEvents = that.subscriptionEvents;
         this.updatedDate = that.updatedDate;
+        this.quantity = that.quantity;
     }
     protected SubscriptionImp(final SubscriptionImp.Builder<?> builder) {
         this.accountId = builder.accountId;
@@ -113,6 +113,7 @@ public class SubscriptionImp implements Subscription {
         this.state = builder.state;
         this.subscriptionEvents = builder.subscriptionEvents;
         this.updatedDate = builder.updatedDate;
+        this.quantity = builder.quantity;
     }
     protected SubscriptionImp() { }
     @Override
@@ -204,6 +205,10 @@ public class SubscriptionImp implements Subscription {
         return this.updatedDate;
     }
     @Override
+    public Integer getQuantity() {
+        return quantity;
+    }
+    @Override
     public void uncancelEntitlement(final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("uncancelEntitlement(java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
@@ -246,6 +251,10 @@ public class SubscriptionImp implements Subscription {
     @Override
     public void updateBCD(final int bcd, final LocalDate effectiveFromDate, final CallContext context) {
         throw new UnsupportedOperationException("updateBCD(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public void updateQuantity(final int quantity, final LocalDate effectiveFromDate, final CallContext context) throws EntitlementApiException {
+        throw new UnsupportedOperationException("updateQuantity(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -326,6 +335,9 @@ public class SubscriptionImp implements Subscription {
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
             return false;
         }
+        if( !Objects.equals(this.quantity, that.quantity) ) {
+            return false;
+        }
         return true;
     }
     @Override
@@ -353,6 +365,7 @@ public class SubscriptionImp implements Subscription {
         result = ( 31 * result ) + Objects.hashCode(this.state);
         result = ( 31 * result ) + Objects.hashCode(this.subscriptionEvents);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
+        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         return result;
     }
     @Override
@@ -412,6 +425,8 @@ public class SubscriptionImp implements Subscription {
         sb.append("subscriptionEvents=").append(this.subscriptionEvents);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
+        sb.append(", ");
+        sb.append("quantity=").append(this.quantity);
         sb.append("}");
         return sb.toString();
     }
@@ -441,6 +456,7 @@ public class SubscriptionImp implements Subscription {
         protected Entitlement.EntitlementState state;
         protected List<SubscriptionEvent> subscriptionEvents;
         protected DateTime updatedDate;
+        protected Integer quantity;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -466,6 +482,7 @@ public class SubscriptionImp implements Subscription {
             this.state = that.state;
             this.subscriptionEvents = that.subscriptionEvents;
             this.updatedDate = that.updatedDate;
+            this.quantity = that.quantity;
         }
         public T withAccountId(final UUID accountId) {
             this.accountId = accountId;
@@ -555,6 +572,10 @@ public class SubscriptionImp implements Subscription {
             this.updatedDate = updatedDate;
             return (T) this;
         }
+        public T withQuantity(final Integer qty) {
+            this.quantity = qty;
+            return (T) this;
+        }
         public T source(final Subscription that) {
             this.accountId = that.getAccountId();
             this.baseEntitlementId = that.getBaseEntitlementId();
@@ -578,6 +599,7 @@ public class SubscriptionImp implements Subscription {
             this.state = that.getState();
             this.subscriptionEvents = that.getSubscriptionEvents();
             this.updatedDate = that.getUpdatedDate();
+            this.quantity = that.getQuantity();
             return (T) this;
         }
         protected Builder validate() {

@@ -20,20 +20,20 @@ package org.killbill.billing.entitlement.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
-import org.joda.time.LocalDate;
+
+import org.joda.time.DateTime;
 import org.killbill.billing.entitlement.api.BaseEntitlementWithAddOnsSpecifier;
 import org.killbill.billing.entitlement.api.EntitlementSpecifier;
 
 @JsonDeserialize( builder = BaseEntitlementWithAddOnsSpecifierImp.Builder.class )
 public class BaseEntitlementWithAddOnsSpecifierImp implements BaseEntitlementWithAddOnsSpecifier {
 
-    protected LocalDate billingEffectiveDate;
+    protected DateTime billingEffectiveDate;
     protected String bundleExternalKey;
     protected UUID bundleId;
-    protected LocalDate entitlementEffectiveDate;
+    protected DateTime entitlementEffectiveDate;
     protected Iterable<EntitlementSpecifier> entitlementSpecifier;
     protected boolean isMigrated;
 
@@ -55,7 +55,7 @@ public class BaseEntitlementWithAddOnsSpecifierImp implements BaseEntitlementWit
     }
     protected BaseEntitlementWithAddOnsSpecifierImp() { }
     @Override
-    public LocalDate getBillingEffectiveDate() {
+    public DateTime getBillingEffectiveDate() {
         return this.billingEffectiveDate;
     }
     @Override
@@ -67,7 +67,7 @@ public class BaseEntitlementWithAddOnsSpecifierImp implements BaseEntitlementWit
         return this.bundleId;
     }
     @Override
-    public LocalDate getEntitlementEffectiveDate() {
+    public DateTime getEntitlementEffectiveDate() {
         return this.entitlementEffectiveDate;
     }
     @Override
@@ -146,10 +146,10 @@ public class BaseEntitlementWithAddOnsSpecifierImp implements BaseEntitlementWit
     @SuppressWarnings("unchecked")
     public static class Builder<T extends BaseEntitlementWithAddOnsSpecifierImp.Builder<T>> {
 
-        protected LocalDate billingEffectiveDate;
+        protected DateTime billingEffectiveDate;
         protected String bundleExternalKey;
         protected UUID bundleId;
-        protected LocalDate entitlementEffectiveDate;
+        protected DateTime entitlementEffectiveDate;
         protected Iterable<EntitlementSpecifier> entitlementSpecifier;
         protected boolean isMigrated;
 
@@ -162,7 +162,7 @@ public class BaseEntitlementWithAddOnsSpecifierImp implements BaseEntitlementWit
             this.entitlementSpecifier = that.entitlementSpecifier;
             this.isMigrated = that.isMigrated;
         }
-        public T withBillingEffectiveDate(final LocalDate billingEffectiveDate) {
+        public T withBillingEffectiveDate(final DateTime billingEffectiveDate) {
             this.billingEffectiveDate = billingEffectiveDate;
             return (T) this;
         }
@@ -174,7 +174,7 @@ public class BaseEntitlementWithAddOnsSpecifierImp implements BaseEntitlementWit
             this.bundleId = bundleId;
             return (T) this;
         }
-        public T withEntitlementEffectiveDate(final LocalDate entitlementEffectiveDate) {
+        public T withEntitlementEffectiveDate(final DateTime entitlementEffectiveDate) {
             this.entitlementEffectiveDate = entitlementEffectiveDate;
             return (T) this;
         }
