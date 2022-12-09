@@ -309,7 +309,7 @@ public abstract class PluginApi {
 
     protected Collection<Invoice> getInvoicesByAccountId(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {
         final InvoiceUserApi invoiceUserApi = getInvoiceUserApi();
-        return invoiceUserApi.getInvoicesByAccount(accountId, false, false, context);
+        return invoiceUserApi.getInvoicesByAccount(accountId, false, false, false, context);
     }
 
     protected BigDecimal getAccountBalance(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {

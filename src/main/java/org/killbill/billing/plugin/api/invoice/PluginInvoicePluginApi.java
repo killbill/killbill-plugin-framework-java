@@ -18,10 +18,7 @@
 
 package org.killbill.billing.plugin.api.invoice;
 
-import java.util.List;
-
 import org.killbill.billing.invoice.api.Invoice;
-import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.plugin.api.AdditionalItemsResult;
 import org.killbill.billing.invoice.plugin.api.InvoiceContext;
 import org.killbill.billing.invoice.plugin.api.InvoiceGroupingResult;
@@ -33,10 +30,7 @@ import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.plugin.api.PluginApi;
-import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.clock.Clock;
-
-import com.google.common.collect.ImmutableList;
 
 public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginApi {
 
@@ -50,13 +44,13 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
     }
 
     @Override
-    public AdditionalItemsResult getAdditionalInvoiceItems(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final CallContext context) {
+    public AdditionalItemsResult getAdditionalInvoiceItems(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final InvoiceContext context) {
         return new PluginAdditionalItemsResult();
     }
 
     @Override
-    public InvoiceGroupingResult getInvoiceGrouping(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final CallContext context) {
-        return null;
+    public InvoiceGroupingResult getInvoiceGrouping(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final InvoiceContext context) {
+        return new PluginInvoiceGroupingResult();
     }
 
     @Override

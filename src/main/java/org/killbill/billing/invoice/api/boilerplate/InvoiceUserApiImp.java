@@ -18,26 +18,19 @@
 
 package org.killbill.billing.invoice.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import org.joda.time.LocalDate;
-import org.killbill.billing.account.api.AccountApiException;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.invoice.api.DryRunArguments;
 import org.killbill.billing.invoice.api.Invoice;
-import org.killbill.billing.invoice.api.InvoiceApiException;
 import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.api.InvoiceUserApi;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.util.api.AuditLevel;
-import org.killbill.billing.util.api.TagApiException;
 import org.killbill.billing.util.audit.AuditLogWithHistory;
 import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
@@ -73,9 +66,15 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("getInvoiceAsHTML(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public List<Invoice> getInvoicesByAccount(final UUID accountId, final boolean includesMigrated, final boolean includeVoidedInvoices, final TenantContext context) {
-        throw new UnsupportedOperationException("getInvoicesByAccount(java.util.UUID, boolean, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public List<Invoice> getInvoicesByAccount(final UUID accountId, final boolean includesMigrated, final boolean includeVoidedInvoices, final boolean includeInvoiceComponents, final TenantContext context) {
+        throw new UnsupportedOperationException("getInvoicesByAccount(java.util.UUID, boolean, boolean, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
+
+    @Override
+    public Pagination<Invoice> getInvoicesByAccount(final UUID accountId, final Long offset, final Long limit, final TenantContext context) {
+        throw new UnsupportedOperationException("getInvoicesByAccount(java.util.UUID, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+
     @Override
     public UUID createMigrationInvoice(final UUID accountId, final LocalDate invoiceDate, final Iterable<InvoiceItem> items, final CallContext context) {
         throw new UnsupportedOperationException("createMigrationInvoice(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.invoice.api.InvoiceItem>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
@@ -157,8 +156,8 @@ public class InvoiceUserApiImp implements InvoiceUserApi {
         throw new UnsupportedOperationException("triggerDryRunInvoiceGeneration(java.util.UUID, org.joda.time.LocalDate, org.killbill.billing.invoice.api.DryRunArguments, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<Invoice> getInvoicesByAccount(final UUID accountId, final LocalDate fromDate, final LocalDate upToDate, final boolean includeVoidedInvoices, final TenantContext context) {
-        throw new UnsupportedOperationException("getInvoicesByAccount(java.util.UUID, org.joda.time.LocalDate, org.joda.time.LocalDate, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public List<Invoice> getInvoicesByAccount(final UUID accountId, final LocalDate fromDate, final LocalDate upToDate, final boolean includeVoidedInvoices, final boolean includeInvoiceComponents, final TenantContext context) {
+        throw new UnsupportedOperationException("getInvoicesByAccount(java.util.UUID, org.joda.time.LocalDate, org.joda.time.LocalDate, boolean, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getInvoiceAuditLogsWithHistoryForId(final UUID invoiceId, final AuditLevel auditLevel, final TenantContext context) {

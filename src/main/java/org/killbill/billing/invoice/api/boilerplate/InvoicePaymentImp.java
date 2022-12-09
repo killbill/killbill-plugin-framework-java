@@ -18,15 +18,14 @@
 
 package org.killbill.billing.invoice.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import org.joda.time.DateTime;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.invoice.api.InvoicePayment;
+import org.killbill.billing.invoice.api.InvoicePaymentStatus;
 import org.killbill.billing.invoice.api.InvoicePaymentType;
 
 @JsonDeserialize( builder = InvoicePaymentImp.Builder.class )
@@ -37,7 +36,6 @@ public class InvoicePaymentImp implements InvoicePayment {
     protected Currency currency;
     protected UUID id;
     protected UUID invoiceId;
-    protected Boolean isSuccess;
     protected UUID linkedInvoicePaymentId;
     protected String paymentCookieId;
     protected DateTime paymentDate;
@@ -45,6 +43,7 @@ public class InvoicePaymentImp implements InvoicePayment {
     protected Currency processedCurrency;
     protected InvoicePaymentType type;
     protected DateTime updatedDate;
+    protected InvoicePaymentStatus invoicePaymentStatus;
 
     public InvoicePaymentImp(final InvoicePaymentImp that) {
         this.amount = that.amount;
@@ -52,7 +51,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         this.currency = that.currency;
         this.id = that.id;
         this.invoiceId = that.invoiceId;
-        this.isSuccess = that.isSuccess;
         this.linkedInvoicePaymentId = that.linkedInvoicePaymentId;
         this.paymentCookieId = that.paymentCookieId;
         this.paymentDate = that.paymentDate;
@@ -60,6 +58,7 @@ public class InvoicePaymentImp implements InvoicePayment {
         this.processedCurrency = that.processedCurrency;
         this.type = that.type;
         this.updatedDate = that.updatedDate;
+        this.invoicePaymentStatus = that.invoicePaymentStatus;
     }
     protected InvoicePaymentImp(final InvoicePaymentImp.Builder<?> builder) {
         this.amount = builder.amount;
@@ -67,7 +66,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         this.currency = builder.currency;
         this.id = builder.id;
         this.invoiceId = builder.invoiceId;
-        this.isSuccess = builder.isSuccess;
         this.linkedInvoicePaymentId = builder.linkedInvoicePaymentId;
         this.paymentCookieId = builder.paymentCookieId;
         this.paymentDate = builder.paymentDate;
@@ -75,6 +73,7 @@ public class InvoicePaymentImp implements InvoicePayment {
         this.processedCurrency = builder.processedCurrency;
         this.type = builder.type;
         this.updatedDate = builder.updatedDate;
+        this.invoicePaymentStatus = builder.invoicePaymentStatus;
     }
     protected InvoicePaymentImp() { }
     @Override
@@ -98,11 +97,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         return this.invoiceId;
     }
     @Override
-    @JsonGetter("isSuccess")
-    public Boolean isSuccess() {
-        return this.isSuccess;
-    }
-    @Override
     public UUID getLinkedInvoicePaymentId() {
         return this.linkedInvoicePaymentId;
     }
@@ -122,6 +116,12 @@ public class InvoicePaymentImp implements InvoicePayment {
     public Currency getProcessedCurrency() {
         return this.processedCurrency;
     }
+
+    @Override
+    public InvoicePaymentStatus getStatus() {
+        return invoicePaymentStatus;
+    }
+
     @Override
     public InvoicePaymentType getType() {
         return this.type;
@@ -154,9 +154,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         if( !Objects.equals(this.invoiceId, that.invoiceId) ) {
             return false;
         }
-        if( !Objects.equals(this.isSuccess, that.isSuccess) ) {
-            return false;
-        }
         if( !Objects.equals(this.linkedInvoicePaymentId, that.linkedInvoicePaymentId) ) {
             return false;
         }
@@ -178,6 +175,9 @@ public class InvoicePaymentImp implements InvoicePayment {
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
             return false;
         }
+        if ( !Objects.equals(this.invoicePaymentStatus, that.invoicePaymentStatus) ) {
+            return false;
+        }
         return true;
     }
     @Override
@@ -188,7 +188,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         result = ( 31 * result ) + Objects.hashCode(this.currency);
         result = ( 31 * result ) + Objects.hashCode(this.id);
         result = ( 31 * result ) + Objects.hashCode(this.invoiceId);
-        result = ( 31 * result ) + Objects.hashCode(this.isSuccess);
         result = ( 31 * result ) + Objects.hashCode(this.linkedInvoicePaymentId);
         result = ( 31 * result ) + Objects.hashCode(this.paymentCookieId);
         result = ( 31 * result ) + Objects.hashCode(this.paymentDate);
@@ -196,6 +195,7 @@ public class InvoicePaymentImp implements InvoicePayment {
         result = ( 31 * result ) + Objects.hashCode(this.processedCurrency);
         result = ( 31 * result ) + Objects.hashCode(this.type);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
+        result = ( 31 * result ) + Objects.hashCode(this.invoicePaymentStatus);
         return result;
     }
     @Override
@@ -212,7 +212,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         sb.append(", ");
         sb.append("invoiceId=").append(this.invoiceId);
         sb.append(", ");
-        sb.append("isSuccess=").append(this.isSuccess);
         sb.append(", ");
         sb.append("linkedInvoicePaymentId=").append(this.linkedInvoicePaymentId);
         sb.append(", ");
@@ -232,6 +231,8 @@ public class InvoicePaymentImp implements InvoicePayment {
         sb.append("type=").append(this.type);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
+        sb.append(", ");
+        sb.append("invoicePaymentStatus=").append(this.invoicePaymentStatus);
         sb.append("}");
         return sb.toString();
     }
@@ -244,7 +245,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         protected Currency currency;
         protected UUID id;
         protected UUID invoiceId;
-        protected Boolean isSuccess;
         protected UUID linkedInvoicePaymentId;
         protected String paymentCookieId;
         protected DateTime paymentDate;
@@ -252,15 +252,15 @@ public class InvoicePaymentImp implements InvoicePayment {
         protected Currency processedCurrency;
         protected InvoicePaymentType type;
         protected DateTime updatedDate;
+        public InvoicePaymentStatus invoicePaymentStatus;
 
         public Builder() { }
-        public Builder(final Builder that) {
+        public Builder(final Builder<?> that) {
             this.amount = that.amount;
             this.createdDate = that.createdDate;
             this.currency = that.currency;
             this.id = that.id;
             this.invoiceId = that.invoiceId;
-            this.isSuccess = that.isSuccess;
             this.linkedInvoicePaymentId = that.linkedInvoicePaymentId;
             this.paymentCookieId = that.paymentCookieId;
             this.paymentDate = that.paymentDate;
@@ -268,6 +268,7 @@ public class InvoicePaymentImp implements InvoicePayment {
             this.processedCurrency = that.processedCurrency;
             this.type = that.type;
             this.updatedDate = that.updatedDate;
+            this.invoicePaymentStatus = that.invoicePaymentStatus;
         }
         public T withAmount(final BigDecimal amount) {
             this.amount = amount;
@@ -287,10 +288,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         }
         public T withInvoiceId(final UUID invoiceId) {
             this.invoiceId = invoiceId;
-            return (T) this;
-        }
-        public T withIsSuccess(final Boolean isSuccess) {
-            this.isSuccess = isSuccess;
             return (T) this;
         }
         public T withLinkedInvoicePaymentId(final UUID linkedInvoicePaymentId) {
@@ -321,13 +318,16 @@ public class InvoicePaymentImp implements InvoicePayment {
             this.updatedDate = updatedDate;
             return (T) this;
         }
+        public T withInvoicePaymentStatus(final InvoicePaymentStatus status) {
+            this.invoicePaymentStatus = status;
+            return (T) this;
+        }
         public T source(final InvoicePayment that) {
             this.amount = that.getAmount();
             this.createdDate = that.getCreatedDate();
             this.currency = that.getCurrency();
             this.id = that.getId();
             this.invoiceId = that.getInvoiceId();
-            this.isSuccess = that.isSuccess();
             this.linkedInvoicePaymentId = that.getLinkedInvoicePaymentId();
             this.paymentCookieId = that.getPaymentCookieId();
             this.paymentDate = that.getPaymentDate();
@@ -335,6 +335,7 @@ public class InvoicePaymentImp implements InvoicePayment {
             this.processedCurrency = that.getProcessedCurrency();
             this.type = that.getType();
             this.updatedDate = that.getUpdatedDate();
+            this.invoicePaymentStatus = that.getStatus();
             return (T) this;
         }
         protected Builder validate() {
