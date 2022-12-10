@@ -13,7 +13,7 @@ Convenience library to help write Kill Bill plugins.
 | 3.x.y             | 0.20.z            |
 | 4.1.y             | 0.22.z            |
 | 4.2.y             | 0.22.z            |
-| 5.0.y             | 0.23.z            |
+| 5.0.y             | 0.24.z            |
 
 We've upgraded numerous dependencies in 4.2.x (required for Java 11 support).
 
