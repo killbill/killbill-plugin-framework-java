@@ -43,4 +43,9 @@ public abstract class KillBillMoney {
         final CurrencyUnit currencyUnit = CurrencyUnit.of(currencyIsoCode);
         return Money.of(currencyUnit, amountBD, roundingMode).getAmountMinorLong();
     }
+
+    public static BigDecimal fromMinorUnits(final String currencyIsoCode, final long amountBD) {
+        final CurrencyUnit currencyUnit = CurrencyUnit.of(currencyIsoCode);
+        return Money.ofMinor(currencyUnit, amountBD).getAmount();
+    }
 }
