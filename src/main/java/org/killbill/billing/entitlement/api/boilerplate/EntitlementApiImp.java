@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -18,11 +18,9 @@
 
 package org.killbill.billing.entitlement.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.UUID;
 import org.joda.time.LocalDate;
 import org.killbill.billing.catalog.api.BillingActionPolicy;
@@ -30,7 +28,6 @@ import org.killbill.billing.entitlement.api.BaseEntitlementWithAddOnsSpecifier;
 import org.killbill.billing.entitlement.api.Entitlement;
 import org.killbill.billing.entitlement.api.EntitlementAOStatusDryRun;
 import org.killbill.billing.entitlement.api.EntitlementApi;
-import org.killbill.billing.entitlement.api.EntitlementApiException;
 import org.killbill.billing.entitlement.api.EntitlementSpecifier;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.util.callcontext.CallContext;
@@ -54,8 +51,8 @@ public class EntitlementApiImp implements EntitlementApi {
         throw new UnsupportedOperationException("getAllEntitlementsForBundle(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Entitlement getEntitlementForId(final UUID id, final TenantContext context) {
-        throw new UnsupportedOperationException("getEntitlementForId(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public Entitlement getEntitlementForId(final UUID id, final boolean includeDeletedEvents, final TenantContext context) {
+        throw new UnsupportedOperationException("getEntitlementForId(java.util.UUID, java.lang.Boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void resume(final UUID bundleId, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -70,16 +67,16 @@ public class EntitlementApiImp implements EntitlementApi {
         throw new UnsupportedOperationException("pause(java.util.UUID, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public UUID transferEntitlements(final UUID sourceAccountId, final UUID destAccountId, final String bundleExternalKey, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("transferEntitlements(java.util.UUID, java.util.UUID, java.lang.String, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    public UUID transferEntitlements(final UUID sourceAccountId, final UUID destAccountId, final String bundleExternalKey, final LocalDate effectiveDate, final Map<UUID, String> subExtKeys, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("transferEntitlements(java.util.UUID, java.util.UUID, java.lang.String, org.joda.time.LocalDate, java.util.Map<java.util.UUID, java.lang.String>, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public UUID transferEntitlementsOverrideBillingPolicy(final UUID sourceAccountId, final UUID destAccountId, final String bundleExternalKey, final LocalDate effectiveDate, final Map<UUID, String> subExtKeys, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("transferEntitlementsOverrideBillingPolicy(java.util.UUID, java.util.UUID, java.lang.String, org.joda.time.LocalDate, java.util.Map<java.util.UUID, java.lang.String>, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public List<Entitlement> getAllEntitlementsForAccountIdAndBundleExternalKey(final UUID accountId, final String bundleExternalKey, final TenantContext context) {
         throw new UnsupportedOperationException("getAllEntitlementsForAccountIdAndBundleExternalKey(java.util.UUID, java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
-    public UUID transferEntitlementsOverrideBillingPolicy(final UUID sourceAccountId, final UUID destAccountId, final String bundleExternalKey, final LocalDate effectiveDate, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("transferEntitlementsOverrideBillingPolicy(java.util.UUID, java.util.UUID, java.lang.String, org.joda.time.LocalDate, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public UUID addEntitlement(final UUID bundleId, final EntitlementSpecifier spec, final LocalDate entitlementEffectiveDate, final LocalDate billingEffectiveDate, final boolean isMigrated, final Iterable<PluginProperty> properties, final CallContext context) {

@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -21,12 +21,16 @@ package org.killbill.billing.payment.plugin.api.boilerplate;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import org.killbill.billing.payment.plugin.api.GatewayNotification;
 import org.killbill.billing.payment.plugin.api.HostedPaymentPageFormDescriptor;
+import org.killbill.billing.payment.plugin.api.PaymentMethodInfoPlugin;
+import org.killbill.billing.payment.plugin.api.PaymentPluginApi;
 import org.killbill.billing.payment.plugin.api.PaymentTransactionInfoPlugin;
 
 public class Resolver extends SimpleAbstractTypeResolver {
     public Resolver(){
         this.addMapping(GatewayNotification.class, GatewayNotificationImp.class);
         this.addMapping(HostedPaymentPageFormDescriptor.class, HostedPaymentPageFormDescriptorImp.class);
+        this.addMapping(PaymentMethodInfoPlugin.class, PaymentMethodInfoPluginImp.class);
+        this.addMapping(PaymentPluginApi.class, PaymentPluginApiImp.class);
         this.addMapping(PaymentTransactionInfoPlugin.class, PaymentTransactionInfoPluginImp.class);
     }
 }

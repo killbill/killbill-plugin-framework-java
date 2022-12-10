@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -18,9 +18,7 @@
 
 package org.killbill.billing.entitlement.api.boilerplate;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -46,14 +44,14 @@ public class SubscriptionImp implements Subscription {
     protected UUID accountId;
     protected UUID baseEntitlementId;
     protected Integer billCycleDayLocal;
-    protected LocalDate billingEndDate;
-    protected LocalDate billingStartDate;
+    protected DateTime billingEndDate;
+    protected DateTime billingStartDate;
     protected String bundleExternalKey;
     protected UUID bundleId;
     protected LocalDate chargedThroughDate;
     protected DateTime createdDate;
-    protected LocalDate effectiveEndDate;
-    protected LocalDate effectiveStartDate;
+    protected DateTime effectiveEndDate;
+    protected DateTime effectiveStartDate;
     protected String externalKey;
     protected UUID id;
     protected PlanPhase lastActivePhase;
@@ -65,6 +63,7 @@ public class SubscriptionImp implements Subscription {
     protected Entitlement.EntitlementState state;
     protected List<SubscriptionEvent> subscriptionEvents;
     protected DateTime updatedDate;
+    protected Integer quantity;
 
     public SubscriptionImp(final SubscriptionImp that) {
         this.accountId = that.accountId;
@@ -89,6 +88,7 @@ public class SubscriptionImp implements Subscription {
         this.state = that.state;
         this.subscriptionEvents = that.subscriptionEvents;
         this.updatedDate = that.updatedDate;
+        this.quantity = that.quantity;
     }
     protected SubscriptionImp(final SubscriptionImp.Builder<?> builder) {
         this.accountId = builder.accountId;
@@ -113,6 +113,7 @@ public class SubscriptionImp implements Subscription {
         this.state = builder.state;
         this.subscriptionEvents = builder.subscriptionEvents;
         this.updatedDate = builder.updatedDate;
+        this.quantity = builder.quantity;
     }
     protected SubscriptionImp() { }
     @Override
@@ -128,11 +129,11 @@ public class SubscriptionImp implements Subscription {
         return this.billCycleDayLocal;
     }
     @Override
-    public LocalDate getBillingEndDate() {
+    public DateTime getBillingEndDate() {
         return this.billingEndDate;
     }
     @Override
-    public LocalDate getBillingStartDate() {
+    public DateTime getBillingStartDate() {
         return this.billingStartDate;
     }
     @Override
@@ -152,11 +153,11 @@ public class SubscriptionImp implements Subscription {
         return this.createdDate;
     }
     @Override
-    public LocalDate getEffectiveEndDate() {
+    public DateTime getEffectiveEndDate() {
         return this.effectiveEndDate;
     }
     @Override
-    public LocalDate getEffectiveStartDate() {
+    public DateTime getEffectiveStartDate() {
         return this.effectiveStartDate;
     }
     @Override
@@ -204,6 +205,10 @@ public class SubscriptionImp implements Subscription {
         return this.updatedDate;
     }
     @Override
+    public Integer getQuantity() {
+        return quantity;
+    }
+    @Override
     public void uncancelEntitlement(final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("uncancelEntitlement(java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
@@ -218,6 +223,14 @@ public class SubscriptionImp implements Subscription {
     @Override
     public void undoChangePlan(final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("undoChangePlan(java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final DateTime effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("changePlanWithDate(org.killbill.billing.entitlement.api.EntitlementSpecifier, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Entitlement cancelEntitlementWithDate(final DateTime entitlementEffectiveDate, final DateTime billingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("cancelEntitlementWithDate(org.joda.time.DateTime, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -238,6 +251,10 @@ public class SubscriptionImp implements Subscription {
     @Override
     public void updateBCD(final int bcd, final LocalDate effectiveFromDate, final CallContext context) {
         throw new UnsupportedOperationException("updateBCD(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public void updateQuantity(final int quantity, final LocalDate effectiveFromDate, final CallContext context) throws EntitlementApiException {
+        throw new UnsupportedOperationException("updateQuantity(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -318,6 +335,9 @@ public class SubscriptionImp implements Subscription {
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
             return false;
         }
+        if( !Objects.equals(this.quantity, that.quantity) ) {
+            return false;
+        }
         return true;
     }
     @Override
@@ -345,6 +365,7 @@ public class SubscriptionImp implements Subscription {
         result = ( 31 * result ) + Objects.hashCode(this.state);
         result = ( 31 * result ) + Objects.hashCode(this.subscriptionEvents);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
+        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         return result;
     }
     @Override
@@ -404,6 +425,8 @@ public class SubscriptionImp implements Subscription {
         sb.append("subscriptionEvents=").append(this.subscriptionEvents);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
+        sb.append(", ");
+        sb.append("quantity=").append(this.quantity);
         sb.append("}");
         return sb.toString();
     }
@@ -414,14 +437,14 @@ public class SubscriptionImp implements Subscription {
         protected UUID accountId;
         protected UUID baseEntitlementId;
         protected Integer billCycleDayLocal;
-        protected LocalDate billingEndDate;
-        protected LocalDate billingStartDate;
+        protected DateTime billingEndDate;
+        protected DateTime billingStartDate;
         protected String bundleExternalKey;
         protected UUID bundleId;
         protected LocalDate chargedThroughDate;
         protected DateTime createdDate;
-        protected LocalDate effectiveEndDate;
-        protected LocalDate effectiveStartDate;
+        protected DateTime effectiveEndDate;
+        protected DateTime effectiveStartDate;
         protected String externalKey;
         protected UUID id;
         protected PlanPhase lastActivePhase;
@@ -433,6 +456,7 @@ public class SubscriptionImp implements Subscription {
         protected Entitlement.EntitlementState state;
         protected List<SubscriptionEvent> subscriptionEvents;
         protected DateTime updatedDate;
+        protected Integer quantity;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -458,6 +482,7 @@ public class SubscriptionImp implements Subscription {
             this.state = that.state;
             this.subscriptionEvents = that.subscriptionEvents;
             this.updatedDate = that.updatedDate;
+            this.quantity = that.quantity;
         }
         public T withAccountId(final UUID accountId) {
             this.accountId = accountId;
@@ -471,11 +496,11 @@ public class SubscriptionImp implements Subscription {
             this.billCycleDayLocal = billCycleDayLocal;
             return (T) this;
         }
-        public T withBillingEndDate(final LocalDate billingEndDate) {
+        public T withBillingEndDate(final DateTime billingEndDate) {
             this.billingEndDate = billingEndDate;
             return (T) this;
         }
-        public T withBillingStartDate(final LocalDate billingStartDate) {
+        public T withBillingStartDate(final DateTime billingStartDate) {
             this.billingStartDate = billingStartDate;
             return (T) this;
         }
@@ -495,11 +520,11 @@ public class SubscriptionImp implements Subscription {
             this.createdDate = createdDate;
             return (T) this;
         }
-        public T withEffectiveEndDate(final LocalDate effectiveEndDate) {
+        public T withEffectiveEndDate(final DateTime effectiveEndDate) {
             this.effectiveEndDate = effectiveEndDate;
             return (T) this;
         }
-        public T withEffectiveStartDate(final LocalDate effectiveStartDate) {
+        public T withEffectiveStartDate(final DateTime effectiveStartDate) {
             this.effectiveStartDate = effectiveStartDate;
             return (T) this;
         }
@@ -547,6 +572,10 @@ public class SubscriptionImp implements Subscription {
             this.updatedDate = updatedDate;
             return (T) this;
         }
+        public T withQuantity(final Integer qty) {
+            this.quantity = qty;
+            return (T) this;
+        }
         public T source(final Subscription that) {
             this.accountId = that.getAccountId();
             this.baseEntitlementId = that.getBaseEntitlementId();
@@ -570,6 +599,7 @@ public class SubscriptionImp implements Subscription {
             this.state = that.getState();
             this.subscriptionEvents = that.getSubscriptionEvents();
             this.updatedDate = that.getUpdatedDate();
+            this.quantity = that.getQuantity();
             return (T) this;
         }
         protected Builder validate() {

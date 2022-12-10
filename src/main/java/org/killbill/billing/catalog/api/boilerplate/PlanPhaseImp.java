@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -20,6 +20,7 @@ package org.killbill.billing.catalog.api.boilerplate;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.Duration;
@@ -96,8 +97,8 @@ public class PlanPhaseImp implements PlanPhase {
         return this.usages;
     }
     @Override
-    public boolean compliesWithLimits(final String unit, final double value) {
-        throw new UnsupportedOperationException("compliesWithLimits(java.lang.String, double) must be implemented.");
+    public boolean compliesWithLimits(final String unit, final BigDecimal value) {
+        throw new UnsupportedOperationException("compliesWithLimits(java.lang.String, java.math.BigDecimal) must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {

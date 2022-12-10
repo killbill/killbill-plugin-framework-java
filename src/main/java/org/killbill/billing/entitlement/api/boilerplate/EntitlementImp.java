@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -46,8 +46,8 @@ public class EntitlementImp implements Entitlement {
     protected String bundleExternalKey;
     protected UUID bundleId;
     protected DateTime createdDate;
-    protected LocalDate effectiveEndDate;
-    protected LocalDate effectiveStartDate;
+    protected DateTime effectiveEndDate;
+    protected DateTime effectiveStartDate;
     protected String externalKey;
     protected UUID id;
     protected PlanPhase lastActivePhase;
@@ -58,6 +58,7 @@ public class EntitlementImp implements Entitlement {
     protected Entitlement.EntitlementSourceType sourceType;
     protected Entitlement.EntitlementState state;
     protected DateTime updatedDate;
+    protected Integer quantity;
 
     public EntitlementImp(final EntitlementImp that) {
         this.accountId = that.accountId;
@@ -78,6 +79,7 @@ public class EntitlementImp implements Entitlement {
         this.sourceType = that.sourceType;
         this.state = that.state;
         this.updatedDate = that.updatedDate;
+        this.quantity = that.quantity;
     }
     protected EntitlementImp(final EntitlementImp.Builder<?> builder) {
         this.accountId = builder.accountId;
@@ -98,6 +100,7 @@ public class EntitlementImp implements Entitlement {
         this.sourceType = builder.sourceType;
         this.state = builder.state;
         this.updatedDate = builder.updatedDate;
+        this.quantity = builder.quantity;
     }
     protected EntitlementImp() { }
     @Override
@@ -125,11 +128,11 @@ public class EntitlementImp implements Entitlement {
         return this.createdDate;
     }
     @Override
-    public LocalDate getEffectiveEndDate() {
+    public DateTime getEffectiveEndDate() {
         return this.effectiveEndDate;
     }
     @Override
-    public LocalDate getEffectiveStartDate() {
+    public DateTime getEffectiveStartDate() {
         return this.effectiveStartDate;
     }
     @Override
@@ -173,6 +176,10 @@ public class EntitlementImp implements Entitlement {
         return this.updatedDate;
     }
     @Override
+    public Integer getQuantity() {
+        return quantity;
+    }
+    @Override
     public void uncancelEntitlement(final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("uncancelEntitlement(java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
@@ -189,8 +196,16 @@ public class EntitlementImp implements Entitlement {
         throw new UnsupportedOperationException("undoChangePlan(java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
+    public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final DateTime effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("changePlanWithDate(org.killbill.billing.entitlement.api.EntitlementSpecifier, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
     public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("cancelEntitlementWithPolicyOverrideBillingPolicy(org.killbill.billing.entitlement.api.Entitlement.EntitlementActionPolicy, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Entitlement cancelEntitlementWithDate(final DateTime entitlementEffectiveDate, final DateTime billingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("cancelEntitlementWithDate(org.joda.time.DateTime, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement cancelEntitlementWithDate(final LocalDate effectiveDate, final boolean overrideBillingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -208,6 +223,12 @@ public class EntitlementImp implements Entitlement {
     public void updateBCD(final int bcd, final LocalDate effectiveFromDate, final CallContext context) {
         throw new UnsupportedOperationException("updateBCD(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
+
+    @Override
+    public void updateQuantity(final int quantity, final LocalDate effectiveFromDate, final CallContext context) throws EntitlementApiException {
+        throw new UnsupportedOperationException("updateQuantity(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+
     @Override
     public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("changePlanWithDate(org.killbill.billing.entitlement.api.EntitlementSpecifier, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
@@ -275,6 +296,9 @@ public class EntitlementImp implements Entitlement {
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
             return false;
         }
+        if( !Objects.equals(this.quantity, that.quantity) ) {
+            return false;
+        }
         return true;
     }
     @Override
@@ -298,6 +322,7 @@ public class EntitlementImp implements Entitlement {
         result = ( 31 * result ) + Objects.hashCode(this.sourceType);
         result = ( 31 * result ) + Objects.hashCode(this.state);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
+        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         return result;
     }
     @Override
@@ -349,6 +374,8 @@ public class EntitlementImp implements Entitlement {
         sb.append("state=").append(this.state);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
+        sb.append(", ");
+        sb.append("quantity=").append(this.quantity);
         sb.append("}");
         return sb.toString();
     }
@@ -362,8 +389,8 @@ public class EntitlementImp implements Entitlement {
         protected String bundleExternalKey;
         protected UUID bundleId;
         protected DateTime createdDate;
-        protected LocalDate effectiveEndDate;
-        protected LocalDate effectiveStartDate;
+        protected DateTime effectiveEndDate;
+        protected DateTime effectiveStartDate;
         protected String externalKey;
         protected UUID id;
         protected PlanPhase lastActivePhase;
@@ -374,6 +401,7 @@ public class EntitlementImp implements Entitlement {
         protected Entitlement.EntitlementSourceType sourceType;
         protected Entitlement.EntitlementState state;
         protected DateTime updatedDate;
+        protected Integer quantity;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -395,6 +423,7 @@ public class EntitlementImp implements Entitlement {
             this.sourceType = that.sourceType;
             this.state = that.state;
             this.updatedDate = that.updatedDate;
+            this.quantity = that.quantity;
         }
         public T withAccountId(final UUID accountId) {
             this.accountId = accountId;
@@ -420,11 +449,11 @@ public class EntitlementImp implements Entitlement {
             this.createdDate = createdDate;
             return (T) this;
         }
-        public T withEffectiveEndDate(final LocalDate effectiveEndDate) {
+        public T withEffectiveEndDate(final DateTime effectiveEndDate) {
             this.effectiveEndDate = effectiveEndDate;
             return (T) this;
         }
-        public T withEffectiveStartDate(final LocalDate effectiveStartDate) {
+        public T withEffectiveStartDate(final DateTime effectiveStartDate) {
             this.effectiveStartDate = effectiveStartDate;
             return (T) this;
         }
@@ -468,6 +497,10 @@ public class EntitlementImp implements Entitlement {
             this.updatedDate = updatedDate;
             return (T) this;
         }
+        public T withQuantity(final Integer quantity) {
+            this.quantity = quantity;
+            return (T) this;
+        }
         public T source(final Entitlement that) {
             this.accountId = that.getAccountId();
             this.baseEntitlementId = that.getBaseEntitlementId();
@@ -487,6 +520,7 @@ public class EntitlementImp implements Entitlement {
             this.sourceType = that.getSourceType();
             this.state = that.getState();
             this.updatedDate = that.getUpdatedDate();
+            this.quantity = that.getQuantity();
             return (T) this;
         }
         protected Builder validate() {

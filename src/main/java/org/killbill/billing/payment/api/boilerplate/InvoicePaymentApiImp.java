@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -67,12 +67,12 @@ public class InvoicePaymentApiImp implements InvoicePaymentApi {
         throw new UnsupportedOperationException("createChargebackReversalForInvoicePayment(org.killbill.billing.account.api.Account, java.util.UUID, org.joda.time.DateTime, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public InvoicePayment createRefundForInvoicePayment(final boolean isAdjusted, final Map<UUID, BigDecimal> adjustments, final Account account, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
-        throw new UnsupportedOperationException("createRefundForInvoicePayment(boolean, java.util.Map<java.util.UUID, java.math.BigDecimal>, org.killbill.billing.account.api.Account, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public List<InvoicePayment> getInvoicePaymentsByAccount(final UUID accountId, final TenantContext context) {
         throw new UnsupportedOperationException("getInvoicePaymentsByAccount(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public InvoicePayment createRefundForInvoicePayment(final boolean isAdjusted, final Map<UUID, BigDecimal> adjustments, final Account account, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {
+        throw new UnsupportedOperationException("createRefundForInvoicePayment(boolean, java.util.Map<java.util.UUID, java.math.BigDecimal>, org.killbill.billing.account.api.Account, java.util.UUID, java.math.BigDecimal, org.killbill.billing.catalog.api.Currency, org.joda.time.DateTime, java.lang.String, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.payment.api.PaymentOptions, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public InvoicePayment createChargebackForInvoicePayment(final Account account, final UUID paymentId, final BigDecimal amount, final Currency currency, final DateTime effectiveDate, final String paymentTransactionExternalKey, final Iterable<PluginProperty> properties, final PaymentOptions paymentOptions, final CallContext context) {

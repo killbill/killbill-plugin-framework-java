@@ -1,7 +1,7 @@
 /*
  * Copyright 2014-2020 Groupon, Inc
- * Copyright 2020-2020 Equinix, Inc
- * Copyright 2014-2020 The Billing Project, LLC
+ * Copyright 2020-2022 Equinix, Inc
+ * Copyright 2014-2022 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -18,11 +18,10 @@
 
 package org.killbill.billing.plugin.api.invoice;
 
-import java.util.List;
-
 import org.killbill.billing.invoice.api.Invoice;
-import org.killbill.billing.invoice.api.InvoiceItem;
+import org.killbill.billing.invoice.plugin.api.AdditionalItemsResult;
 import org.killbill.billing.invoice.plugin.api.InvoiceContext;
+import org.killbill.billing.invoice.plugin.api.InvoiceGroupingResult;
 import org.killbill.billing.invoice.plugin.api.InvoicePluginApi;
 import org.killbill.billing.invoice.plugin.api.OnFailureInvoiceResult;
 import org.killbill.billing.invoice.plugin.api.OnSuccessInvoiceResult;
@@ -31,10 +30,7 @@ import org.killbill.billing.osgi.libs.killbill.OSGIConfigPropertiesService;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.plugin.api.PluginApi;
-import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.clock.Clock;
-
-import com.google.common.collect.ImmutableList;
 
 public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginApi {
 
@@ -48,8 +44,13 @@ public class PluginInvoicePluginApi extends PluginApi implements InvoicePluginAp
     }
 
     @Override
-    public List<InvoiceItem> getAdditionalInvoiceItems(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final CallContext context) {
-        return ImmutableList.<InvoiceItem>of();
+    public AdditionalItemsResult getAdditionalInvoiceItems(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final InvoiceContext context) {
+        return new PluginAdditionalItemsResult();
+    }
+
+    @Override
+    public InvoiceGroupingResult getInvoiceGrouping(final Invoice invoice, final boolean dryRun, final Iterable<PluginProperty> properties, final InvoiceContext context) {
+        return new PluginInvoiceGroupingResult();
     }
 
     @Override

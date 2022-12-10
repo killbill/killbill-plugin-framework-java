@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -57,7 +57,7 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
     protected String prettyProductName;
     protected String prettyUsageName;
     protected String productName;
-    protected Integer quantity;
+    protected BigDecimal quantity;
     protected BigDecimal rate;
     protected LocalDate startDate;
     protected UUID subscriptionId;
@@ -226,7 +226,7 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
         return this.productName;
     }
     @Override
-    public Integer getQuantity() {
+    public BigDecimal getQuantity() {
         return this.quantity;
     }
     @Override
@@ -334,7 +334,7 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
         if( !Objects.equals(this.productName, that.productName) ) {
             return false;
         }
-        if( !Objects.equals(this.quantity, that.quantity) ) {
+        if( ( this.quantity != null ) ? ( 0 != this.quantity.compareTo(that.quantity) ) : ( that.quantity != null ) ) {
             return false;
         }
         if( ( this.rate != null ) ? ( 0 != this.rate.compareTo(that.rate) ) : ( that.rate != null ) ) {
@@ -548,7 +548,7 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
         protected String prettyProductName;
         protected String prettyUsageName;
         protected String productName;
-        protected Integer quantity;
+        protected BigDecimal quantity;
         protected BigDecimal rate;
         protected LocalDate startDate;
         protected UUID subscriptionId;
@@ -684,7 +684,7 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
             this.productName = productName;
             return (T) this;
         }
-        public T withQuantity(final Integer quantity) {
+        public T withQuantity(final BigDecimal quantity) {
             this.quantity = quantity;
             return (T) this;
         }

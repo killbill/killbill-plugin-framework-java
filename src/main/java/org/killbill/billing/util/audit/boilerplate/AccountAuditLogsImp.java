@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -57,12 +57,12 @@ public class AccountAuditLogsImp implements AccountAuditLogs {
         throw new UnsupportedOperationException("getAuditLogsForPaymentMethod(java.util.UUID) must be implemented.");
     }
     @Override
-    public List<AuditLog> getAuditLogsForSubscriptionEvent(final UUID subscriptionEventId) {
-        throw new UnsupportedOperationException("getAuditLogsForSubscriptionEvent(java.util.UUID) must be implemented.");
-    }
-    @Override
     public List<AuditLog> getAuditLogsForBlockingState(final UUID blockingStateId) {
         throw new UnsupportedOperationException("getAuditLogsForBlockingState(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public List<AuditLog> getAuditLogsForSubscriptionEvent(final UUID subscriptionEventId) {
+        throw new UnsupportedOperationException("getAuditLogsForSubscriptionEvent(java.util.UUID) must be implemented.");
     }
     @Override
     public List<AuditLog> getAuditLogsForTag(final UUID tagId) {
@@ -89,12 +89,12 @@ public class AccountAuditLogsImp implements AccountAuditLogs {
         throw new UnsupportedOperationException("getAuditLogsForInvoicePayment(java.util.UUID) must be implemented.");
     }
     @Override
-    public List<AuditLog> getAuditLogsForInvoice(final UUID invoiceId) {
-        throw new UnsupportedOperationException("getAuditLogsForInvoice(java.util.UUID) must be implemented.");
-    }
-    @Override
     public List<AuditLog> getAuditLogsForPayment(final UUID paymentId) {
         throw new UnsupportedOperationException("getAuditLogsForPayment(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public List<AuditLog> getAuditLogsForInvoice(final UUID invoiceId) {
+        throw new UnsupportedOperationException("getAuditLogsForInvoice(java.util.UUID) must be implemented.");
     }
     @Override
     public List<AuditLog> getAuditLogsForPaymentAttempt(final UUID paymentAttemptId) {

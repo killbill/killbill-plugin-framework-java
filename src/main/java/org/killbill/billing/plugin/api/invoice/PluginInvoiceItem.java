@@ -115,7 +115,7 @@ public class PluginInvoiceItem extends InvoiceItemImp {
       final UUID linkedItemId,
       final String usageName,
       final String prettyUsageName,
-      final Integer quantity,
+      final BigDecimal quantity,
       final String itemDetails,
       final DateTime createdDate,
       final DateTime updatedDate) {

@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -53,20 +53,20 @@ public class SecurityApiImp implements SecurityApi {
         throw new UnsupportedOperationException("addUserRoles(java.lang.String, java.lang.String, java.util.List<java.lang.String>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public void checkCurrentUserPermissions(final List<Permission> permissions, final Logical logical, final TenantContext context) {
-        throw new UnsupportedOperationException("checkCurrentUserPermissions(java.util.List<org.killbill.billing.security.Permission>, org.killbill.billing.security.Logical, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public Set<String> getCurrentUserPermissions(final TenantContext context) {
         throw new UnsupportedOperationException("getCurrentUserPermissions(org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public void login(final Object principal, final Object credentials) {
-        throw new UnsupportedOperationException("login(java.lang.Object, java.lang.Object) must be implemented.");
+    public void checkCurrentUserPermissions(final List<Permission> permissions, final Logical logical, final TenantContext context) {
+        throw new UnsupportedOperationException("checkCurrentUserPermissions(java.util.List<org.killbill.billing.security.Permission>, org.killbill.billing.security.Logical, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void logout() {
         throw new UnsupportedOperationException("logout() must be implemented.");
+    }
+    @Override
+    public void login(final Object principal, final Object credentials) {
+        throw new UnsupportedOperationException("login(java.lang.Object, java.lang.Object) must be implemented.");
     }
     @Override
     public List<String> getRoleDefinition(final String role, final TenantContext tenantContext) {

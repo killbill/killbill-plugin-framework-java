@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -43,6 +43,7 @@ public class InvoiceImp implements Invoice {
     protected DateTime createdDate;
     protected BigDecimal creditedAmount;
     protected Currency currency;
+    protected UUID groupId;
     protected UUID id;
     protected LocalDate invoiceDate;
     protected List<InvoiceItem> invoiceItems;
@@ -69,6 +70,7 @@ public class InvoiceImp implements Invoice {
         this.createdDate = that.createdDate;
         this.creditedAmount = that.creditedAmount;
         this.currency = that.currency;
+        this.groupId = that.groupId;
         this.id = that.id;
         this.invoiceDate = that.invoiceDate;
         this.invoiceItems = that.invoiceItems;
@@ -95,6 +97,7 @@ public class InvoiceImp implements Invoice {
         this.createdDate = builder.createdDate;
         this.creditedAmount = builder.creditedAmount;
         this.currency = builder.currency;
+        this.groupId = builder.groupId;
         this.id = builder.id;
         this.invoiceDate = builder.invoiceDate;
         this.invoiceItems = builder.invoiceItems;
@@ -138,6 +141,10 @@ public class InvoiceImp implements Invoice {
     @Override
     public Currency getCurrency() {
         return this.currency;
+    }
+    @Override
+    public UUID getGroupId() {
+        return this.groupId;
     }
     @Override
     public UUID getId() {
@@ -264,6 +271,9 @@ public class InvoiceImp implements Invoice {
         if( !Objects.equals(this.currency, that.currency) ) {
             return false;
         }
+        if( !Objects.equals(this.groupId, that.groupId) ) {
+            return false;
+        }
         if( !Objects.equals(this.id, that.id) ) {
             return false;
         }
@@ -329,6 +339,7 @@ public class InvoiceImp implements Invoice {
         result = ( 31 * result ) + Objects.hashCode(this.createdDate);
         result = ( 31 * result ) + Objects.hashCode(this.creditedAmount);
         result = ( 31 * result ) + Objects.hashCode(this.currency);
+        result = ( 31 * result ) + Objects.hashCode(this.groupId);
         result = ( 31 * result ) + Objects.hashCode(this.id);
         result = ( 31 * result ) + Objects.hashCode(this.invoiceDate);
         result = ( 31 * result ) + Objects.hashCode(this.invoiceItems);
@@ -364,6 +375,8 @@ public class InvoiceImp implements Invoice {
         sb.append("creditedAmount=").append(this.creditedAmount);
         sb.append(", ");
         sb.append("currency=").append(this.currency);
+        sb.append(", ");
+        sb.append("groupId=").append(this.groupId);
         sb.append(", ");
         sb.append("id=").append(this.id);
         sb.append(", ");
@@ -413,6 +426,7 @@ public class InvoiceImp implements Invoice {
         protected DateTime createdDate;
         protected BigDecimal creditedAmount;
         protected Currency currency;
+        protected UUID groupId;
         protected UUID id;
         protected LocalDate invoiceDate;
         protected List<InvoiceItem> invoiceItems;
@@ -440,6 +454,7 @@ public class InvoiceImp implements Invoice {
             this.createdDate = that.createdDate;
             this.creditedAmount = that.creditedAmount;
             this.currency = that.currency;
+            this.groupId = that.groupId;
             this.id = that.id;
             this.invoiceDate = that.invoiceDate;
             this.invoiceItems = that.invoiceItems;
@@ -481,6 +496,10 @@ public class InvoiceImp implements Invoice {
         }
         public T withCurrency(final Currency currency) {
             this.currency = currency;
+            return (T) this;
+        }
+        public T withGroupId(final UUID groupId) {
+            this.groupId = groupId;
             return (T) this;
         }
         public T withId(final UUID id) {
@@ -562,6 +581,7 @@ public class InvoiceImp implements Invoice {
             this.createdDate = that.getCreatedDate();
             this.creditedAmount = that.getCreditedAmount();
             this.currency = that.getCurrency();
+            this.groupId = that.getGroupId();
             this.id = that.getId();
             this.invoiceDate = that.getInvoiceDate();
             this.invoiceItems = that.getInvoiceItems();

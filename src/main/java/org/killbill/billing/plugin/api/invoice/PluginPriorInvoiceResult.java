@@ -1,7 +1,7 @@
 /*
  * Copyright 2014-2020 Groupon, Inc
- * Copyright 2020-2020 Equinix, Inc
- * Copyright 2014-2020 The Billing Project, LLC
+ * Copyright 2020-2022 Equinix, Inc
+ * Copyright 2014-2022 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -18,10 +18,13 @@
 
 package org.killbill.billing.plugin.api.invoice;
 
+import java.util.Objects;
+
 import org.joda.time.DateTime;
 import org.killbill.billing.invoice.plugin.api.PriorInvoiceResult;
+import org.killbill.billing.payment.api.PluginProperty;
 
-public class PluginPriorInvoiceResult implements PriorInvoiceResult {
+public class PluginPriorInvoiceResult extends PluginInvoiceResult implements PriorInvoiceResult {
 
     private final boolean isAborted;
     private final DateTime rescheduleDate;
@@ -39,6 +42,11 @@ public class PluginPriorInvoiceResult implements PriorInvoiceResult {
     }
 
     public PluginPriorInvoiceResult(final boolean isAborted, final DateTime rescheduleDate) {
+        this(isAborted, rescheduleDate, null);
+    }
+
+    public PluginPriorInvoiceResult(final boolean isAborted, final DateTime rescheduleDate, final Iterable<PluginProperty> adjustedPluginProperties) {
+        super(adjustedPluginProperties);
         this.isAborted = isAborted;
         this.rescheduleDate = rescheduleDate;
     }
@@ -58,6 +66,7 @@ public class PluginPriorInvoiceResult implements PriorInvoiceResult {
         final StringBuilder sb = new StringBuilder("PluginPriorInvoiceResult{");
         sb.append("isAborted=").append(isAborted);
         sb.append(", rescheduleDate=").append(rescheduleDate);
+        sb.append(", adjustedPluginProperties=").append(adjustedPluginProperties);
         sb.append('}');
         return sb.toString();
     }
@@ -76,6 +85,9 @@ public class PluginPriorInvoiceResult implements PriorInvoiceResult {
         if (isAborted != that.isAborted) {
             return false;
         }
+        if (!Objects.equals(adjustedPluginProperties, that.adjustedPluginProperties)) {
+            return false;
+        }
         return rescheduleDate != null ? rescheduleDate.compareTo(that.rescheduleDate) == 0 : that.rescheduleDate == null;
     }
 
@@ -83,6 +95,7 @@ public class PluginPriorInvoiceResult implements PriorInvoiceResult {
     public int hashCode() {
         int result = (isAborted ? 1 : 0);
         result = 31 * result + (rescheduleDate != null ? rescheduleDate.hashCode() : 0);
+        result = 31 * result + (adjustedPluginProperties != null ? adjustedPluginProperties.hashCode() : 0);
         return result;
     }
 }

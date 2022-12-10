@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -66,12 +66,12 @@ public class TenantUserApiImp implements TenantUserApi {
         throw new UnsupportedOperationException("getTenantValuesForKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Tenant getTenantById(final UUID tenantId) {
-        throw new UnsupportedOperationException("getTenantById(java.util.UUID) must be implemented.");
-    }
-    @Override
     public Map<String, List<String>> searchTenantKeyValues(final String searchKey, final TenantContext context) {
         throw new UnsupportedOperationException("searchTenantKeyValues(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public Tenant getTenantById(final UUID tenantId) {
+        throw new UnsupportedOperationException("getTenantById(java.util.UUID) must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {

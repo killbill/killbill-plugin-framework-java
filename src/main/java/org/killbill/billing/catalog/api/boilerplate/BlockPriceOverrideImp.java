@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -31,7 +31,7 @@ public class BlockPriceOverrideImp implements BlockPriceOverride {
 
     protected Currency currency;
     protected BigDecimal price;
-    protected Double size;
+    protected BigDecimal size;
     protected String unitName;
 
     public BlockPriceOverrideImp(final BlockPriceOverrideImp that) {
@@ -56,7 +56,7 @@ public class BlockPriceOverrideImp implements BlockPriceOverride {
         return this.price;
     }
     @Override
-    public Double getSize() {
+    public BigDecimal getSize() {
         return this.size;
     }
     @Override
@@ -78,7 +78,7 @@ public class BlockPriceOverrideImp implements BlockPriceOverride {
         if( ( this.price != null ) ? ( 0 != this.price.compareTo(that.price) ) : ( that.price != null ) ) {
             return false;
         }
-        if( !Objects.equals(this.size, that.size) ) {
+        if( ( this.size != null ) ? ( 0 != this.size.compareTo(that.size) ) : ( that.size != null ) ) {
             return false;
         }
         if( !Objects.equals(this.unitName, that.unitName) ) {
@@ -120,7 +120,7 @@ public class BlockPriceOverrideImp implements BlockPriceOverride {
 
         protected Currency currency;
         protected BigDecimal price;
-        protected Double size;
+        protected BigDecimal size;
         protected String unitName;
 
         public Builder() { }
@@ -138,7 +138,7 @@ public class BlockPriceOverrideImp implements BlockPriceOverride {
             this.price = price;
             return (T) this;
         }
-        public T withSize(final Double size) {
+        public T withSize(final BigDecimal size) {
             this.size = size;
             return (T) this;
         }

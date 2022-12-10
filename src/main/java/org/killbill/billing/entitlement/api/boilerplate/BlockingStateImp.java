@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -42,6 +42,7 @@ public class BlockingStateImp implements BlockingState {
     protected String stateName;
     protected BlockingStateType type;
     protected DateTime updatedDate;
+    protected boolean active;
 
     public BlockingStateImp(final BlockingStateImp that) {
         this.blockedId = that.blockedId;
@@ -56,6 +57,7 @@ public class BlockingStateImp implements BlockingState {
         this.stateName = that.stateName;
         this.type = that.type;
         this.updatedDate = that.updatedDate;
+        this.active = that.active;
     }
     protected BlockingStateImp(final BlockingStateImp.Builder<?> builder) {
         this.blockedId = builder.blockedId;
@@ -70,6 +72,7 @@ public class BlockingStateImp implements BlockingState {
         this.stateName = builder.stateName;
         this.type = builder.type;
         this.updatedDate = builder.updatedDate;
+        this.active = builder.active;
     }
     protected BlockingStateImp() { }
     @Override
@@ -124,6 +127,10 @@ public class BlockingStateImp implements BlockingState {
         return this.updatedDate;
     }
     @Override
+    public boolean isActive() {
+        return active;
+    }
+    @Override
     public int compareTo(final BlockingState arg0) {
         throw new UnsupportedOperationException("compareTo(org.killbill.billing.entitlement.api.BlockingState) must be implemented.");
     }
@@ -172,6 +179,9 @@ public class BlockingStateImp implements BlockingState {
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
             return false;
         }
+        if( !Objects.equals(this.active, that.active) ) {
+            return false;
+        }
         return true;
     }
     @Override
@@ -189,6 +199,7 @@ public class BlockingStateImp implements BlockingState {
         result = ( 31 * result ) + Objects.hashCode(this.stateName);
         result = ( 31 * result ) + Objects.hashCode(this.type);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
+        result = ( 31 * result ) + Objects.hashCode(this.active);
         return result;
     }
     @Override
@@ -233,6 +244,8 @@ public class BlockingStateImp implements BlockingState {
         sb.append("type=").append(this.type);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
+        sb.append(", ");
+        sb.append("active=").append(this.active);
         sb.append("}");
         return sb.toString();
     }
@@ -252,6 +265,7 @@ public class BlockingStateImp implements BlockingState {
         protected String stateName;
         protected BlockingStateType type;
         protected DateTime updatedDate;
+        protected boolean active;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -267,6 +281,7 @@ public class BlockingStateImp implements BlockingState {
             this.stateName = that.stateName;
             this.type = that.type;
             this.updatedDate = that.updatedDate;
+            this.active = that.active;
         }
         public T withBlockedId(final UUID blockedId) {
             this.blockedId = blockedId;
@@ -316,6 +331,10 @@ public class BlockingStateImp implements BlockingState {
             this.updatedDate = updatedDate;
             return (T) this;
         }
+        public T withActive(final boolean active) {
+            this.active = active;
+            return (T) this;
+        }
         public T source(final BlockingState that) {
             this.blockedId = that.getBlockedId();
             this.createdDate = that.getCreatedDate();
@@ -329,6 +348,7 @@ public class BlockingStateImp implements BlockingState {
             this.stateName = that.getStateName();
             this.type = that.getType();
             this.updatedDate = that.getUpdatedDate();
+            this.active = that.isActive();
             return (T) this;
         }
         protected Builder validate() {

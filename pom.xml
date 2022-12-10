@@ -21,11 +21,11 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.144.81</version>
+        <version>0.145.3-8ff3c94-SNAPSHOT</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
-    <version>4.2.22-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Kill Bill base OSGI plugin</name>
     <description>Kill Bill base OSGI plugin</description>
@@ -43,6 +43,8 @@
     <properties>
         <check.fail-spotbugs>true</check.fail-spotbugs>
         <check.spotbugs-exclude-filter-file>spotbugs-exclude.xml</check.spotbugs-exclude-filter-file>
+        <killbill-api.version>0.54.0-663b841-SNAPSHOT</killbill-api.version>
+        <killbill-plugin-api.version>0.27.0-df83159-SNAPSHOT</killbill-plugin-api.version>
     </properties>
     <dependencies>
         <dependency>
@@ -93,17 +95,12 @@
         </dependency>
         <dependency>
             <groupId>io.airlift</groupId>
-            <artifactId>testing-mysql-server</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.airlift</groupId>
-            <artifactId>testing-postgresql-server</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.airlift</groupId>
             <artifactId>units</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-postgres</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -112,8 +109,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -122,13 +119,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.framework</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.asynchttpclient</groupId>
-            <artifactId>async-http-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.joda</groupId>
@@ -176,6 +174,13 @@
             <groupId>org.kill-bill.billing</groupId>
             <artifactId>killbill-platform-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <!-- Temporary, until we get rid of SNAPSHOT dependencies on 0.23.x -->
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.billing.plugin</groupId>
@@ -211,17 +216,15 @@
             <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-embeddeddb-mysql</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <!-- For mariadb: ignore RequireUpperBoundDeps errors -->
-                <exclusion>
-                    <groupId>org.osgi</groupId>
-                    <artifactId>org.osgi.core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.kill-bill.commons</groupId>
             <artifactId>killbill-embeddeddb-postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.kill-bill.testing</groupId>
+            <artifactId>testing-mysql-server</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

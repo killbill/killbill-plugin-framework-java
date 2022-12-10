@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -25,6 +25,7 @@ import org.killbill.billing.osgi.api.OSGIPluginProperties;
 import org.killbill.billing.osgi.api.PluginInfo;
 import org.killbill.billing.osgi.api.PluginServiceInfo;
 import org.killbill.billing.osgi.api.PluginsInfoApi;
+import org.killbill.billing.osgi.api.ServiceDiscoveryRegistry;
 
 public class Resolver extends SimpleAbstractTypeResolver {
     public Resolver(){
@@ -34,5 +35,6 @@ public class Resolver extends SimpleAbstractTypeResolver {
         this.addMapping(PluginInfo.class, PluginInfoImp.class);
         this.addMapping(PluginServiceInfo.class, PluginServiceInfoImp.class);
         this.addMapping(PluginsInfoApi.class, PluginsInfoApiImp.class);
+        this.addMapping(ServiceDiscoveryRegistry.class, ServiceDiscoveryRegistryImp.class);
     }
 }

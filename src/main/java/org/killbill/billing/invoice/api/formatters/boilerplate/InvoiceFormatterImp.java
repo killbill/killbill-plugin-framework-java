@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -47,6 +47,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
     protected String formattedChargedAmount;
     protected String formattedInvoiceDate;
     protected String formattedPaidAmount;
+    protected UUID groupId;
     protected UUID id;
     protected LocalDate invoiceDate;
     protected List<InvoiceItem> invoiceItems;
@@ -79,6 +80,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         this.formattedChargedAmount = that.formattedChargedAmount;
         this.formattedInvoiceDate = that.formattedInvoiceDate;
         this.formattedPaidAmount = that.formattedPaidAmount;
+        this.groupId = that.groupId;
         this.id = that.id;
         this.invoiceDate = that.invoiceDate;
         this.invoiceItems = that.invoiceItems;
@@ -111,6 +113,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         this.formattedChargedAmount = builder.formattedChargedAmount;
         this.formattedInvoiceDate = builder.formattedInvoiceDate;
         this.formattedPaidAmount = builder.formattedPaidAmount;
+        this.groupId = builder.groupId;
         this.id = builder.id;
         this.invoiceDate = builder.invoiceDate;
         this.invoiceItems = builder.invoiceItems;
@@ -172,6 +175,10 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
     @Override
     public String getFormattedPaidAmount() {
         return this.formattedPaidAmount;
+    }
+    @Override
+    public UUID getGroupId() {
+        return this.groupId;
     }
     @Override
     public UUID getId() {
@@ -318,6 +325,9 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         if( !Objects.equals(this.formattedPaidAmount, that.formattedPaidAmount) ) {
             return false;
         }
+        if( !Objects.equals(this.groupId, that.groupId) ) {
+            return false;
+        }
         if( !Objects.equals(this.id, that.id) ) {
             return false;
         }
@@ -393,6 +403,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         result = ( 31 * result ) + Objects.hashCode(this.formattedChargedAmount);
         result = ( 31 * result ) + Objects.hashCode(this.formattedInvoiceDate);
         result = ( 31 * result ) + Objects.hashCode(this.formattedPaidAmount);
+        result = ( 31 * result ) + Objects.hashCode(this.groupId);
         result = ( 31 * result ) + Objects.hashCode(this.id);
         result = ( 31 * result ) + Objects.hashCode(this.invoiceDate);
         result = ( 31 * result ) + Objects.hashCode(this.invoiceItems);
@@ -459,6 +470,8 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
             sb.append("'").append(this.formattedPaidAmount).append("'");
         }
         sb.append(", ");
+        sb.append("groupId=").append(this.groupId);
+        sb.append(", ");
         sb.append("id=").append(this.id);
         sb.append(", ");
         sb.append("invoiceDate=").append(this.invoiceDate);
@@ -520,6 +533,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         protected String formattedChargedAmount;
         protected String formattedInvoiceDate;
         protected String formattedPaidAmount;
+        protected UUID groupId;
         protected UUID id;
         protected LocalDate invoiceDate;
         protected List<InvoiceItem> invoiceItems;
@@ -553,6 +567,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
             this.formattedChargedAmount = that.formattedChargedAmount;
             this.formattedInvoiceDate = that.formattedInvoiceDate;
             this.formattedPaidAmount = that.formattedPaidAmount;
+            this.groupId = that.groupId;
             this.id = that.id;
             this.invoiceDate = that.invoiceDate;
             this.invoiceItems = that.invoiceItems;
@@ -612,6 +627,10 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         }
         public T withFormattedPaidAmount(final String formattedPaidAmount) {
             this.formattedPaidAmount = formattedPaidAmount;
+            return (T) this;
+        }
+        public T withGroupId(final UUID groupId) {
+            this.groupId = groupId;
             return (T) this;
         }
         public T withId(final UUID id) {
@@ -705,6 +724,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
             this.formattedChargedAmount = that.getFormattedChargedAmount();
             this.formattedInvoiceDate = that.getFormattedInvoiceDate();
             this.formattedPaidAmount = that.getFormattedPaidAmount();
+            this.groupId = that.getGroupId();
             this.id = that.getId();
             this.invoiceDate = that.getInvoiceDate();
             this.invoiceItems = that.getInvoiceItems();

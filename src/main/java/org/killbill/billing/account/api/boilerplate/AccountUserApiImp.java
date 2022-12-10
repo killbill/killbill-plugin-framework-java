@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -81,12 +81,12 @@ public class AccountUserApiImp implements AccountUserApi {
         throw new UnsupportedOperationException("getIdFromKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public void removeEmail(final UUID accountId, final AccountEmail email, final CallContext context) {
-        throw new UnsupportedOperationException("removeEmail(java.util.UUID, org.killbill.billing.account.api.AccountEmail, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public List<AuditLogWithHistory> getAuditLogsWithHistoryForId(final UUID accountId, final AuditLevel auditLevel, final TenantContext context) {
         throw new UnsupportedOperationException("getAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public void removeEmail(final UUID accountId, final AccountEmail email, final CallContext context) {
+        throw new UnsupportedOperationException("removeEmail(java.util.UUID, org.killbill.billing.account.api.AccountEmail, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Pagination<Account> searchAccounts(final String searchKey, final Long offset, final Long limit, final TenantContext context) {

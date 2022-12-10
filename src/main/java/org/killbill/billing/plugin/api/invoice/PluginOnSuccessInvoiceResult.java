@@ -1,7 +1,7 @@
 /*
  * Copyright 2014-2020 Groupon, Inc
- * Copyright 2020-2020 Equinix, Inc
- * Copyright 2014-2020 The Billing Project, LLC
+ * Copyright 2020-2022 Equinix, Inc
+ * Copyright 2014-2022 The Billing Project, LLC
  *
  * The Billing Project licenses this file to you under the Apache License, version 2.0
  * (the "License"); you may not use this file except in compliance with the
@@ -20,5 +20,5 @@ package org.killbill.billing.plugin.api.invoice;
 
 import org.killbill.billing.invoice.plugin.api.OnSuccessInvoiceResult;
 
-public class PluginOnSuccessInvoiceResult implements OnSuccessInvoiceResult {
+public class PluginOnSuccessInvoiceResult extends PluginInvoiceResult implements OnSuccessInvoiceResult {
 }

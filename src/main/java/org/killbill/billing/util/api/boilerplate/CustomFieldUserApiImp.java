@@ -3,9 +3,9 @@
  *
  *  Copyright 2022-2022 The Billing Project, LLC
  *
- *  The Billing Project licenses this file to you under the Apache License, version 2.0
- *  (the "License"); you may not use this file except in compliance with the
- *  License.  You may obtain a copy of the License at:
+ *  The Billing Project licenses this file to you under the Apache License,
+ *  version 2.0 (the "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at:
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -56,12 +56,12 @@ public class CustomFieldUserApiImp implements CustomFieldUserApi {
         throw new UnsupportedOperationException("removeCustomFields(java.util.List<org.killbill.billing.util.customfield.CustomField>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Pagination<CustomField> searchCustomFields(final String fieldName, final String fieldValue, final ObjectType objectType, final Long offset, final Long limit, final TenantContext context) {
-        throw new UnsupportedOperationException("searchCustomFields(java.lang.String, java.lang.String, org.killbill.billing.ObjectType, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public List<AuditLogWithHistory> getCustomFieldAuditLogsWithHistoryForId(final UUID customFieldId, final AuditLevel auditLevel, final TenantContext context) {
         throw new UnsupportedOperationException("getCustomFieldAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public Pagination<CustomField> searchCustomFields(final String fieldName, final String fieldValue, final ObjectType objectType, final Long offset, final Long limit, final TenantContext context) {
+        throw new UnsupportedOperationException("searchCustomFields(java.lang.String, java.lang.String, org.killbill.billing.ObjectType, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<CustomField> getCustomFieldsForAccountType(final UUID accountId, final ObjectType objectType, final TenantContext context) {
@@ -76,12 +76,12 @@ public class CustomFieldUserApiImp implements CustomFieldUserApi {
         throw new UnsupportedOperationException("searchCustomFields(java.lang.String, org.killbill.billing.ObjectType, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Pagination<CustomField> searchCustomFields(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
-        throw new UnsupportedOperationException("searchCustomFields(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public void updateCustomFields(final List<CustomField> fields, final CallContext context) {
         throw new UnsupportedOperationException("updateCustomFields(java.util.List<org.killbill.billing.util.customfield.CustomField>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Pagination<CustomField> searchCustomFields(final String searchKey, final Long offset, final Long limit, final TenantContext context) {
+        throw new UnsupportedOperationException("searchCustomFields(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public Pagination<CustomField> getCustomFields(final Long offset, final Long limit, final TenantContext context) {
