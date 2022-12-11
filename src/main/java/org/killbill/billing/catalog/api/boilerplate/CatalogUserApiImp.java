@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.joda.time.DateTime;
 import org.killbill.billing.catalog.api.CatalogApiException;
 import org.killbill.billing.catalog.api.CatalogUserApi;
+import org.killbill.billing.catalog.api.CatalogValidation;
 import org.killbill.billing.catalog.api.SimplePlanDescriptor;
 import org.killbill.billing.catalog.api.StaticCatalog;
 import org.killbill.billing.catalog.api.VersionedCatalog;
@@ -63,7 +64,7 @@ public class CatalogUserApiImp implements CatalogUserApi {
     }
 
     @Override
-    public void validateCatalog(final String catalogXML, final CallContext context) throws CatalogApiException {
+    public CatalogValidation validateCatalog(final String catalogXML, final CallContext context) {
         throw new UnsupportedOperationException("validateCatalog(java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
 

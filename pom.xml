@@ -43,6 +43,7 @@
     <properties>
         <check.fail-spotbugs>true</check.fail-spotbugs>
         <check.spotbugs-exclude-filter-file>spotbugs-exclude.xml</check.spotbugs-exclude-filter-file>
+        <killbill-platform.version>0.40.13</killbill-platform.version>
     </properties>
     <dependencies>
         <dependency>
@@ -177,6 +178,10 @@
                 <exclusion>
                     <groupId>org.mockito</groupId>
                     <artifactId>mockito-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.osgi</groupId>
+                    <artifactId>org.osgi.compendium</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
