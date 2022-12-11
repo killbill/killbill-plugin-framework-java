@@ -298,16 +298,16 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         if( !Objects.equals(this.accountId, that.accountId) ) {
             return false;
         }
-        if( ( this.balance != null ) ? ( 0 != this.balance.compareTo(that.balance) ) : ( that.balance != null ) ) {
+        if( !Objects.equals(this.balance, that.balance) ) {
             return false;
         }
-        if( ( this.chargedAmount != null ) ? ( 0 != this.chargedAmount.compareTo(that.chargedAmount) ) : ( that.chargedAmount != null ) ) {
+        if( !Objects.equals(this.chargedAmount, that.chargedAmount) ) {
             return false;
         }
         if( ( this.createdDate != null ) ? ( 0 != this.createdDate.compareTo(that.createdDate) ) : ( that.createdDate != null ) ) {
             return false;
         }
-        if( ( this.creditedAmount != null ) ? ( 0 != this.creditedAmount.compareTo(that.creditedAmount) ) : ( that.creditedAmount != null ) ) {
+        if( !Objects.equals(this.creditedAmount, that.creditedAmount) ) {
             return false;
         }
         if( !Objects.equals(this.currency, that.currency) ) {
@@ -331,7 +331,7 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         if( !Objects.equals(this.id, that.id) ) {
             return false;
         }
-        if( ( this.invoiceDate != null ) ? ( 0 != this.invoiceDate.compareTo(that.invoiceDate) ) : ( that.invoiceDate != null ) ) {
+        if( !Objects.equals(this.invoiceDate, that.invoiceDate) ) {
             return false;
         }
         if( !Objects.equals(this.invoiceItems, that.invoiceItems) ) {
@@ -352,10 +352,10 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         if( this.numberOfPayments != that.numberOfPayments ) {
             return false;
         }
-        if( ( this.originalChargedAmount != null ) ? ( 0 != this.originalChargedAmount.compareTo(that.originalChargedAmount) ) : ( that.originalChargedAmount != null ) ) {
+        if( !Objects.equals(this.originalChargedAmount, that.originalChargedAmount) ) {
             return false;
         }
-        if( ( this.paidAmount != null ) ? ( 0 != this.paidAmount.compareTo(that.paidAmount) ) : ( that.paidAmount != null ) ) {
+        if( !Objects.equals(this.paidAmount, that.paidAmount) ) {
             return false;
         }
         if( !Objects.equals(this.parentAccountId, that.parentAccountId) ) {
@@ -373,13 +373,13 @@ public class InvoiceFormatterImp implements InvoiceFormatter {
         if( !Objects.equals(this.processedPaymentRate, that.processedPaymentRate) ) {
             return false;
         }
-        if( ( this.refundedAmount != null ) ? ( 0 != this.refundedAmount.compareTo(that.refundedAmount) ) : ( that.refundedAmount != null ) ) {
+        if( !Objects.equals(this.refundedAmount, that.refundedAmount) ) {
             return false;
         }
         if( !Objects.equals(this.status, that.status) ) {
             return false;
         }
-        if( ( this.targetDate != null ) ? ( 0 != this.targetDate.compareTo(that.targetDate) ) : ( that.targetDate != null ) ) {
+        if( !Objects.equals(this.targetDate, that.targetDate) ) {
             return false;
         }
         if( !Objects.equals(this.trackingIds, that.trackingIds) ) {

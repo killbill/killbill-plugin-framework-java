@@ -18,11 +18,12 @@
 
 package org.killbill.billing.usage.api.boilerplate;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
-
 import org.joda.time.DateTime;
 import org.killbill.billing.usage.api.RawUsageRecord;
 
@@ -79,7 +80,7 @@ public class RawUsageRecordImp implements RawUsageRecord {
             return false;
         }
         final RawUsageRecordImp that = (RawUsageRecordImp) o;
-        if( ( this.amount != null ) ? ( 0 != this.amount.compareTo(that.amount) ) : ( that.amount != null ) ) {
+        if( !Objects.equals(this.amount, that.amount) ) {
             return false;
         }
         if( ( this.date != null ) ? ( 0 != this.date.compareTo(that.date) ) : ( that.date != null ) ) {

@@ -18,7 +18,9 @@
 
 package org.killbill.billing.entitlement.api.boilerplate;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import org.killbill.billing.catalog.api.PlanPhasePriceOverride;
@@ -67,7 +69,7 @@ public class EntitlementSpecifierImp implements EntitlementSpecifier {
     }
     @Override
     public Integer getQuantity() {
-        return quantity;
+        return this.quantity;
     }
     @Override
     public boolean equals(final Object o) {

@@ -82,7 +82,7 @@ public class RateImp implements Rate {
         if( !Objects.equals(this.currency, that.currency) ) {
             return false;
         }
-        if( ( this.value != null ) ? ( 0 != this.value.compareTo(that.value) ) : ( that.value != null ) ) {
+        if( !Objects.equals(this.value, that.value) ) {
             return false;
         }
         return true;

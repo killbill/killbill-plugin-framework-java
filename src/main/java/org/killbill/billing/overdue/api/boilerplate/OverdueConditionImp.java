@@ -103,7 +103,7 @@ public class OverdueConditionImp implements OverdueCondition {
         if( !Objects.equals(this.timeSinceEarliestUnpaidInvoiceEqualsOrExceeds, that.timeSinceEarliestUnpaidInvoiceEqualsOrExceeds) ) {
             return false;
         }
-        if( ( this.totalUnpaidInvoiceBalanceEqualsOrExceeds != null ) ? ( 0 != this.totalUnpaidInvoiceBalanceEqualsOrExceeds.compareTo(that.totalUnpaidInvoiceBalanceEqualsOrExceeds) ) : ( that.totalUnpaidInvoiceBalanceEqualsOrExceeds != null ) ) {
+        if( !Objects.equals(this.totalUnpaidInvoiceBalanceEqualsOrExceeds, that.totalUnpaidInvoiceBalanceEqualsOrExceeds) ) {
             return false;
         }
         return true;

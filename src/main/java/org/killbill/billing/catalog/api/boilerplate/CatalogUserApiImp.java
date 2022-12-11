@@ -18,7 +18,10 @@
 
 package org.killbill.billing.catalog.api.boilerplate;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Arrays;
+import java.util.Objects;
 import org.joda.time.DateTime;
 import org.killbill.billing.catalog.api.CatalogApiException;
 import org.killbill.billing.catalog.api.CatalogUserApi;
@@ -55,6 +58,10 @@ public class CatalogUserApiImp implements CatalogUserApi {
         throw new UnsupportedOperationException("createDefaultEmptyCatalog(org.joda.time.DateTime, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
+    public CatalogValidation validateCatalog(final String catalogXML, final CallContext context) {
+        throw new UnsupportedOperationException("validateCatalog(java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
     public void deleteCatalog(final CallContext callContext) {
         throw new UnsupportedOperationException("deleteCatalog(org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
@@ -62,12 +69,6 @@ public class CatalogUserApiImp implements CatalogUserApi {
     public void uploadCatalog(final String catalogXML, final CallContext context) {
         throw new UnsupportedOperationException("uploadCatalog(java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
-
-    @Override
-    public CatalogValidation validateCatalog(final String catalogXML, final CallContext context) {
-        throw new UnsupportedOperationException("validateCatalog(java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-
     @Override
     public boolean equals(final Object o) {
         if ( this == o ) {

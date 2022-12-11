@@ -165,16 +165,16 @@ public class PaymentImp implements Payment {
         if( !Objects.equals(this.accountId, that.accountId) ) {
             return false;
         }
-        if( ( this.authAmount != null ) ? ( 0 != this.authAmount.compareTo(that.authAmount) ) : ( that.authAmount != null ) ) {
+        if( !Objects.equals(this.authAmount, that.authAmount) ) {
             return false;
         }
-        if( ( this.capturedAmount != null ) ? ( 0 != this.capturedAmount.compareTo(that.capturedAmount) ) : ( that.capturedAmount != null ) ) {
+        if( !Objects.equals(this.capturedAmount, that.capturedAmount) ) {
             return false;
         }
         if( ( this.createdDate != null ) ? ( 0 != this.createdDate.compareTo(that.createdDate) ) : ( that.createdDate != null ) ) {
             return false;
         }
-        if( ( this.creditedAmount != null ) ? ( 0 != this.creditedAmount.compareTo(that.creditedAmount) ) : ( that.creditedAmount != null ) ) {
+        if( !Objects.equals(this.creditedAmount, that.creditedAmount) ) {
             return false;
         }
         if( !Objects.equals(this.currency, that.currency) ) {
@@ -198,10 +198,10 @@ public class PaymentImp implements Payment {
         if( !Objects.equals(this.paymentNumber, that.paymentNumber) ) {
             return false;
         }
-        if( ( this.purchasedAmount != null ) ? ( 0 != this.purchasedAmount.compareTo(that.purchasedAmount) ) : ( that.purchasedAmount != null ) ) {
+        if( !Objects.equals(this.purchasedAmount, that.purchasedAmount) ) {
             return false;
         }
-        if( ( this.refundedAmount != null ) ? ( 0 != this.refundedAmount.compareTo(that.refundedAmount) ) : ( that.refundedAmount != null ) ) {
+        if( !Objects.equals(this.refundedAmount, that.refundedAmount) ) {
             return false;
         }
         if( !Objects.equals(this.transactions, that.transactions) ) {

@@ -89,16 +89,16 @@ public class TieredBlockImp implements TieredBlock {
             return false;
         }
         final TieredBlockImp that = (TieredBlockImp) o;
-        if( ( this.max != null ) ? ( 0 != this.max.compareTo(that.max) ) : ( that.max != null ) ) {
+        if( !Objects.equals(this.max, that.max) ) {
             return false;
         }
-        if( ( this.minTopUpCredit != null ) ? ( 0 != this.minTopUpCredit.compareTo(that.minTopUpCredit) ) : ( that.minTopUpCredit != null ) ) {
+        if( !Objects.equals(this.minTopUpCredit, that.minTopUpCredit) ) {
             return false;
         }
         if( !Objects.equals(this.price, that.price) ) {
             return false;
         }
-        if( ( this.size != null ) ? ( 0 != this.size.compareTo(that.size) ) : ( that.size != null ) ) {
+        if( !Objects.equals(this.size, that.size) ) {
             return false;
         }
         if( !Objects.equals(this.type, that.type) ) {

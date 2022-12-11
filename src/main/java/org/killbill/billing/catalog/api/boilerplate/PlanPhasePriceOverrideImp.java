@@ -92,7 +92,7 @@ public class PlanPhasePriceOverrideImp implements PlanPhasePriceOverride {
         if( !Objects.equals(this.currency, that.currency) ) {
             return false;
         }
-        if( ( this.fixedPrice != null ) ? ( 0 != this.fixedPrice.compareTo(that.fixedPrice) ) : ( that.fixedPrice != null ) ) {
+        if( !Objects.equals(this.fixedPrice, that.fixedPrice) ) {
             return false;
         }
         if( !Objects.equals(this.phaseName, that.phaseName) ) {
@@ -101,7 +101,7 @@ public class PlanPhasePriceOverrideImp implements PlanPhasePriceOverride {
         if( !Objects.equals(this.planPhaseSpecifier, that.planPhaseSpecifier) ) {
             return false;
         }
-        if( ( this.recurringPrice != null ) ? ( 0 != this.recurringPrice.compareTo(that.recurringPrice) ) : ( that.recurringPrice != null ) ) {
+        if( !Objects.equals(this.recurringPrice, that.recurringPrice) ) {
             return false;
         }
         if( !Objects.equals(this.usagePriceOverrides, that.usagePriceOverrides) ) {

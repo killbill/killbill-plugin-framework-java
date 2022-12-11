@@ -21,16 +21,12 @@ package org.killbill.billing.payment.plugin.api.boilerplate;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import org.killbill.billing.payment.plugin.api.GatewayNotification;
 import org.killbill.billing.payment.plugin.api.HostedPaymentPageFormDescriptor;
-import org.killbill.billing.payment.plugin.api.PaymentMethodInfoPlugin;
-import org.killbill.billing.payment.plugin.api.PaymentPluginApi;
 import org.killbill.billing.payment.plugin.api.PaymentTransactionInfoPlugin;
 
 public class Resolver extends SimpleAbstractTypeResolver {
     public Resolver(){
         this.addMapping(GatewayNotification.class, GatewayNotificationImp.class);
         this.addMapping(HostedPaymentPageFormDescriptor.class, HostedPaymentPageFormDescriptorImp.class);
-        this.addMapping(PaymentMethodInfoPlugin.class, PaymentMethodInfoPluginImp.class);
-        this.addMapping(PaymentPluginApi.class, PaymentPluginApiImp.class);
         this.addMapping(PaymentTransactionInfoPlugin.class, PaymentTransactionInfoPluginImp.class);
     }
 }

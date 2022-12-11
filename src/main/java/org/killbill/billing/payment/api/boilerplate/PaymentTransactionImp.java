@@ -154,7 +154,7 @@ public class PaymentTransactionImp implements PaymentTransaction {
             return false;
         }
         final PaymentTransactionImp that = (PaymentTransactionImp) o;
-        if( ( this.amount != null ) ? ( 0 != this.amount.compareTo(that.amount) ) : ( that.amount != null ) ) {
+        if( !Objects.equals(this.amount, that.amount) ) {
             return false;
         }
         if( ( this.createdDate != null ) ? ( 0 != this.createdDate.compareTo(that.createdDate) ) : ( that.createdDate != null ) ) {
@@ -184,7 +184,7 @@ public class PaymentTransactionImp implements PaymentTransaction {
         if( !Objects.equals(this.paymentInfoPlugin, that.paymentInfoPlugin) ) {
             return false;
         }
-        if( ( this.processedAmount != null ) ? ( 0 != this.processedAmount.compareTo(that.processedAmount) ) : ( that.processedAmount != null ) ) {
+        if( !Objects.equals(this.processedAmount, that.processedAmount) ) {
             return false;
         }
         if( !Objects.equals(this.processedCurrency, that.processedCurrency) ) {

@@ -46,12 +46,12 @@ public class TenantUserApiImp implements TenantUserApi {
         throw new UnsupportedOperationException("updateTenantKeyValue(java.lang.String, java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public void addTenantKeyValue(final String key, final String value, final CallContext context) {
-        throw new UnsupportedOperationException("addTenantKeyValue(java.lang.String, java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public void deleteTenantKey(final String key, final CallContext context) {
         throw new UnsupportedOperationException("deleteTenantKey(java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public void addTenantKeyValue(final String key, final String value, final CallContext context) {
+        throw new UnsupportedOperationException("addTenantKeyValue(java.lang.String, java.lang.String, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Tenant createTenant(final TenantData data, final CallContext context) {
@@ -66,12 +66,12 @@ public class TenantUserApiImp implements TenantUserApi {
         throw new UnsupportedOperationException("getTenantValuesForKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Map<String, List<String>> searchTenantKeyValues(final String searchKey, final TenantContext context) {
-        throw new UnsupportedOperationException("searchTenantKeyValues(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public Tenant getTenantById(final UUID tenantId) {
         throw new UnsupportedOperationException("getTenantById(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public Map<String, List<String>> searchTenantKeyValues(final String searchKey, final TenantContext context) {
+        throw new UnsupportedOperationException("searchTenantKeyValues(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public boolean equals(final Object o) {

@@ -35,6 +35,7 @@ public class BlockingStateImp implements BlockingState {
     protected String description;
     protected DateTime effectiveDate;
     protected UUID id;
+    protected boolean isActive;
     protected boolean isBlockBilling;
     protected boolean isBlockChange;
     protected boolean isBlockEntitlement;
@@ -42,7 +43,6 @@ public class BlockingStateImp implements BlockingState {
     protected String stateName;
     protected BlockingStateType type;
     protected DateTime updatedDate;
-    protected boolean active;
 
     public BlockingStateImp(final BlockingStateImp that) {
         this.blockedId = that.blockedId;
@@ -50,6 +50,7 @@ public class BlockingStateImp implements BlockingState {
         this.description = that.description;
         this.effectiveDate = that.effectiveDate;
         this.id = that.id;
+        this.isActive = that.isActive;
         this.isBlockBilling = that.isBlockBilling;
         this.isBlockChange = that.isBlockChange;
         this.isBlockEntitlement = that.isBlockEntitlement;
@@ -57,7 +58,6 @@ public class BlockingStateImp implements BlockingState {
         this.stateName = that.stateName;
         this.type = that.type;
         this.updatedDate = that.updatedDate;
-        this.active = that.active;
     }
     protected BlockingStateImp(final BlockingStateImp.Builder<?> builder) {
         this.blockedId = builder.blockedId;
@@ -65,6 +65,7 @@ public class BlockingStateImp implements BlockingState {
         this.description = builder.description;
         this.effectiveDate = builder.effectiveDate;
         this.id = builder.id;
+        this.isActive = builder.isActive;
         this.isBlockBilling = builder.isBlockBilling;
         this.isBlockChange = builder.isBlockChange;
         this.isBlockEntitlement = builder.isBlockEntitlement;
@@ -72,7 +73,6 @@ public class BlockingStateImp implements BlockingState {
         this.stateName = builder.stateName;
         this.type = builder.type;
         this.updatedDate = builder.updatedDate;
-        this.active = builder.active;
     }
     protected BlockingStateImp() { }
     @Override
@@ -94,6 +94,11 @@ public class BlockingStateImp implements BlockingState {
     @Override
     public UUID getId() {
         return this.id;
+    }
+    @Override
+    @JsonGetter("isActive")
+    public boolean isActive() {
+        return this.isActive;
     }
     @Override
     @JsonGetter("isBlockBilling")
@@ -127,10 +132,6 @@ public class BlockingStateImp implements BlockingState {
         return this.updatedDate;
     }
     @Override
-    public boolean isActive() {
-        return active;
-    }
-    @Override
     public int compareTo(final BlockingState arg0) {
         throw new UnsupportedOperationException("compareTo(org.killbill.billing.entitlement.api.BlockingState) must be implemented.");
     }
@@ -158,6 +159,9 @@ public class BlockingStateImp implements BlockingState {
         if( !Objects.equals(this.id, that.id) ) {
             return false;
         }
+        if( this.isActive != that.isActive ) {
+            return false;
+        }
         if( this.isBlockBilling != that.isBlockBilling ) {
             return false;
         }
@@ -179,9 +183,6 @@ public class BlockingStateImp implements BlockingState {
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
             return false;
         }
-        if( !Objects.equals(this.active, that.active) ) {
-            return false;
-        }
         return true;
     }
     @Override
@@ -192,6 +193,7 @@ public class BlockingStateImp implements BlockingState {
         result = ( 31 * result ) + Objects.hashCode(this.description);
         result = ( 31 * result ) + Objects.hashCode(this.effectiveDate);
         result = ( 31 * result ) + Objects.hashCode(this.id);
+        result = ( 31 * result ) + Objects.hashCode(this.isActive);
         result = ( 31 * result ) + Objects.hashCode(this.isBlockBilling);
         result = ( 31 * result ) + Objects.hashCode(this.isBlockChange);
         result = ( 31 * result ) + Objects.hashCode(this.isBlockEntitlement);
@@ -199,7 +201,6 @@ public class BlockingStateImp implements BlockingState {
         result = ( 31 * result ) + Objects.hashCode(this.stateName);
         result = ( 31 * result ) + Objects.hashCode(this.type);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
-        result = ( 31 * result ) + Objects.hashCode(this.active);
         return result;
     }
     @Override
@@ -220,6 +221,8 @@ public class BlockingStateImp implements BlockingState {
         sb.append("effectiveDate=").append(this.effectiveDate);
         sb.append(", ");
         sb.append("id=").append(this.id);
+        sb.append(", ");
+        sb.append("isActive=").append(this.isActive);
         sb.append(", ");
         sb.append("isBlockBilling=").append(this.isBlockBilling);
         sb.append(", ");
@@ -244,8 +247,6 @@ public class BlockingStateImp implements BlockingState {
         sb.append("type=").append(this.type);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
-        sb.append(", ");
-        sb.append("active=").append(this.active);
         sb.append("}");
         return sb.toString();
     }
@@ -258,6 +259,7 @@ public class BlockingStateImp implements BlockingState {
         protected String description;
         protected DateTime effectiveDate;
         protected UUID id;
+        protected boolean isActive;
         protected boolean isBlockBilling;
         protected boolean isBlockChange;
         protected boolean isBlockEntitlement;
@@ -265,7 +267,6 @@ public class BlockingStateImp implements BlockingState {
         protected String stateName;
         protected BlockingStateType type;
         protected DateTime updatedDate;
-        protected boolean active;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -274,6 +275,7 @@ public class BlockingStateImp implements BlockingState {
             this.description = that.description;
             this.effectiveDate = that.effectiveDate;
             this.id = that.id;
+            this.isActive = that.isActive;
             this.isBlockBilling = that.isBlockBilling;
             this.isBlockChange = that.isBlockChange;
             this.isBlockEntitlement = that.isBlockEntitlement;
@@ -281,7 +283,6 @@ public class BlockingStateImp implements BlockingState {
             this.stateName = that.stateName;
             this.type = that.type;
             this.updatedDate = that.updatedDate;
-            this.active = that.active;
         }
         public T withBlockedId(final UUID blockedId) {
             this.blockedId = blockedId;
@@ -301,6 +302,10 @@ public class BlockingStateImp implements BlockingState {
         }
         public T withId(final UUID id) {
             this.id = id;
+            return (T) this;
+        }
+        public T withIsActive(final boolean isActive) {
+            this.isActive = isActive;
             return (T) this;
         }
         public T withIsBlockBilling(final boolean isBlockBilling) {
@@ -331,16 +336,13 @@ public class BlockingStateImp implements BlockingState {
             this.updatedDate = updatedDate;
             return (T) this;
         }
-        public T withActive(final boolean active) {
-            this.active = active;
-            return (T) this;
-        }
         public T source(final BlockingState that) {
             this.blockedId = that.getBlockedId();
             this.createdDate = that.getCreatedDate();
             this.description = that.getDescription();
             this.effectiveDate = that.getEffectiveDate();
             this.id = that.getId();
+            this.isActive = that.isActive();
             this.isBlockBilling = that.isBlockBilling();
             this.isBlockChange = that.isBlockChange();
             this.isBlockEntitlement = that.isBlockEntitlement();
@@ -348,7 +350,6 @@ public class BlockingStateImp implements BlockingState {
             this.stateName = that.getStateName();
             this.type = that.getType();
             this.updatedDate = that.getUpdatedDate();
-            this.active = that.isActive();
             return (T) this;
         }
         protected Builder validate() {

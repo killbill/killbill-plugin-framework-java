@@ -55,10 +55,10 @@ public class EntitlementImp implements Entitlement {
     protected PriceList lastActivePriceList;
     protected Product lastActiveProduct;
     protected ProductCategory lastActiveProductCategory;
+    protected Integer quantity;
     protected Entitlement.EntitlementSourceType sourceType;
     protected Entitlement.EntitlementState state;
     protected DateTime updatedDate;
-    protected Integer quantity;
 
     public EntitlementImp(final EntitlementImp that) {
         this.accountId = that.accountId;
@@ -76,10 +76,10 @@ public class EntitlementImp implements Entitlement {
         this.lastActivePriceList = that.lastActivePriceList;
         this.lastActiveProduct = that.lastActiveProduct;
         this.lastActiveProductCategory = that.lastActiveProductCategory;
+        this.quantity = that.quantity;
         this.sourceType = that.sourceType;
         this.state = that.state;
         this.updatedDate = that.updatedDate;
-        this.quantity = that.quantity;
     }
     protected EntitlementImp(final EntitlementImp.Builder<?> builder) {
         this.accountId = builder.accountId;
@@ -97,10 +97,10 @@ public class EntitlementImp implements Entitlement {
         this.lastActivePriceList = builder.lastActivePriceList;
         this.lastActiveProduct = builder.lastActiveProduct;
         this.lastActiveProductCategory = builder.lastActiveProductCategory;
+        this.quantity = builder.quantity;
         this.sourceType = builder.sourceType;
         this.state = builder.state;
         this.updatedDate = builder.updatedDate;
-        this.quantity = builder.quantity;
     }
     protected EntitlementImp() { }
     @Override
@@ -164,6 +164,10 @@ public class EntitlementImp implements Entitlement {
         return this.lastActiveProductCategory;
     }
     @Override
+    public Integer getQuantity() {
+        return this.quantity;
+    }
+    @Override
     public Entitlement.EntitlementSourceType getSourceType() {
         return this.sourceType;
     }
@@ -174,10 +178,6 @@ public class EntitlementImp implements Entitlement {
     @Override
     public DateTime getUpdatedDate() {
         return this.updatedDate;
-    }
-    @Override
-    public Integer getQuantity() {
-        return quantity;
     }
     @Override
     public void uncancelEntitlement(final Iterable<PluginProperty> properties, final CallContext context) {
@@ -200,12 +200,12 @@ public class EntitlementImp implements Entitlement {
         throw new UnsupportedOperationException("changePlanWithDate(org.killbill.billing.entitlement.api.EntitlementSpecifier, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
-        throw new UnsupportedOperationException("cancelEntitlementWithPolicyOverrideBillingPolicy(org.killbill.billing.entitlement.api.Entitlement.EntitlementActionPolicy, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
-    }
-    @Override
     public Entitlement cancelEntitlementWithDate(final DateTime entitlementEffectiveDate, final DateTime billingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("cancelEntitlementWithDate(org.joda.time.DateTime, org.joda.time.DateTime, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
+    }
+    @Override
+    public Entitlement cancelEntitlementWithPolicyOverrideBillingPolicy(final Entitlement.EntitlementActionPolicy policy, final BillingActionPolicy billingPolicy, final Iterable<PluginProperty> properties, final CallContext context) {
+        throw new UnsupportedOperationException("cancelEntitlementWithPolicyOverrideBillingPolicy(org.killbill.billing.entitlement.api.Entitlement.EntitlementActionPolicy, org.killbill.billing.catalog.api.BillingActionPolicy, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public Entitlement cancelEntitlementWithDate(final LocalDate effectiveDate, final boolean overrideBillingEffectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -223,12 +223,10 @@ public class EntitlementImp implements Entitlement {
     public void updateBCD(final int bcd, final LocalDate effectiveFromDate, final CallContext context) {
         throw new UnsupportedOperationException("updateBCD(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
-
     @Override
-    public void updateQuantity(final int quantity, final LocalDate effectiveFromDate, final CallContext context) throws EntitlementApiException {
+    public void updateQuantity(final int quantity, final LocalDate effectiveFromDate, final CallContext context) {
         throw new UnsupportedOperationException("updateQuantity(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
-
     @Override
     public Entitlement changePlanWithDate(final EntitlementSpecifier spec, final LocalDate effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
         throw new UnsupportedOperationException("changePlanWithDate(org.killbill.billing.entitlement.api.EntitlementSpecifier, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
@@ -287,6 +285,9 @@ public class EntitlementImp implements Entitlement {
         if( !Objects.equals(this.lastActiveProductCategory, that.lastActiveProductCategory) ) {
             return false;
         }
+        if( !Objects.equals(this.quantity, that.quantity) ) {
+            return false;
+        }
         if( !Objects.equals(this.sourceType, that.sourceType) ) {
             return false;
         }
@@ -294,9 +295,6 @@ public class EntitlementImp implements Entitlement {
             return false;
         }
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
-            return false;
-        }
-        if( !Objects.equals(this.quantity, that.quantity) ) {
             return false;
         }
         return true;
@@ -319,10 +317,10 @@ public class EntitlementImp implements Entitlement {
         result = ( 31 * result ) + Objects.hashCode(this.lastActivePriceList);
         result = ( 31 * result ) + Objects.hashCode(this.lastActiveProduct);
         result = ( 31 * result ) + Objects.hashCode(this.lastActiveProductCategory);
+        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         result = ( 31 * result ) + Objects.hashCode(this.sourceType);
         result = ( 31 * result ) + Objects.hashCode(this.state);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
-        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         return result;
     }
     @Override
@@ -369,13 +367,13 @@ public class EntitlementImp implements Entitlement {
         sb.append(", ");
         sb.append("lastActiveProductCategory=").append(this.lastActiveProductCategory);
         sb.append(", ");
+        sb.append("quantity=").append(this.quantity);
+        sb.append(", ");
         sb.append("sourceType=").append(this.sourceType);
         sb.append(", ");
         sb.append("state=").append(this.state);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
-        sb.append(", ");
-        sb.append("quantity=").append(this.quantity);
         sb.append("}");
         return sb.toString();
     }
@@ -398,10 +396,10 @@ public class EntitlementImp implements Entitlement {
         protected PriceList lastActivePriceList;
         protected Product lastActiveProduct;
         protected ProductCategory lastActiveProductCategory;
+        protected Integer quantity;
         protected Entitlement.EntitlementSourceType sourceType;
         protected Entitlement.EntitlementState state;
         protected DateTime updatedDate;
-        protected Integer quantity;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -420,10 +418,10 @@ public class EntitlementImp implements Entitlement {
             this.lastActivePriceList = that.lastActivePriceList;
             this.lastActiveProduct = that.lastActiveProduct;
             this.lastActiveProductCategory = that.lastActiveProductCategory;
+            this.quantity = that.quantity;
             this.sourceType = that.sourceType;
             this.state = that.state;
             this.updatedDate = that.updatedDate;
-            this.quantity = that.quantity;
         }
         public T withAccountId(final UUID accountId) {
             this.accountId = accountId;
@@ -485,6 +483,10 @@ public class EntitlementImp implements Entitlement {
             this.lastActiveProductCategory = lastActiveProductCategory;
             return (T) this;
         }
+        public T withQuantity(final Integer quantity) {
+            this.quantity = quantity;
+            return (T) this;
+        }
         public T withSourceType(final Entitlement.EntitlementSourceType sourceType) {
             this.sourceType = sourceType;
             return (T) this;
@@ -495,10 +497,6 @@ public class EntitlementImp implements Entitlement {
         }
         public T withUpdatedDate(final DateTime updatedDate) {
             this.updatedDate = updatedDate;
-            return (T) this;
-        }
-        public T withQuantity(final Integer quantity) {
-            this.quantity = quantity;
             return (T) this;
         }
         public T source(final Entitlement that) {
@@ -517,10 +515,10 @@ public class EntitlementImp implements Entitlement {
             this.lastActivePriceList = that.getLastActivePriceList();
             this.lastActiveProduct = that.getLastActiveProduct();
             this.lastActiveProductCategory = that.getLastActiveProductCategory();
+            this.quantity = that.getQuantity();
             this.sourceType = that.getSourceType();
             this.state = that.getState();
             this.updatedDate = that.getUpdatedDate();
-            this.quantity = that.getQuantity();
             return (T) this;
         }
         protected Builder validate() {

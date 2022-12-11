@@ -112,12 +112,12 @@ public class MutableStaticCatalogImp implements MutableStaticCatalog {
         return this.units;
     }
     @Override
-    public Plan findPlan(final String name) {
-        throw new UnsupportedOperationException("findPlan(java.lang.String) must be implemented.");
-    }
-    @Override
     public Plan createOrFindPlan(final PlanSpecifier spec, final PlanPhasePriceOverridesWithCallContext overrides) {
         throw new UnsupportedOperationException("createOrFindPlan(org.killbill.billing.catalog.api.PlanSpecifier, org.killbill.billing.catalog.api.PlanPhasePriceOverridesWithCallContext) must be implemented.");
+    }
+    @Override
+    public Plan findPlan(final String name) {
+        throw new UnsupportedOperationException("findPlan(java.lang.String) must be implemented.");
     }
     @Override
     public void addProduct(final Product product) {

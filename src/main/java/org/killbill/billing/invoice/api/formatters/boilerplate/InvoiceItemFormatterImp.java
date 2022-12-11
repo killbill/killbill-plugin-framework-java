@@ -265,7 +265,7 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
         if( !Objects.equals(this.accountId, that.accountId) ) {
             return false;
         }
-        if( ( this.amount != null ) ? ( 0 != this.amount.compareTo(that.amount) ) : ( that.amount != null ) ) {
+        if( !Objects.equals(this.amount, that.amount) ) {
             return false;
         }
         if( !Objects.equals(this.bundleId, that.bundleId) ) {
@@ -286,7 +286,7 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
         if( !Objects.equals(this.description, that.description) ) {
             return false;
         }
-        if( ( this.endDate != null ) ? ( 0 != this.endDate.compareTo(that.endDate) ) : ( that.endDate != null ) ) {
+        if( !Objects.equals(this.endDate, that.endDate) ) {
             return false;
         }
         if( !Objects.equals(this.formattedAmount, that.formattedAmount) ) {
@@ -334,13 +334,13 @@ public class InvoiceItemFormatterImp implements InvoiceItemFormatter {
         if( !Objects.equals(this.productName, that.productName) ) {
             return false;
         }
-        if( ( this.quantity != null ) ? ( 0 != this.quantity.compareTo(that.quantity) ) : ( that.quantity != null ) ) {
+        if( !Objects.equals(this.quantity, that.quantity) ) {
             return false;
         }
-        if( ( this.rate != null ) ? ( 0 != this.rate.compareTo(that.rate) ) : ( that.rate != null ) ) {
+        if( !Objects.equals(this.rate, that.rate) ) {
             return false;
         }
-        if( ( this.startDate != null ) ? ( 0 != this.startDate.compareTo(that.startDate) ) : ( that.startDate != null ) ) {
+        if( !Objects.equals(this.startDate, that.startDate) ) {
             return false;
         }
         if( !Objects.equals(this.subscriptionId, that.subscriptionId) ) {

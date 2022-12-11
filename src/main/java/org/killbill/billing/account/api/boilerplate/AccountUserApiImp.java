@@ -53,12 +53,12 @@ public class AccountUserApiImp implements AccountUserApi {
         throw new UnsupportedOperationException("updateAccount(java.util.UUID, org.killbill.billing.account.api.AccountData, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<AccountEmail> getEmails(final UUID accountId, final TenantContext context) {
-        throw new UnsupportedOperationException("getEmails(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public List<Account> getChildrenAccounts(final UUID parentAccountId, final TenantContext context) {
         throw new UnsupportedOperationException("getChildrenAccounts(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public List<AccountEmail> getEmails(final UUID accountId, final TenantContext context) {
+        throw new UnsupportedOperationException("getEmails(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getEmailAuditLogsWithHistoryForId(final UUID accountEmailId, final AuditLevel auditLevel, final TenantContext context) {

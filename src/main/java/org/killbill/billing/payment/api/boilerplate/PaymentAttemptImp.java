@@ -157,7 +157,7 @@ public class PaymentAttemptImp implements PaymentAttempt {
         if( !Objects.equals(this.accountId, that.accountId) ) {
             return false;
         }
-        if( ( this.amount != null ) ? ( 0 != this.amount.compareTo(that.amount) ) : ( that.amount != null ) ) {
+        if( !Objects.equals(this.amount, that.amount) ) {
             return false;
         }
         if( ( this.createdDate != null ) ? ( 0 != this.createdDate.compareTo(that.createdDate) ) : ( that.createdDate != null ) ) {
