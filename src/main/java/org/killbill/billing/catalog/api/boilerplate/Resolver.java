@@ -23,6 +23,8 @@ import org.killbill.billing.catalog.api.Block;
 import org.killbill.billing.catalog.api.BlockPriceOverride;
 import org.killbill.billing.catalog.api.CatalogEntity;
 import org.killbill.billing.catalog.api.CatalogUserApi;
+import org.killbill.billing.catalog.api.CatalogValidation;
+import org.killbill.billing.catalog.api.CatalogValidationError;
 import org.killbill.billing.catalog.api.Duration;
 import org.killbill.billing.catalog.api.Fixed;
 import org.killbill.billing.catalog.api.InternationalPrice;
@@ -56,6 +58,8 @@ public class Resolver extends SimpleAbstractTypeResolver {
         this.addMapping(BlockPriceOverride.class, BlockPriceOverrideImp.class);
         this.addMapping(CatalogEntity.class, CatalogEntityImp.class);
         this.addMapping(CatalogUserApi.class, CatalogUserApiImp.class);
+        this.addMapping(CatalogValidationError.class, CatalogValidationErrorImp.class);
+        this.addMapping(CatalogValidation.class, CatalogValidationImp.class);
         this.addMapping(Duration.class, DurationImp.class);
         this.addMapping(Fixed.class, FixedImp.class);
         this.addMapping(InternationalPrice.class, InternationalPriceImp.class);

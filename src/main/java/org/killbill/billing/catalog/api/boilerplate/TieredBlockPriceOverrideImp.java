@@ -82,13 +82,13 @@ public class TieredBlockPriceOverrideImp implements TieredBlockPriceOverride {
         if( !Objects.equals(this.currency, that.currency) ) {
             return false;
         }
-        if( ( this.max != null ) ? ( 0 != this.max.compareTo(that.max) ) : ( that.max != null ) ) {
+        if( !Objects.equals(this.max, that.max) ) {
             return false;
         }
-        if( ( this.price != null ) ? ( 0 != this.price.compareTo(that.price) ) : ( that.price != null ) ) {
+        if( !Objects.equals(this.price, that.price) ) {
             return false;
         }
-        if( ( this.size != null ) ? ( 0 != this.size.compareTo(that.size) ) : ( that.size != null ) ) {
+        if( !Objects.equals(this.size, that.size) ) {
             return false;
         }
         if( !Objects.equals(this.unitName, that.unitName) ) {

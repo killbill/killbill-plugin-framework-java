@@ -109,7 +109,7 @@ public class DryRunArgumentsImp implements DryRunArguments {
         if( !Objects.equals(this.dryRunType, that.dryRunType) ) {
             return false;
         }
-        if( ( this.effectiveDate != null ) ? ( 0 != this.effectiveDate.compareTo(that.effectiveDate) ) : ( that.effectiveDate != null ) ) {
+        if( !Objects.equals(this.effectiveDate, that.effectiveDate) ) {
             return false;
         }
         if( !Objects.equals(this.entitlementSpecifier, that.entitlementSpecifier) ) {

@@ -57,12 +57,12 @@ public class AccountAuditLogsImp implements AccountAuditLogs {
         throw new UnsupportedOperationException("getAuditLogsForPaymentMethod(java.util.UUID) must be implemented.");
     }
     @Override
-    public List<AuditLog> getAuditLogsForBlockingState(final UUID blockingStateId) {
-        throw new UnsupportedOperationException("getAuditLogsForBlockingState(java.util.UUID) must be implemented.");
-    }
-    @Override
     public List<AuditLog> getAuditLogsForSubscriptionEvent(final UUID subscriptionEventId) {
         throw new UnsupportedOperationException("getAuditLogsForSubscriptionEvent(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public List<AuditLog> getAuditLogsForBlockingState(final UUID blockingStateId) {
+        throw new UnsupportedOperationException("getAuditLogsForBlockingState(java.util.UUID) must be implemented.");
     }
     @Override
     public List<AuditLog> getAuditLogsForTag(final UUID tagId) {
@@ -89,12 +89,12 @@ public class AccountAuditLogsImp implements AccountAuditLogs {
         throw new UnsupportedOperationException("getAuditLogsForInvoicePayment(java.util.UUID) must be implemented.");
     }
     @Override
-    public List<AuditLog> getAuditLogsForPayment(final UUID paymentId) {
-        throw new UnsupportedOperationException("getAuditLogsForPayment(java.util.UUID) must be implemented.");
-    }
-    @Override
     public List<AuditLog> getAuditLogsForInvoice(final UUID invoiceId) {
         throw new UnsupportedOperationException("getAuditLogsForInvoice(java.util.UUID) must be implemented.");
+    }
+    @Override
+    public List<AuditLog> getAuditLogsForPayment(final UUID paymentId) {
+        throw new UnsupportedOperationException("getAuditLogsForPayment(java.util.UUID) must be implemented.");
     }
     @Override
     public List<AuditLog> getAuditLogsForPaymentAttempt(final UUID paymentAttemptId) {

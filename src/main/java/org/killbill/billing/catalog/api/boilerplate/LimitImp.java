@@ -69,10 +69,10 @@ public class LimitImp implements Limit {
             return false;
         }
         final LimitImp that = (LimitImp) o;
-        if( ( this.max != null ) ? ( 0 != this.max.compareTo(that.max) ) : ( that.max != null ) ) {
+        if( !Objects.equals(this.max, that.max) ) {
             return false;
         }
-        if( ( this.min != null ) ? ( 0 != this.min.compareTo(that.min) ) : ( that.min != null ) ) {
+        if( !Objects.equals(this.min, that.min) ) {
             return false;
         }
         if( !Objects.equals(this.unit, that.unit) ) {

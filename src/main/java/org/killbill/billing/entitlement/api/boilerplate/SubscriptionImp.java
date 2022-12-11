@@ -18,7 +18,9 @@
 
 package org.killbill.billing.entitlement.api.boilerplate;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -59,11 +61,11 @@ public class SubscriptionImp implements Subscription {
     protected PriceList lastActivePriceList;
     protected Product lastActiveProduct;
     protected ProductCategory lastActiveProductCategory;
+    protected Integer quantity;
     protected Entitlement.EntitlementSourceType sourceType;
     protected Entitlement.EntitlementState state;
     protected List<SubscriptionEvent> subscriptionEvents;
     protected DateTime updatedDate;
-    protected Integer quantity;
 
     public SubscriptionImp(final SubscriptionImp that) {
         this.accountId = that.accountId;
@@ -84,11 +86,11 @@ public class SubscriptionImp implements Subscription {
         this.lastActivePriceList = that.lastActivePriceList;
         this.lastActiveProduct = that.lastActiveProduct;
         this.lastActiveProductCategory = that.lastActiveProductCategory;
+        this.quantity = that.quantity;
         this.sourceType = that.sourceType;
         this.state = that.state;
         this.subscriptionEvents = that.subscriptionEvents;
         this.updatedDate = that.updatedDate;
-        this.quantity = that.quantity;
     }
     protected SubscriptionImp(final SubscriptionImp.Builder<?> builder) {
         this.accountId = builder.accountId;
@@ -109,11 +111,11 @@ public class SubscriptionImp implements Subscription {
         this.lastActivePriceList = builder.lastActivePriceList;
         this.lastActiveProduct = builder.lastActiveProduct;
         this.lastActiveProductCategory = builder.lastActiveProductCategory;
+        this.quantity = builder.quantity;
         this.sourceType = builder.sourceType;
         this.state = builder.state;
         this.subscriptionEvents = builder.subscriptionEvents;
         this.updatedDate = builder.updatedDate;
-        this.quantity = builder.quantity;
     }
     protected SubscriptionImp() { }
     @Override
@@ -189,6 +191,10 @@ public class SubscriptionImp implements Subscription {
         return this.lastActiveProductCategory;
     }
     @Override
+    public Integer getQuantity() {
+        return this.quantity;
+    }
+    @Override
     public Entitlement.EntitlementSourceType getSourceType() {
         return this.sourceType;
     }
@@ -203,10 +209,6 @@ public class SubscriptionImp implements Subscription {
     @Override
     public DateTime getUpdatedDate() {
         return this.updatedDate;
-    }
-    @Override
-    public Integer getQuantity() {
-        return quantity;
     }
     @Override
     public void uncancelEntitlement(final Iterable<PluginProperty> properties, final CallContext context) {
@@ -253,7 +255,7 @@ public class SubscriptionImp implements Subscription {
         throw new UnsupportedOperationException("updateBCD(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public void updateQuantity(final int quantity, final LocalDate effectiveFromDate, final CallContext context) throws EntitlementApiException {
+    public void updateQuantity(final int quantity, final LocalDate effectiveFromDate, final CallContext context) {
         throw new UnsupportedOperationException("updateQuantity(int, org.joda.time.LocalDate, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
@@ -290,7 +292,7 @@ public class SubscriptionImp implements Subscription {
         if( !Objects.equals(this.bundleId, that.bundleId) ) {
             return false;
         }
-        if( ( this.chargedThroughDate != null ) ? ( 0 != this.chargedThroughDate.compareTo(that.chargedThroughDate) ) : ( that.chargedThroughDate != null ) ) {
+        if( !Objects.equals(this.chargedThroughDate, that.chargedThroughDate) ) {
             return false;
         }
         if( ( this.createdDate != null ) ? ( 0 != this.createdDate.compareTo(that.createdDate) ) : ( that.createdDate != null ) ) {
@@ -323,6 +325,9 @@ public class SubscriptionImp implements Subscription {
         if( !Objects.equals(this.lastActiveProductCategory, that.lastActiveProductCategory) ) {
             return false;
         }
+        if( !Objects.equals(this.quantity, that.quantity) ) {
+            return false;
+        }
         if( !Objects.equals(this.sourceType, that.sourceType) ) {
             return false;
         }
@@ -333,9 +338,6 @@ public class SubscriptionImp implements Subscription {
             return false;
         }
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
-            return false;
-        }
-        if( !Objects.equals(this.quantity, that.quantity) ) {
             return false;
         }
         return true;
@@ -361,11 +363,11 @@ public class SubscriptionImp implements Subscription {
         result = ( 31 * result ) + Objects.hashCode(this.lastActivePriceList);
         result = ( 31 * result ) + Objects.hashCode(this.lastActiveProduct);
         result = ( 31 * result ) + Objects.hashCode(this.lastActiveProductCategory);
+        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         result = ( 31 * result ) + Objects.hashCode(this.sourceType);
         result = ( 31 * result ) + Objects.hashCode(this.state);
         result = ( 31 * result ) + Objects.hashCode(this.subscriptionEvents);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
-        result = ( 31 * result ) + Objects.hashCode(this.quantity);
         return result;
     }
     @Override
@@ -418,6 +420,8 @@ public class SubscriptionImp implements Subscription {
         sb.append(", ");
         sb.append("lastActiveProductCategory=").append(this.lastActiveProductCategory);
         sb.append(", ");
+        sb.append("quantity=").append(this.quantity);
+        sb.append(", ");
         sb.append("sourceType=").append(this.sourceType);
         sb.append(", ");
         sb.append("state=").append(this.state);
@@ -425,8 +429,6 @@ public class SubscriptionImp implements Subscription {
         sb.append("subscriptionEvents=").append(this.subscriptionEvents);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
-        sb.append(", ");
-        sb.append("quantity=").append(this.quantity);
         sb.append("}");
         return sb.toString();
     }
@@ -452,11 +454,11 @@ public class SubscriptionImp implements Subscription {
         protected PriceList lastActivePriceList;
         protected Product lastActiveProduct;
         protected ProductCategory lastActiveProductCategory;
+        protected Integer quantity;
         protected Entitlement.EntitlementSourceType sourceType;
         protected Entitlement.EntitlementState state;
         protected List<SubscriptionEvent> subscriptionEvents;
         protected DateTime updatedDate;
-        protected Integer quantity;
 
         public Builder() { }
         public Builder(final Builder that) {
@@ -478,11 +480,11 @@ public class SubscriptionImp implements Subscription {
             this.lastActivePriceList = that.lastActivePriceList;
             this.lastActiveProduct = that.lastActiveProduct;
             this.lastActiveProductCategory = that.lastActiveProductCategory;
+            this.quantity = that.quantity;
             this.sourceType = that.sourceType;
             this.state = that.state;
             this.subscriptionEvents = that.subscriptionEvents;
             this.updatedDate = that.updatedDate;
-            this.quantity = that.quantity;
         }
         public T withAccountId(final UUID accountId) {
             this.accountId = accountId;
@@ -556,6 +558,10 @@ public class SubscriptionImp implements Subscription {
             this.lastActiveProductCategory = lastActiveProductCategory;
             return (T) this;
         }
+        public T withQuantity(final Integer quantity) {
+            this.quantity = quantity;
+            return (T) this;
+        }
         public T withSourceType(final Entitlement.EntitlementSourceType sourceType) {
             this.sourceType = sourceType;
             return (T) this;
@@ -570,10 +576,6 @@ public class SubscriptionImp implements Subscription {
         }
         public T withUpdatedDate(final DateTime updatedDate) {
             this.updatedDate = updatedDate;
-            return (T) this;
-        }
-        public T withQuantity(final Integer qty) {
-            this.quantity = qty;
             return (T) this;
         }
         public T source(final Subscription that) {
@@ -595,11 +597,11 @@ public class SubscriptionImp implements Subscription {
             this.lastActivePriceList = that.getLastActivePriceList();
             this.lastActiveProduct = that.getLastActiveProduct();
             this.lastActiveProductCategory = that.getLastActiveProductCategory();
+            this.quantity = that.getQuantity();
             this.sourceType = that.getSourceType();
             this.state = that.getState();
             this.subscriptionEvents = that.getSubscriptionEvents();
             this.updatedDate = that.getUpdatedDate();
-            this.quantity = that.getQuantity();
             return (T) this;
         }
         protected Builder validate() {

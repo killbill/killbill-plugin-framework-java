@@ -18,8 +18,10 @@
 
 package org.killbill.billing.invoice.api.boilerplate;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import org.joda.time.DateTime;
@@ -41,9 +43,9 @@ public class InvoicePaymentImp implements InvoicePayment {
     protected DateTime paymentDate;
     protected UUID paymentId;
     protected Currency processedCurrency;
+    protected InvoicePaymentStatus status;
     protected InvoicePaymentType type;
     protected DateTime updatedDate;
-    protected InvoicePaymentStatus invoicePaymentStatus;
 
     public InvoicePaymentImp(final InvoicePaymentImp that) {
         this.amount = that.amount;
@@ -56,9 +58,9 @@ public class InvoicePaymentImp implements InvoicePayment {
         this.paymentDate = that.paymentDate;
         this.paymentId = that.paymentId;
         this.processedCurrency = that.processedCurrency;
+        this.status = that.status;
         this.type = that.type;
         this.updatedDate = that.updatedDate;
-        this.invoicePaymentStatus = that.invoicePaymentStatus;
     }
     protected InvoicePaymentImp(final InvoicePaymentImp.Builder<?> builder) {
         this.amount = builder.amount;
@@ -71,9 +73,9 @@ public class InvoicePaymentImp implements InvoicePayment {
         this.paymentDate = builder.paymentDate;
         this.paymentId = builder.paymentId;
         this.processedCurrency = builder.processedCurrency;
+        this.status = builder.status;
         this.type = builder.type;
         this.updatedDate = builder.updatedDate;
-        this.invoicePaymentStatus = builder.invoicePaymentStatus;
     }
     protected InvoicePaymentImp() { }
     @Override
@@ -116,12 +118,10 @@ public class InvoicePaymentImp implements InvoicePayment {
     public Currency getProcessedCurrency() {
         return this.processedCurrency;
     }
-
     @Override
     public InvoicePaymentStatus getStatus() {
-        return invoicePaymentStatus;
+        return this.status;
     }
-
     @Override
     public InvoicePaymentType getType() {
         return this.type;
@@ -139,7 +139,7 @@ public class InvoicePaymentImp implements InvoicePayment {
             return false;
         }
         final InvoicePaymentImp that = (InvoicePaymentImp) o;
-        if( ( this.amount != null ) ? ( 0 != this.amount.compareTo(that.amount) ) : ( that.amount != null ) ) {
+        if( !Objects.equals(this.amount, that.amount) ) {
             return false;
         }
         if( ( this.createdDate != null ) ? ( 0 != this.createdDate.compareTo(that.createdDate) ) : ( that.createdDate != null ) ) {
@@ -169,13 +169,13 @@ public class InvoicePaymentImp implements InvoicePayment {
         if( !Objects.equals(this.processedCurrency, that.processedCurrency) ) {
             return false;
         }
+        if( !Objects.equals(this.status, that.status) ) {
+            return false;
+        }
         if( !Objects.equals(this.type, that.type) ) {
             return false;
         }
         if( ( this.updatedDate != null ) ? ( 0 != this.updatedDate.compareTo(that.updatedDate) ) : ( that.updatedDate != null ) ) {
-            return false;
-        }
-        if ( !Objects.equals(this.invoicePaymentStatus, that.invoicePaymentStatus) ) {
             return false;
         }
         return true;
@@ -193,9 +193,9 @@ public class InvoicePaymentImp implements InvoicePayment {
         result = ( 31 * result ) + Objects.hashCode(this.paymentDate);
         result = ( 31 * result ) + Objects.hashCode(this.paymentId);
         result = ( 31 * result ) + Objects.hashCode(this.processedCurrency);
+        result = ( 31 * result ) + Objects.hashCode(this.status);
         result = ( 31 * result ) + Objects.hashCode(this.type);
         result = ( 31 * result ) + Objects.hashCode(this.updatedDate);
-        result = ( 31 * result ) + Objects.hashCode(this.invoicePaymentStatus);
         return result;
     }
     @Override
@@ -212,7 +212,6 @@ public class InvoicePaymentImp implements InvoicePayment {
         sb.append(", ");
         sb.append("invoiceId=").append(this.invoiceId);
         sb.append(", ");
-        sb.append(", ");
         sb.append("linkedInvoicePaymentId=").append(this.linkedInvoicePaymentId);
         sb.append(", ");
         sb.append("paymentCookieId=");
@@ -228,11 +227,11 @@ public class InvoicePaymentImp implements InvoicePayment {
         sb.append(", ");
         sb.append("processedCurrency=").append(this.processedCurrency);
         sb.append(", ");
+        sb.append("status=").append(this.status);
+        sb.append(", ");
         sb.append("type=").append(this.type);
         sb.append(", ");
         sb.append("updatedDate=").append(this.updatedDate);
-        sb.append(", ");
-        sb.append("invoicePaymentStatus=").append(this.invoicePaymentStatus);
         sb.append("}");
         return sb.toString();
     }
@@ -250,12 +249,12 @@ public class InvoicePaymentImp implements InvoicePayment {
         protected DateTime paymentDate;
         protected UUID paymentId;
         protected Currency processedCurrency;
+        protected InvoicePaymentStatus status;
         protected InvoicePaymentType type;
         protected DateTime updatedDate;
-        public InvoicePaymentStatus invoicePaymentStatus;
 
         public Builder() { }
-        public Builder(final Builder<?> that) {
+        public Builder(final Builder that) {
             this.amount = that.amount;
             this.createdDate = that.createdDate;
             this.currency = that.currency;
@@ -266,9 +265,9 @@ public class InvoicePaymentImp implements InvoicePayment {
             this.paymentDate = that.paymentDate;
             this.paymentId = that.paymentId;
             this.processedCurrency = that.processedCurrency;
+            this.status = that.status;
             this.type = that.type;
             this.updatedDate = that.updatedDate;
-            this.invoicePaymentStatus = that.invoicePaymentStatus;
         }
         public T withAmount(final BigDecimal amount) {
             this.amount = amount;
@@ -310,16 +309,16 @@ public class InvoicePaymentImp implements InvoicePayment {
             this.processedCurrency = processedCurrency;
             return (T) this;
         }
+        public T withStatus(final InvoicePaymentStatus status) {
+            this.status = status;
+            return (T) this;
+        }
         public T withType(final InvoicePaymentType type) {
             this.type = type;
             return (T) this;
         }
         public T withUpdatedDate(final DateTime updatedDate) {
             this.updatedDate = updatedDate;
-            return (T) this;
-        }
-        public T withInvoicePaymentStatus(final InvoicePaymentStatus status) {
-            this.invoicePaymentStatus = status;
             return (T) this;
         }
         public T source(final InvoicePayment that) {
@@ -333,9 +332,9 @@ public class InvoicePaymentImp implements InvoicePayment {
             this.paymentDate = that.getPaymentDate();
             this.paymentId = that.getPaymentId();
             this.processedCurrency = that.getProcessedCurrency();
+            this.status = that.getStatus();
             this.type = that.getType();
             this.updatedDate = that.getUpdatedDate();
-            this.invoicePaymentStatus = that.getStatus();
             return (T) this;
         }
         protected Builder validate() {

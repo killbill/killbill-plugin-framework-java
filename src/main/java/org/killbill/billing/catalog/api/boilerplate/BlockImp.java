@@ -82,13 +82,13 @@ public class BlockImp implements Block {
             return false;
         }
         final BlockImp that = (BlockImp) o;
-        if( ( this.minTopUpCredit != null ) ? ( 0 != this.minTopUpCredit.compareTo(that.minTopUpCredit) ) : ( that.minTopUpCredit != null ) ) {
+        if( !Objects.equals(this.minTopUpCredit, that.minTopUpCredit) ) {
             return false;
         }
         if( !Objects.equals(this.price, that.price) ) {
             return false;
         }
-        if( ( this.size != null ) ? ( 0 != this.size.compareTo(that.size) ) : ( that.size != null ) ) {
+        if( !Objects.equals(this.size, that.size) ) {
             return false;
         }
         if( !Objects.equals(this.type, that.type) ) {

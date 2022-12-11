@@ -18,14 +18,18 @@
 
 package org.killbill.billing.entitlement.api.boilerplate;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.killbill.billing.OrderingType;
 import org.killbill.billing.entitlement.api.BlockingState;
 import org.killbill.billing.entitlement.api.BlockingStateType;
+import org.killbill.billing.entitlement.api.EntitlementApiException;
 import org.killbill.billing.entitlement.api.Subscription;
 import org.killbill.billing.entitlement.api.SubscriptionApi;
 import org.killbill.billing.entitlement.api.SubscriptionApiException;
@@ -41,9 +45,9 @@ import org.killbill.billing.util.entity.Pagination;
 public class SubscriptionApiImp implements SubscriptionApi {
 
 
-    public SubscriptionApiImp(final SubscriptionApiImp ignored) {
+    public SubscriptionApiImp(final SubscriptionApiImp that) {
     }
-    protected SubscriptionApiImp(final SubscriptionApiImp.Builder<?> ignored) {
+    protected SubscriptionApiImp(final SubscriptionApiImp.Builder<?> builder) {
     }
     protected SubscriptionApiImp() { }
     @Override
@@ -55,12 +59,12 @@ public class SubscriptionApiImp implements SubscriptionApi {
         throw new UnsupportedOperationException("searchSubscriptionBundles(java.lang.String, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Subscription getSubscriptionForEntitlementId(final UUID entitlementId, final boolean includeDeletedEvents, final TenantContext context) {
-        throw new UnsupportedOperationException("getSubscriptionForEntitlementId(java.util.UUID, java.lang.Boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public SubscriptionBundle getActiveSubscriptionBundleForExternalKey(final String externalKey, final TenantContext context) {
         throw new UnsupportedOperationException("getActiveSubscriptionBundleForExternalKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public Subscription getSubscriptionForEntitlementId(final UUID entitlementId, final boolean includeDeletedEvents, final TenantContext context) {
+        throw new UnsupportedOperationException("getSubscriptionForEntitlementId(java.util.UUID, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getSubscriptionEventAuditLogsWithHistoryForId(final UUID EventId, final AuditLevel auditLevel, final TenantContext context) {
@@ -69,10 +73,6 @@ public class SubscriptionApiImp implements SubscriptionApi {
     @Override
     public List<SubscriptionBundle> getSubscriptionBundlesForExternalKey(final String externalKey, final TenantContext context) {
         throw new UnsupportedOperationException("getSubscriptionBundlesForExternalKey(java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
-    public Subscription getSubscriptionForExternalKey(final String externalKey, final boolean includeDeletedEvents, final TenantContext context) {
-        throw new UnsupportedOperationException("getSubscriptionForExternalKey(java.lang.String, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void addBlockingState(final BlockingState blockingState, final DateTime effectiveDate, final Iterable<PluginProperty> properties, final CallContext context) {
@@ -87,28 +87,32 @@ public class SubscriptionApiImp implements SubscriptionApi {
         throw new UnsupportedOperationException("addBlockingState(org.killbill.billing.entitlement.api.BlockingState, org.joda.time.LocalDate, java.lang.Iterable<org.killbill.billing.payment.api.PluginProperty>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
+    public List<AuditLogWithHistory> getBlockingStateAuditLogsWithHistoryForId(final UUID blockingId, final AuditLevel auditLevel, final TenantContext context) {
+        throw new UnsupportedOperationException("getBlockingStateAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
     public List<SubscriptionBundle> getSubscriptionBundlesForAccountId(final UUID accountId, final TenantContext context) {
         throw new UnsupportedOperationException("getSubscriptionBundlesForAccountId(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public Pagination<SubscriptionBundle> getSubscriptionBundlesForAccountId(final UUID accountId, final Long offset, final Long limit, final TenantContext context) throws SubscriptionApiException {
-        throw new UnsupportedOperationException("getSubscriptionBundlesForAccountId(java.util.UUID, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
-    public List<AuditLogWithHistory> getBlockingStateAuditLogsWithHistoryForId(final UUID blockingId, final AuditLevel auditLevel, final TenantContext context) {
-        throw new UnsupportedOperationException("getBlockingStateAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public Subscription getSubscriptionForExternalKey(final String externalKey, final boolean includeDeletedEvents, final TenantContext context) {
+        throw new UnsupportedOperationException("getSubscriptionForExternalKey(java.lang.String, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getSubscriptionAuditLogsWithHistoryForId(final UUID entitlementId, final AuditLevel auditLevel, final TenantContext context) {
         throw new UnsupportedOperationException("getSubscriptionAuditLogsWithHistoryForId(java.util.UUID, org.killbill.billing.util.api.AuditLevel, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
+    public List<SubscriptionBundle> getSubscriptionBundlesForAccountIdAndExternalKey(final UUID accountId, final String externalKey, final TenantContext context) {
+        throw new UnsupportedOperationException("getSubscriptionBundlesForAccountIdAndExternalKey(java.util.UUID, java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
     public Pagination<SubscriptionBundle> getSubscriptionBundles(final Long offset, final Long limit, final TenantContext context) {
         throw new UnsupportedOperationException("getSubscriptionBundles(java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
-    public List<SubscriptionBundle> getSubscriptionBundlesForAccountIdAndExternalKey(final UUID accountId, final String externalKey, final TenantContext context) {
-        throw new UnsupportedOperationException("getSubscriptionBundlesForAccountIdAndExternalKey(java.util.UUID, java.lang.String, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    public Pagination<SubscriptionBundle> getSubscriptionBundlesForAccountId(final UUID accountId, final Long offset, final Long limit, final TenantContext context) {
+        throw new UnsupportedOperationException("getSubscriptionBundlesForAccountId(java.util.UUID, java.lang.Long, java.lang.Long, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<AuditLogWithHistory> getSubscriptionBundleAuditLogsWithHistoryForId(final UUID bundleId, final AuditLevel auditLevel, final TenantContext context) {

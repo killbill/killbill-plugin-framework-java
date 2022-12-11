@@ -80,16 +80,16 @@ public class TagUserApiImp implements TagUserApi {
         throw new UnsupportedOperationException("createTagDefinition(java.lang.String, java.lang.String, java.util.Set<org.killbill.billing.ObjectType>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public List<Tag> getTagsForAccountType(final UUID accountId, final ObjectType objectType, final boolean includedDeleted, final TenantContext context) {
-        throw new UnsupportedOperationException("getTagsForAccountType(java.util.UUID, org.killbill.billing.ObjectType, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public void deleteTagDefinition(final UUID tagDefinitionId, final CallContext context) {
         throw new UnsupportedOperationException("deleteTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
     public TagDefinition getTagDefinition(final UUID tagDefinitionId, final TenantContext context) {
         throw new UnsupportedOperationException("getTagDefinition(java.util.UUID, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public List<Tag> getTagsForAccountType(final UUID accountId, final ObjectType objectType, final boolean includedDeleted, final TenantContext context) {
+        throw new UnsupportedOperationException("getTagsForAccountType(java.util.UUID, org.killbill.billing.ObjectType, boolean, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public List<Tag> getTagsForAccount(final UUID accountId, final boolean includedDeleted, final TenantContext context) {

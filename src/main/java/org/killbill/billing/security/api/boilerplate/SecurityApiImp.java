@@ -53,12 +53,12 @@ public class SecurityApiImp implements SecurityApi {
         throw new UnsupportedOperationException("addUserRoles(java.lang.String, java.lang.String, java.util.List<java.lang.String>, org.killbill.billing.util.callcontext.CallContext) must be implemented.");
     }
     @Override
-    public Set<String> getCurrentUserPermissions(final TenantContext context) {
-        throw new UnsupportedOperationException("getCurrentUserPermissions(org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
-    }
-    @Override
     public void checkCurrentUserPermissions(final List<Permission> permissions, final Logical logical, final TenantContext context) {
         throw new UnsupportedOperationException("checkCurrentUserPermissions(java.util.List<org.killbill.billing.security.Permission>, org.killbill.billing.security.Logical, org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
+    }
+    @Override
+    public Set<String> getCurrentUserPermissions(final TenantContext context) {
+        throw new UnsupportedOperationException("getCurrentUserPermissions(org.killbill.billing.util.callcontext.TenantContext) must be implemented.");
     }
     @Override
     public void logout() {

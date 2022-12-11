@@ -111,7 +111,7 @@ public class SimplePlanDescriptorImp implements SimplePlanDescriptor {
             return false;
         }
         final SimplePlanDescriptorImp that = (SimplePlanDescriptorImp) o;
-        if( ( this.amount != null ) ? ( 0 != this.amount.compareTo(that.amount) ) : ( that.amount != null ) ) {
+        if( !Objects.equals(this.amount, that.amount) ) {
             return false;
         }
         if( !Objects.equals(this.availableBaseProducts, that.availableBaseProducts) ) {

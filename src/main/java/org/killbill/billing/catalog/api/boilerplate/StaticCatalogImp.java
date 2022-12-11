@@ -112,24 +112,24 @@ public class StaticCatalogImp implements StaticCatalog {
         return this.units;
     }
     @Override
-    public Plan findPlan(final String name) {
-        throw new UnsupportedOperationException("findPlan(java.lang.String) must be implemented.");
-    }
-    @Override
     public Plan createOrFindPlan(final PlanSpecifier spec, final PlanPhasePriceOverridesWithCallContext overrides) {
         throw new UnsupportedOperationException("createOrFindPlan(org.killbill.billing.catalog.api.PlanSpecifier, org.killbill.billing.catalog.api.PlanPhasePriceOverridesWithCallContext) must be implemented.");
+    }
+    @Override
+    public Plan findPlan(final String name) {
+        throw new UnsupportedOperationException("findPlan(java.lang.String) must be implemented.");
     }
     @Override
     public List<Listing> getAvailableAddOnListings(final String baseProductName, final String priceListName) {
         throw new UnsupportedOperationException("getAvailableAddOnListings(java.lang.String, java.lang.String) must be implemented.");
     }
     @Override
-    public Product findProduct(final String name) {
-        throw new UnsupportedOperationException("findProduct(java.lang.String) must be implemented.");
-    }
-    @Override
     public PlanPhase findPhase(final String name) {
         throw new UnsupportedOperationException("findPhase(java.lang.String) must be implemented.");
+    }
+    @Override
+    public Product findProduct(final String name) {
+        throw new UnsupportedOperationException("findProduct(java.lang.String) must be implemented.");
     }
     @Override
     public PriceList findPriceList(final String name) {
