@@ -23,7 +23,10 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
+import java.net.http.HttpClient.Redirect;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -71,6 +74,22 @@ public class TestHttpClient {
                     }
                 }
                 exchange.sendResponseHeaders(401, 0);
+            }
+        });
+        server.createContext("/redirect/source", exchange -> {
+            final byte[] body = "302 - will redirect".getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(302, body.length);
+            // exchange.getResponseHeaders().add("Location", "http://" + exchange.getLocalAddress().getHostName() + ":" + exchange.getLocalAddress().getPort() + "/redirect/target");
+            exchange.getResponseHeaders().add("Location", "/redirect/target");
+            try (final OutputStream os = exchange.getResponseBody()) {
+                os.write(body);
+            }
+        });
+        server.createContext("/redirect/target", exchange -> {
+            final byte[] body = "200 - Ok".getBytes(StandardCharsets.UTF_8);
+            exchange.sendResponseHeaders(200, body.length);
+            try (final OutputStream os = exchange.getResponseBody()) {
+                os.write(body);
             }
         });
         server.start();
@@ -140,6 +159,26 @@ public class TestHttpClient {
                             "http://127.0.0.1:8080/plugins/something?Atitle=%3F%20and%20the%20Mysterians&Bdescription=%E4%B8%8A%E6%B5%B7%2B%E4%B8%AD%E5%9C%8B&Csimple=");
     }
 
+    @Test(groups = "slow")
+    public void testNotFollowRedirect() throws Exception {
+        final MyPluginClient myPluginClient = new MyPluginClient();
+        //MyPluginClient should not following redirect location, and return "/redirect/source" body instead.
+        Assert.assertEquals(myPluginClient.doRedirect(), "302 - will redirect");
+        myPluginClient.close();
+    }
+
+    @Test(groups = "slow", enabled = false, description = "Disabled, because it never worked. It should")
+    public void testFollowingRedirect() throws Exception {
+        final RedirectHttpClient redirectHttpClient = new RedirectHttpClient();
+        // Just to make sure that /redirect/target is actually exist.
+        Assert.assertEquals(redirectHttpClient.doRedirect("/redirect/target"), "200 - Ok");
+
+        // RedirectHttpClient override httpClientBuilder so that it follows redirects.
+        Assert.assertEquals(redirectHttpClient.doRedirect("/redirect/source"), "200 - Ok");
+        redirectHttpClient.close();
+    }
+
+
     // Typical usage example (see Avatax plugin for instance)
     public class MyPluginClient extends HttpClient {
 
@@ -170,6 +209,32 @@ public class TestHttpClient {
                           ImmutableMap.<String, String>of("X-Plugin-Client", "12345"),
                           InputStream.class,
                           ResponseFormat.RAW);
+        }
+
+        public String doRedirect() throws Exception {
+            return doCall(GET, url + "/redirect/source", null, Collections.emptyMap(), Collections.emptyMap(), String.class, ResponseFormat.TEXT);
+        }
+    }
+
+    public class RedirectHttpClient extends HttpClient {
+
+        public RedirectHttpClient() throws GeneralSecurityException {
+            super("http://" + server.getAddress().getHostString() + ":" + server.getAddress().getPort(),
+                  "aladdin",
+                  "opensesame",
+                  null,
+                  null,
+                  false);
+        }
+
+        @Override
+        public java.net.http.HttpClient.Builder httpClientBuilder(final boolean strictSSL, final int connectTimeoutMs, final String proxyHost, final Integer proxyPort) throws GeneralSecurityException {
+            return super.httpClientBuilder(strictSSL, connectTimeoutMs, proxyHost, proxyPort)
+                        .followRedirects(Redirect.NORMAL);
+        }
+
+        public String doRedirect(final String path) throws Exception {
+            return doCall(GET, url + path, null, Collections.emptyMap(), Collections.emptyMap(), String.class, ResponseFormat.TEXT);
         }
     }
 
