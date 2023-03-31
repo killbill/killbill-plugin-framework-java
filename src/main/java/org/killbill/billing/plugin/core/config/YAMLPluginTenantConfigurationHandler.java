@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.inspector.TrustedTagInspector;
 
 public abstract class YAMLPluginTenantConfigurationHandler<U, T> extends PluginConfigurationHandler {
 
