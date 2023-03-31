@@ -80,7 +80,7 @@ public abstract class YAMLPluginTenantConfigurationHandler<U, T> extends PluginC
 
     protected U parseRawConfiguration(final String rawConfiguration) {
     	final LoaderOptions options = new LoaderOptions();
-    	options.setTagInspector(new TrustedTagInspector()); // trust all
+    	options.setTagInspector(new KillBillTrustedTagInspector()); // trust all
     	final Yaml yaml = new Yaml(options);
         final Object configObject = yaml.load(rawConfiguration);
         if (configurationKey != null &&
