@@ -32,6 +32,7 @@ import org.killbill.billing.plugin.api.notification.PluginConfigurationHandler;
 import org.killbill.billing.plugin.api.notification.PluginTenantConfigurable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 
 public abstract class YAMLPluginTenantConfigurationHandler<U, T> extends PluginConfigurationHandler {
@@ -77,7 +78,9 @@ public abstract class YAMLPluginTenantConfigurationHandler<U, T> extends PluginC
     }
 
     protected U parseRawConfiguration(final String rawConfiguration) {
-        final Yaml yaml = new Yaml();
+    	final LoaderOptions options = new LoaderOptions();
+    	options.setTagInspector(new KillBillTrustedTagInspector()); // trust all
+    	final Yaml yaml = new Yaml(options);
         final Object configObject = yaml.load(rawConfiguration);
         if (configurationKey != null &&
             configObject instanceof Map) {
