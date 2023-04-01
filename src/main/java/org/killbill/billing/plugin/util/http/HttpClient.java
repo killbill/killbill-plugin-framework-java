@@ -92,7 +92,7 @@ public class HttpClient implements Closeable {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.httpClient = buildHttpClient(strictSSL, DEFAULT_HTTP_CONNECT_TIMEOUT_SEC * 1000, proxyHost, proxyPort);
+        this.httpClient = httpClientBuilder(strictSSL, DEFAULT_HTTP_CONNECT_TIMEOUT_SEC * 1000, proxyHost, proxyPort).build();
         this.mapper = createObjectMapper();
     }
 
@@ -106,7 +106,7 @@ public class HttpClient implements Closeable {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.httpClient = buildHttpClient(strictSSL, connectTimeoutMs, proxyHost, proxyPort);
+        this.httpClient = httpClientBuilder(strictSSL, connectTimeoutMs, proxyHost, proxyPort).build();
         this.mapper = createObjectMapper();
     }
 
@@ -121,15 +121,15 @@ public class HttpClient implements Closeable {
         this.url = url;
         this.username = username;
         this.password = password;
-        this.httpClient = buildHttpClient(strictSSL, connectTimeoutMs, proxyHost, proxyPort);
+        this.httpClient = httpClientBuilder(strictSSL, connectTimeoutMs, proxyHost, proxyPort).build();
         this.mapper = createObjectMapper();
         this.httpTimeoutSec = requestTimeoutMs;
     }
 
-    private java.net.http.HttpClient buildHttpClient(final boolean strictSSL,
-                                                     final int connectTimeoutMs,
-                                                     @Nullable final String proxyHost,
-                                                     @Nullable final Integer proxyPort) throws GeneralSecurityException {
+    protected java.net.http.HttpClient.Builder httpClientBuilder(final boolean strictSSL,
+                                                                 final int connectTimeoutMs,
+                                                                 @Nullable final String proxyHost,
+                                                                 @Nullable final Integer proxyPort) throws GeneralSecurityException {
         final java.net.http.HttpClient.Builder builder = java.net.http.HttpClient.newBuilder()
                                                                                  .sslContext(SslUtils.getInstance().getSSLContext(!strictSSL))
                                                                                  .connectTimeout(Duration.of(connectTimeoutMs, ChronoUnit.MILLIS));
@@ -138,7 +138,7 @@ public class HttpClient implements Closeable {
             builder.proxy(ProxySelector.of(new InetSocketAddress(proxyHost, proxyPort)));
         }
 
-        return builder.build();
+        return builder;
     }
 
     @Override
