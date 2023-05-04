@@ -37,4 +37,12 @@ org.killbill.billing.util.callcontext.boilerplate.Module
 org.killbill.billing.util.tag.boilerplate.Module
 org.killbill.billing.overdue.api.boilerplate.Module
 org.killbill.billing.catalog.api.boilerplate.Module
+org.killbill.billing.payment.plugin.api.boilerplate.plugin.Module
+org.killbill.billing.catalog.plugin.api.boilerplate.plugin.Module
+org.killbill.billing.entitlement.plugin.api.boilerplate.plugin.Module
+org.killbill.billing.notification.plugin.api.boilerplate.plugin.Module
+org.killbill.billing.control.plugin.api.boilerplate.plugin.Module
+org.killbill.billing.invoice.plugin.api.boilerplate.plugin.Module
+org.killbill.billing.currency.plugin.api.boilerplate.plugin.Module
+
 
