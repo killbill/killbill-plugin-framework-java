@@ -20,10 +20,13 @@ package org.killbill.billing.plugin.api;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -70,12 +73,6 @@ import org.killbill.clock.Clock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-
 public abstract class PluginApi {
 
     private static final Logger logger = LoggerFactory.getLogger(PluginApi.class);
@@ -89,7 +86,7 @@ public abstract class PluginApi {
     // See convention in InternalCallContextFactory
     protected static final long INTERNAL_TENANT_RECORD_ID = 0L;
 
-    protected static final Iterable<PluginProperty> PLUGIN_PROPERTIES = ImmutableList.<PluginProperty>of();
+    protected static final Iterable<PluginProperty> PLUGIN_PROPERTIES = Collections.emptyList();
 
     protected final OSGIKillbillAPI killbillAPI;
     protected final OSGIConfigPropertiesService configProperties;
@@ -221,31 +218,20 @@ public abstract class PluginApi {
 
     protected Iterable<SubscriptionEvent> getBlockingHistory(final UUID accountId, final TenantContext context) throws OSGIServiceNotAvailable {
         final List<SubscriptionBundle> bundles = getSubscriptionBundlesForAccount(accountId, context);
-
-        // Find all subscription events for that account
-        final Iterable<SubscriptionEvent> subscriptionEvents = Iterables.<SubscriptionEvent>concat(Iterables.<SubscriptionBundle, List<SubscriptionEvent>>transform(bundles,
-                                                                                                                                                                    new Function<SubscriptionBundle, List<SubscriptionEvent>>() {
-                                                                                                                                                                        @Override
-                                                                                                                                                                        public List<SubscriptionEvent> apply(final SubscriptionBundle bundle) {
-                                                                                                                                                                            return bundle == null ? ImmutableList.<SubscriptionEvent>of() : bundle.getTimeline().getSubscriptionEvents();
-                                                                                                                                                                        }
-                                                                                                                                                                    }
-                                                                                                                                                                   ));
-
-        // Filter all service state changes
-        return Iterables.<SubscriptionEvent>filter(subscriptionEvents,
-                                                   new Predicate<SubscriptionEvent>() {
-                                                       @Override
-                                                       public boolean apply(final SubscriptionEvent event) {
-                                                           return event != null &&
-                                                                  event.getSubscriptionEventType() != null &&
-                                                                  // We want events coming from the blocking states table...
-                                                                  ObjectType.BLOCKING_STATES.equals(event.getSubscriptionEventType().getObjectType()) &&
-                                                                  // ...that are for any service but entitlement
-                                                                  !ENTITLEMENT_SERVICE_NAME.equals(event.getServiceName());
-                                                       }
-                                                   }
-                                                  );
+        if (bundles != null) {
+            // Find all subscription events for that account
+            return bundles.stream()
+                          .map(subscriptionBundle -> subscriptionBundle.getTimeline().getSubscriptionEvents())
+                          .flatMap(Collection::stream)
+                          .filter(event -> event != null &&
+                                           event.getSubscriptionEventType() != null &&
+                                           // We want events coming from the blocking states table...
+                                           ObjectType.BLOCKING_STATES.equals(event.getSubscriptionEventType().getObjectType()) &&
+                                           // ...that are for any service but entitlement
+                                           !ENTITLEMENT_SERVICE_NAME.equals(event.getServiceName()))
+                          .collect(Collectors.toUnmodifiableList());
+        }
+        return Collections.emptyList();
     }
 
     //
@@ -321,7 +307,7 @@ public abstract class PluginApi {
         try {
             final VersionedCatalog catalog = getCatalog(context);
             // getCatalogEffectiveDate was introduced in 0.21.x
-            final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
+            final DateTime catalogEffectiveDate = Objects.requireNonNullElse(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
             return catalog.getVersion(catalogEffectiveDate.toDate()).findPlan(invoiceItem.getPlanName());
         } catch (final CatalogApiException e) {
             logger.info("Unable to retrieve plan for invoice item {}", invoiceItem.getId(), e);
@@ -333,7 +319,7 @@ public abstract class PluginApi {
         try {
             final VersionedCatalog catalog = getCatalog(context);
             // getCatalogEffectiveDate was introduced in 0.21.x
-            final DateTime catalogEffectiveDate = MoreObjects.firstNonNull(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
+            final DateTime catalogEffectiveDate = Objects.requireNonNullElse(invoiceItem.getCatalogEffectiveDate(), invoiceItem.getCreatedDate());
             return catalog.getVersion(catalogEffectiveDate.toDate()).findPhase(invoiceItem.getPhaseName());
         } catch (final CatalogApiException e) {
             logger.info("Unable to retrieve phase for invoice item {}", invoiceItem.getId(), e);
@@ -451,13 +437,9 @@ public abstract class PluginApi {
     }
 
     protected PaymentTransaction getPaymentTransaction(final UUID kbTransactionId, final Payment payment) throws OSGIServiceNotAvailable {
-        return Iterables.<PaymentTransaction>find(payment.getTransactions(),
-                                                  new Predicate<PaymentTransaction>() {
-                                                      @Override
-                                                      public boolean apply(final PaymentTransaction input) {
-                                                          return input != null && kbTransactionId.equals(input.getId());
-                                                      }
-                                                  });
+        return payment.getTransactions().stream()
+                      .filter(input -> input != null && kbTransactionId.equals(input.getId()))
+                      .findFirst().get();
     }
 
     protected Long getPaymentRecordId(final UUID paymentId, final TenantContext context) throws OSGIServiceNotAvailable {
