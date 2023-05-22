@@ -18,38 +18,33 @@
 
 package org.killbill.billing.plugin.api;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.killbill.billing.payment.api.PluginProperty;
+import org.killbill.commons.utils.collect.Iterables;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Ordering;
-
 public class TestPluginProperties {
 
-    private final List<PluginProperty> pluginProperties1 = PluginProperties.buildPluginProperties(ImmutableMap.of("foo", "bar",
-                                                                                                                  "baz", 12L));
-    private final List<PluginProperty> pluginProperties2 = PluginProperties.buildPluginProperties(ImmutableMap.of("foo", "override",
-                                                                                                                  "baz2", "something else"));
+    private final List<PluginProperty> pluginProperties1 = PluginProperties.buildPluginProperties(Map.of("foo", "bar", "baz", 12L));
+    private final List<PluginProperty> pluginProperties2 = PluginProperties.buildPluginProperties(Map.of("foo", "override", "baz2", "something else"));
     private final String encodedPropertyValue = "%7B%22eventType%22%3A%22voidEvent%22%2C%22transactionType%22%3A%22void%22%2C%22contractType%22%3A%22temp%22%7D";
     private final String decodedPropertyValue = "{\"eventType\":\"voidEvent\",\"transactionType\":\"void\",\"contractType\":\"temp\"}";
-    private final List<PluginProperty> pluginProperties3 = PluginProperties.buildPluginProperties(ImmutableMap.of("foo", encodedPropertyValue));
+    private final List<PluginProperty> pluginProperties3 = PluginProperties.buildPluginProperties(Map.of("foo", encodedPropertyValue));
 
     @Test(groups = "fast")
-    public void testMerge() throws Exception {
-        final List<PluginProperty> pluginPropertiesRaw = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge(pluginProperties1, pluginProperties2));
-
-        final List<PluginProperty> pluginProperties = sort(pluginPropertiesRaw);
+    public void testMerge() {
+        final List<PluginProperty> pluginProperties = sort(PluginProperties.merge(pluginProperties1, pluginProperties2));
 
         Assert.assertEquals(pluginProperties.size(), 3);
         Assert.assertEquals(pluginProperties.get(0).getKey(), "baz");
-        Assert.assertEquals(pluginProperties.get(0).getValue(), (Long) 12L);
+        Assert.assertEquals(pluginProperties.get(0).getValue(), 12L);
         Assert.assertFalse(pluginProperties.get(0).getIsUpdatable());
         Assert.assertEquals(pluginProperties.get(1).getKey(), "baz2");
         Assert.assertEquals(pluginProperties.get(1).getValue(), "something else");
@@ -58,16 +53,16 @@ public class TestPluginProperties {
         Assert.assertEquals(pluginProperties.get(2).getValue(), "override");
         Assert.assertFalse(pluginProperties.get(2).getIsUpdatable());
 
-        final List<PluginProperty> pluginPropertiesRaw2 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge(PluginProperties.toMap(pluginProperties1), pluginProperties2));
+        final Iterable<PluginProperty> pluginPropertiesRaw2 = PluginProperties.merge(PluginProperties.toMap(pluginProperties1), pluginProperties2);
         Assert.assertEquals(sort(pluginPropertiesRaw2), pluginProperties);
 
-        final List<PluginProperty> pluginPropertiesRaw3 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge(PluginProperties.toMap(pluginProperties1), pluginProperties1, pluginProperties2));
+        final Iterable<PluginProperty> pluginPropertiesRaw3 = PluginProperties.merge(PluginProperties.toMap(pluginProperties1), pluginProperties1, pluginProperties2);
         Assert.assertEquals(sort(pluginPropertiesRaw3), pluginProperties);
 
-        final List<PluginProperty> pluginPropertiesRaw4 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge(ImmutableMap.<String, Object>of(), pluginProperties1, pluginProperties2));
+        final Iterable<PluginProperty> pluginPropertiesRaw4 = PluginProperties.merge(PluginProperties.merge(Collections.emptyMap(), pluginProperties1, pluginProperties2));
         Assert.assertEquals(sort(pluginPropertiesRaw4), pluginProperties);
 
-        final List<PluginProperty> pluginPropertiesRaw5 = ImmutableList.<PluginProperty>copyOf(PluginProperties.merge((Map) null, pluginProperties1, pluginProperties2));
+        final Iterable<PluginProperty> pluginPropertiesRaw5 = PluginProperties.merge((Map) null, pluginProperties1, pluginProperties2);
         Assert.assertEquals(sort(pluginPropertiesRaw5), pluginProperties);
     }
 
@@ -128,24 +123,34 @@ public class TestPluginProperties {
     }
 
     @Test(groups = "fast")
-    public void testBuildPluginProperties() throws Exception {
+    public void testBuildPluginProperties() {
+        Assert.assertEquals(pluginProperties1.size(), 2);
+        Assert.assertTrue(pluginProperties1.stream().anyMatch(i -> "foo".equals(i.getKey())));
+        Assert.assertTrue(pluginProperties1.stream().anyMatch(i -> "baz".equals(i.getKey())));
+
+        Assert.assertTrue(pluginProperties1.stream().anyMatch(i -> "bar".equals(i.getValue())));
+        Assert.assertTrue(pluginProperties1.stream().anyMatch(i -> i.getValue() != null && "12".equals(i.getValue().toString())));
+
+        // When PluginProperties.buildPluginProperties() called, there's no guarantee that the first added map entry
+        // would be the first element of the List. When using guava's ImmutableMap, it's known that guava make its
+        // implementation "sorted", so this assertion will always valid. This will not the same with JDK map. For short:
+        // - "pluginProperties1.get(0).getKey()" using Guava's ImmutableMap.of() : Will always return "foo"
+        // - "pluginProperties1.get(0).getKey()" using JDK Map.of() : No guarantee.
+        //
+        // Keep old assertion here just in case we need to rethink about this.
+        /*
         Assert.assertEquals(pluginProperties1.size(), 2);
         Assert.assertEquals(pluginProperties1.get(0).getKey(), "foo");
         Assert.assertEquals(pluginProperties1.get(0).getValue(), "bar");
         Assert.assertFalse(pluginProperties1.get(0).getIsUpdatable());
         Assert.assertEquals(pluginProperties1.get(1).getKey(), "baz");
-        Assert.assertEquals(pluginProperties1.get(1).getValue(), (Long) 12L);
-        Assert.assertFalse(pluginProperties1.get(1).getIsUpdatable());
+        Assert.assertEquals(pluginProperties1.get(1).getValue(), 12L);
+        Assert.assertFalse(pluginProperties1.get(1).getIsUpdatable()); */
     }
 
     private List<PluginProperty> sort(final Iterable<PluginProperty> pluginProperties) {
-        return Ordering.natural()
-                       .onResultOf(new Function<PluginProperty, String>() {
-                           @Override
-                           public String apply(final PluginProperty pluginProperty) {
-                               return pluginProperty.getKey();
-                           }
-                       })
-                       .immutableSortedCopy(pluginProperties);
+        return Iterables.toStream(pluginProperties)
+                        .sorted(Comparator.comparing(PluginProperty::getKey))
+                        .collect(Collectors.toUnmodifiableList());
     }
 }
