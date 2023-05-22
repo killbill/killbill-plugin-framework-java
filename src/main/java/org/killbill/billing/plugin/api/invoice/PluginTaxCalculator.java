@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,23 +38,19 @@ import org.killbill.billing.invoice.api.InvoiceItem;
 import org.killbill.billing.invoice.api.InvoiceItemType;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.util.callcontext.TenantContext;
-
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Multimap;
+import org.killbill.commons.utils.Preconditions;
+import org.killbill.commons.utils.collect.MultiValueHashMap;
+import org.killbill.commons.utils.collect.MultiValueMap;
 
 // This calculator implicitly assumes that tax items are not adjusted, only the taxable items are
 // (tax adjustments show up as negative TAX items, linked to the original taxable item).
 public abstract class PluginTaxCalculator {
 
-    public static final List<InvoiceItemType> TAXABLE_ITEM_TYPES = ImmutableList.<InvoiceItemType>of(InvoiceItemType.EXTERNAL_CHARGE,
-                                                                                                     InvoiceItemType.FIXED,
-                                                                                                     InvoiceItemType.RECURRING,
-                                                                                                     InvoiceItemType.USAGE);
-    public static final List<InvoiceItemType> ADJUSTMENT_ITEM_TYPES = ImmutableList.<InvoiceItemType>of(InvoiceItemType.ITEM_ADJ,
-                                                                                                        InvoiceItemType.REPAIR_ADJ);
+    public static final List<InvoiceItemType> TAXABLE_ITEM_TYPES = List.of(InvoiceItemType.EXTERNAL_CHARGE,
+                                                                           InvoiceItemType.FIXED,
+                                                                           InvoiceItemType.RECURRING,
+                                                                           InvoiceItemType.USAGE);
+    public static final List<InvoiceItemType> ADJUSTMENT_ITEM_TYPES = List.of(InvoiceItemType.ITEM_ADJ, InvoiceItemType.REPAIR_ADJ);
 
     protected final OSGIKillbillAPI osgiKillbillAPI;
 
@@ -82,13 +79,13 @@ public abstract class PluginTaxCalculator {
         // All taxable invoice item ids either on that invoice, or referenced to by that invoice (REPAIR_ADJ usecase)
         final Map<UUID, InvoiceItem> allTaxableItems = new HashMap<UUID, InvoiceItem>();
         // Mapping of invoice item ids to their invoice item adjustment ids. In case of repair, keys may point to taxable items on previous invoices
-        final Multimap<UUID, UUID> adjustmentsByLinkedId = HashMultimap.<UUID, UUID>create();
+        final MultiValueMap<UUID, UUID> adjustmentsByLinkedId = new MultiValueHashMap<>();
         for (final InvoiceItem invoiceItem : invoice.getInvoiceItems()) {
             allItems.put(invoiceItem.getId(), invoiceItem);
             if (isTaxableItem(invoiceItem)) {
                 allTaxableItems.put(invoiceItem.getId(), invoiceItem);
             } else if (isAdjustmentItem(invoiceItem)) {
-                adjustmentsByLinkedId.put(invoiceItem.getLinkedItemId(), invoiceItem.getId());
+                adjustmentsByLinkedId.putElement(invoiceItem.getLinkedItemId(), invoiceItem.getId());
             }
         }
 
@@ -135,7 +132,7 @@ public abstract class PluginTaxCalculator {
 
             // Compute the difference between adjustments already taken into account and new ones
             final Set<UUID> adjustmentsAlreadyTakenIntoAccount = alreadyTaxedItemsWithAdjustments == null ? null : alreadyTaxedItemsWithAdjustments.get(taxableItemId);
-            final Collection<UUID> currentAdjustmentIdsForTaxableId = MoreObjects.firstNonNull(adjustmentsByLinkedId.get(taxableItemId), new LinkedList<UUID>());
+            final Collection<UUID> currentAdjustmentIdsForTaxableId = Objects.requireNonNullElse(adjustmentsByLinkedId.get(taxableItemId), new LinkedList<UUID>());
             if (adjustmentsAlreadyTakenIntoAccount != null) {
                 currentAdjustmentIdsForTaxableId.removeAll(adjustmentsAlreadyTakenIntoAccount);
             }
@@ -195,12 +192,12 @@ public abstract class PluginTaxCalculator {
                                                        adjustmentItem.getStartDate(),
                                                        adjustmentItem.getEndDate(),
                                                        amount,
-                                                       MoreObjects.firstNonNull(description, "Tax"));
+                                                       Objects.requireNonNullElse(description, "Tax"));
             } else {
                 return PluginInvoiceItem.createTaxItem(originalItem,
                                                        invoiceId,
                                                        amount,
-                                                       MoreObjects.firstNonNull(description, "Tax"));
+                                                       Objects.requireNonNullElse(description, "Tax"));
             }
         }
     }
