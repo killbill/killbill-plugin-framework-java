@@ -16,26 +16,25 @@
 
 package org.killbill.billing.plugin.api.core;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.killbill.billing.catalog.api.PlanPhasePriceOverride;
+import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.google.common.collect.ImmutableList;
-import org.killbill.billing.catalog.api.PlanPhasePriceOverride;
-import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 @Test(groups = { "fast" })
 public class TestPluginEntitlementSpecifier {
 
     final private Integer billCycleDay = 1;
     final private String externalKey = "TestExternalKey";
-    final private List<PlanPhasePriceOverride> overrides = ImmutableList.<PlanPhasePriceOverride>of();
+    final private List<PlanPhasePriceOverride> overrides = Collections.emptyList();
     final private PlanPhaseSpecifier planPhaseSpecifier = null;
 
     @Test

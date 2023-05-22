@@ -20,6 +20,8 @@ package org.killbill.billing.plugin.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,12 +36,9 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.killbill.billing.tenant.api.Tenant;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.MoreObjects;
-import com.google.common.base.Strings;
-import com.google.common.io.ByteStreams;
-import com.google.common.net.HttpHeaders;
+import org.killbill.commons.utils.Strings;
+import org.killbill.commons.utils.io.ByteStreams;
+import org.killbill.commons.utils.net.HttpHeaders;
 
 public class PluginServlet extends HttpServlet {
 
@@ -68,7 +67,7 @@ public class PluginServlet extends HttpServlet {
     }
 
     protected String getCreatedBy(final HttpServletRequest req) {
-        return MoreObjects.firstNonNull(req.getHeader(HDR_CREATED_BY), req.getRemoteAddr());
+        return Objects.requireNonNullElse(req.getHeader(HDR_CREATED_BY), req.getRemoteAddr());
     }
 
     protected String getReason(final HttpServletRequest req) {
@@ -76,7 +75,7 @@ public class PluginServlet extends HttpServlet {
     }
 
     protected String getComment(final HttpServletRequest req) {
-        return MoreObjects.firstNonNull(req.getHeader(HDR_COMMENT), req.getRequestURI());
+        return Objects.requireNonNullElse(req.getHeader(HDR_COMMENT), req.getRequestURI());
     }
 
     protected Tenant getTenant(final ServletRequest req) {
@@ -87,7 +86,7 @@ public class PluginServlet extends HttpServlet {
     protected String getRequestData(final ServletRequest req) throws IOException {
         final InputStream inputStream = req.getInputStream();
         try {
-            return new String(ByteStreams.toByteArray(inputStream), Charsets.UTF_8);
+            return new String(ByteStreams.toByteArray(inputStream), StandardCharsets.UTF_8);
         } finally {
             inputStream.close();
         }

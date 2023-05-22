@@ -40,8 +40,7 @@ import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.payment.api.TransactionType;
 import org.killbill.billing.plugin.api.payment.PluginPaymentPluginApi;
 import org.killbill.billing.plugin.dao.PluginDao;
-
-import com.google.common.base.Strings;
+import org.killbill.commons.utils.Strings;
 
 public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, RESP_T extends Table<RESP_R>, PM_R extends UpdatableRecord<PM_R>, PM_T extends Table<PM_R>> extends PluginDao {
 
@@ -241,7 +240,7 @@ public abstract class PluginPaymentDao<RESP_R extends UpdatableRecord<RESP_R>, R
         final String country             = clonedProperties.remove(PluginPaymentPluginApi.PROPERTY_COUNTRY);
 
         /* Calculate last 4 digits of the credit card number */
-        final String ccLast4 = (Strings.isNullOrEmpty(ccNumber) || ccNumber.length() < 4)  ? null : ccNumber.substring(ccNumber.length() - 4, ccNumber.length());
+        final String ccLast4 = (Strings.isNullOrEmpty(ccNumber) || ccNumber.length() < 4) ? null : ccNumber.substring(ccNumber.length() - 4, ccNumber.length());
 
         /* Calculate the additional data to store */
         final String additionalData = asString(clonedProperties);

@@ -19,9 +19,10 @@
 package org.killbill.billing.plugin.api.invoice;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.killbill.billing.account.api.Account;
 import org.killbill.billing.catalog.api.Currency;
@@ -37,10 +38,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 public class TestPluginTaxCalculator {
 
@@ -108,7 +105,7 @@ public class TestPluginTaxCalculator {
          *      $1 Tax item I2
          */
         invoice1.getInvoiceItems().add(invoice1TaxItem);
-        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of()), tenantContext);
+        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, Map.of(invoice1TaxableItem.getId(), Collections.emptySet()), tenantContext);
         // Nothing to do
         Assert.assertEquals(newItemsToTax.size(), 0);
     }
@@ -139,7 +136,7 @@ public class TestPluginTaxCalculator {
          *      $1 Tax item I3
          */
         invoice1.getInvoiceItems().add(invoice1TaxItem);
-        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of(invoice1AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
+        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, Map.of(invoice1TaxableItem.getId(), Set.of(invoice1AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
         // Nothing to do
         Assert.assertEquals(newItemsToTax.size(), 0);
     }
@@ -155,7 +152,7 @@ public class TestPluginTaxCalculator {
         invoice1.getInvoiceItems().add(invoice1TaxableItem);
         invoice1.getInvoiceItems().add(invoice1AdjustmentItemForInvoice1TaxableItem);
         invoice1.getInvoiceItems().add(invoice1TaxItem);
-        List<NewItemToTax> newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of()), tenantContext);
+        List<NewItemToTax> newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, Map.of(invoice1TaxableItem.getId(), Collections.emptySet()), tenantContext);
         // 1 item to return
         Assert.assertEquals(newItemsToTax.size(), 1);
         Assert.assertEquals(newItemsToTax.get(0).getInvoice(), invoice1);
@@ -173,7 +170,7 @@ public class TestPluginTaxCalculator {
          *     -$1 Tax item I4
          */
         invoice1.getInvoiceItems().add(invoice1TaxItem2);
-        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of(invoice1AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
+        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, Map.of(invoice1TaxableItem.getId(), Set.of(invoice1AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
         // Nothing to do
         Assert.assertEquals(newItemsToTax.size(), 0);
     }
@@ -202,20 +199,20 @@ public class TestPluginTaxCalculator {
          *     -$0.01 Tax item I2
          */
         invoice2.getInvoiceItems().add(invoice2TaxItem);
-        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, ImmutableMap.<UUID, Set<UUID>>of(invoice1TaxableItem.getId(), ImmutableSet.<UUID>of(invoice2AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
+        newItemsToTax = pluginTaxCalculatorTest.computeTaxItems(invoice1, Map.of(invoice1TaxableItem.getId(), Set.of(invoice2AdjustmentItemForInvoice1TaxableItem.getId())), tenantContext);
         // Nothing to do
         Assert.assertEquals(newItemsToTax.size(), 0);
     }
 
     @Test(groups = "fast")
     public void testNetAmount() throws Exception {
-        final BigDecimal sum = pluginTaxCalculatorTest.netAmount(invoice1TaxableItem, ImmutableList.<InvoiceItem>of(invoice1AdjustmentItemForInvoice1TaxableItem));
+        final BigDecimal sum = pluginTaxCalculatorTest.netAmount(invoice1TaxableItem, List.of(invoice1AdjustmentItemForInvoice1TaxableItem));
         Assert.assertEquals(sum.compareTo(new BigDecimal("9")), 0);
     }
 
     @Test(groups = "fast")
     public void testSum() throws Exception {
-        final ImmutableList<InvoiceItem> invoiceItems = ImmutableList.<InvoiceItem>of(invoice1TaxableItem, invoice1TaxItem, invoice1AdjustmentItemForInvoice1TaxableItem);
+        final List<InvoiceItem> invoiceItems = List.of(invoice1TaxableItem, invoice1TaxItem, invoice1AdjustmentItemForInvoice1TaxableItem);
         final BigDecimal sum = pluginTaxCalculatorTest.sum(invoiceItems);
         Assert.assertEquals(sum.compareTo(BigDecimal.TEN), 0);
     }

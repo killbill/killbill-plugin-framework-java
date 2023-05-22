@@ -16,24 +16,23 @@
 
 package org.killbill.billing.plugin.api.payment;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.google.common.collect.ImmutableList;
+
 import org.joda.time.DateTime;
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.payment.api.TransactionType;
 import org.killbill.billing.payment.plugin.api.PaymentPluginStatus;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 @Test(groups = { "fast" })
 public class TestPluginPaymentTransactionInfoPlugin {
@@ -47,7 +46,7 @@ public class TestPluginPaymentTransactionInfoPlugin {
     private final String gatewayErrorCode = "TestGatewayErrorCode";
     private final UUID kbPaymentId = UUID.fromString("00000000-0000-0000-0000-000000000001");
     private final UUID kbTransactionPaymentId = UUID.fromString("00000000-0000-0000-0000-000000000002");
-    private final List<PluginProperty> properties = ImmutableList.<PluginProperty>of();
+    private final List<PluginProperty> properties = Collections.emptyList();
     private final String secondPaymentReferenceId = "TestSecondPaymentReferenceId";
     private final PaymentPluginStatus status = PaymentPluginStatus.PENDING;
     private final TransactionType transactionType  = TransactionType.CHARGEBACK;

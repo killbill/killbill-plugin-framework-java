@@ -19,7 +19,6 @@
 package org.killbill.billing.plugin.dao.payment;
 
 import java.math.BigDecimal;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.UUID;
@@ -49,8 +48,7 @@ import org.killbill.billing.plugin.dao.payment.gen.tables.records.TestPaymentMet
 import org.killbill.billing.plugin.dao.payment.gen.tables.records.TestResponsesRecord;
 import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.clock.Clock;
-
-import com.google.common.base.Strings;
+import org.killbill.commons.utils.Strings;
 
 public class TestPaymentPluginApi
         extends PluginPaymentPluginApi<TestResponsesRecord,

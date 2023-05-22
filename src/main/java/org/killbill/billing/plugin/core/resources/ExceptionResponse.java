@@ -18,7 +18,10 @@
 
 package org.killbill.billing.plugin.core.resources;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -26,8 +29,6 @@ import org.killbill.billing.BillingExceptionBase;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class ExceptionResponse {
 
@@ -60,22 +61,18 @@ public class ExceptionResponse {
              exception.getLocalizedMessage(),
              exception.getCause() == null ? null : exception.getCause().getClass().getName(),
              exception.getCause() == null ? null : exception.getCause().getLocalizedMessage(),
-             !withStackTrace ? ImmutableList.<StackTraceElementJson>of() :
-             Lists.<StackTraceElement, StackTraceElementJson>transform(ImmutableList.<StackTraceElement>copyOf(exception.getStackTrace()),
-                                                                       input -> new StackTraceElementJson(input.getClassName(),
-                                                                                                          input.getFileName(),
-                                                                                                          input.getLineNumber(),
-                                                                                                          input.getMethodName(),
-                                                                                                          input.isNativeMethod())));
+             !withStackTrace ? Collections.emptyList() : Stream.of(exception.getStackTrace())
+                                                               .map(input -> new StackTraceElementJson(
+                                                                       input.getClassName(),
+                                                                       input.getFileName(),
+                                                                       input.getLineNumber(),
+                                                                       input.getMethodName(),
+                                                                       input.isNativeMethod()
+                                                               )).collect(Collectors.toUnmodifiableList()));
     }
 
     public ExceptionResponse(final String message) {
-        this(null,
-             null,
-             message,
-             null,
-             null,
-             null);
+        this(null, null, message, null, null, null);
     }
 
     public String getClassName() {

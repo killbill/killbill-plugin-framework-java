@@ -18,6 +18,7 @@
 
 package org.killbill.billing.plugin.api.notification;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -35,8 +36,6 @@ import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class TestPluginTenantConfigurableConfigurationHandler {
 
@@ -65,7 +64,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
     public void testConfigurationForTenant() throws Exception {
         final UUID configuredTenant = UUID.randomUUID();
         final UUID otherTenant = UUID.randomUUID();
-        mockTenantKvs(configuredTenant, ImmutableList.<String>of("key=CONFIGURED_TENANT"), otherTenant, ImmutableList.<String>of());
+        mockTenantKvs(configuredTenant, List.of("key=CONFIGURED_TENANT"), otherTenant, Collections.emptyList());
 
         final String initialConfigurableForConfiguredTenant = configurationHandler.getConfigurable(configuredTenant);
         Assert.assertEquals(initialConfigurableForConfiguredTenant, "CONFIGURED_TENANT");
@@ -75,7 +74,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
         Assert.assertEquals(configurationHandler.getConfigurable(null), "DEFAULT");
 
         // Configure the other tenant explicitly
-        mockTenantKvs(configuredTenant, ImmutableList.<String>of("key=CONFIGURED_TENANT"), otherTenant, ImmutableList.<String>of("key=OTHER_CONFIGURED_TENANT"));
+        mockTenantKvs(configuredTenant, List.of("key=CONFIGURED_TENANT"), otherTenant, List.of("key=OTHER_CONFIGURED_TENANT"));
         configurationHandler.configure(otherTenant);
 
         final String subsequentConfigurableForConfiguredTenant = configurationHandler.getConfigurable(configuredTenant);
@@ -92,7 +91,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
         final UUID nonConfiguredTenant = UUID.randomUUID();
 
         // configure tenants
-        mockTenantKvsCloseable(configuredTenant, ImmutableList.<String>of("CloseableTest"), nonConfiguredTenant, ImmutableList.<String>of());
+        mockTenantKvsCloseable(configuredTenant, List.of("CloseableTest"), nonConfiguredTenant, Collections.emptyList());
         closableConfigurationHandler.configure(configuredTenant);
 
         final CloseableTest o = closableConfigurationHandler.getConfigurable(configuredTenant);
@@ -102,7 +101,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
         Assert.assertEquals(o2, defaultCloseable);
 
         // deconfigure tenants
-        mockTenantKvsCloseable(configuredTenant, ImmutableList.<String>of(), nonConfiguredTenant, ImmutableList.<String>of());
+        mockTenantKvsCloseable(configuredTenant, Collections.emptyList(), nonConfiguredTenant, Collections.emptyList());
         closableConfigurationHandler.configure(configuredTenant);
         Assert.assertTrue(o.isClosed());
         Assert.assertFalse(defaultCloseable.isClosed());
@@ -113,7 +112,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
             @Override
             public List<String> answer(final InvocationOnMock invocation) throws Throwable {
                 if (!"PLUGIN_CONFIG_test".equals(invocation.getArguments()[0])) {
-                    return ImmutableList.<String>of();
+                    return Collections.emptyList();
                 }
 
                 final TenantContext context = (TenantContext) invocation.getArguments()[1];
@@ -122,7 +121,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
                 } else if (kbTenantIdB.equals(context.getTenantId())) {
                     return tenantKvsB;
                 } else {
-                    return ImmutableList.<String>of();
+                    return Collections.emptyList();
                 }
             }
         });
@@ -134,7 +133,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
             @Override
             public List<String> answer(final InvocationOnMock invocation) throws Throwable {
                 if (!"PLUGIN_CONFIG_closeable".equals(invocation.getArguments()[0])) {
-                    return ImmutableList.<String>of();
+                    return Collections.emptyList();
                 }
 
                 final TenantContext context = (TenantContext) invocation.getArguments()[1];
@@ -143,7 +142,7 @@ public class TestPluginTenantConfigurableConfigurationHandler {
                 } else if (kbTenantIdB.equals(context.getTenantId())) {
                     return tenantKvsB;
                 } else {
-                    return ImmutableList.<String>of();
+                    return Collections.emptyList();
                 }
             }
         });

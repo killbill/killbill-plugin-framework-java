@@ -21,12 +21,11 @@ package org.killbill.billing.plugin.api.notification;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Nullable;
-
-import com.google.common.base.MoreObjects;
 
 public class PluginTenantConfigurable<C> {
 
@@ -56,7 +55,7 @@ public class PluginTenantConfigurable<C> {
     public C get(@Nullable final UUID kbTenantId) {
         final String key = getKey(kbTenantId);
         final C configurableForTenant = perTenantConfigurable.get(key);
-        return MoreObjects.firstNonNull(configurableForTenant, defaultConfigurable);
+        return Objects.requireNonNullElse(configurableForTenant, defaultConfigurable);
     }
 
     public void put(@Nullable final UUID kbTenantId, @Nullable final C configurableForTenant) {
@@ -66,7 +65,7 @@ public class PluginTenantConfigurable<C> {
         if (configurableForTenant == null && defaultConfigurable == null) {
             oldConfigurable = perTenantConfigurable.remove(key);
         } else {
-            oldConfigurable = perTenantConfigurable.put(key, MoreObjects.firstNonNull(configurableForTenant, defaultConfigurable));
+            oldConfigurable = perTenantConfigurable.put(key, Objects.requireNonNullElse(configurableForTenant, defaultConfigurable));
         }
 
         // Cleanup the old value

@@ -22,12 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -60,6 +62,8 @@ import org.killbill.billing.payment.plugin.api.PaymentTransactionInfoPlugin;
 import org.killbill.billing.plugin.api.PluginProperties;
 import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
+import org.killbill.commons.utils.io.ByteStreams;
+import org.killbill.commons.utils.io.Resources;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -69,11 +73,6 @@ import org.testng.Assert;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Charsets;
-import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableList;
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Resources;
 
 public abstract class TestUtils {
 
@@ -91,7 +90,7 @@ public abstract class TestUtils {
     public static String toString(final String resourceName) throws IOException {
         final InputStream inputStream = Resources.getResource(resourceName).openStream();
         try {
-            return new String(ByteStreams.toByteArray(inputStream), Charsets.UTF_8);
+            return new String(ByteStreams.toByteArray(inputStream), StandardCharsets.UTF_8);
         } finally {
             inputStream.close();
         }
@@ -116,7 +115,12 @@ public abstract class TestUtils {
                        PaymentTransaction paymentTransaction = null;
 
                        final UUID kbPaymentTransactionId = (UUID) invocation.getArguments()[1];
-                       for (final Payment p : paymentApi.getAccountPayments(account.getId(), false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[3])) {
+                       final List<Payment> accountPayments = paymentApi.getAccountPayments(account.getId(),
+                                                                                           false,
+                                                                                           false,
+                                                                                           Collections.emptyList(),
+                                                                                           (TenantContext) invocation.getArguments()[3]);
+                       for (final Payment p : accountPayments) {
                            for (final PaymentTransaction t : p.getTransactions()) {
                                if (kbPaymentTransactionId.equals(t.getId())) {
                                    payment = p;
@@ -149,7 +153,7 @@ public abstract class TestUtils {
                .then(new Answer<Payment>() {
                    @Override
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
-                       final List<Payment> payments = paymentApi.getAccountPayments(account.getId(), false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[6]);
+                       final List<Payment> payments = paymentApi.getAccountPayments(account.getId(), false, false, Collections.emptyList(), (TenantContext) invocation.getArguments()[6]);
                        final Payment payment;
                        if (payments == null || payments.isEmpty()) {
                            payment = buildPayment(account.getId(), account.getPaymentMethodId(), (Currency) invocation.getArguments()[3], killbillApi);
@@ -171,7 +175,7 @@ public abstract class TestUtils {
                    @Override
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
                        final UUID kbPaymentId = (UUID) invocation.getArguments()[1];
-                       final Payment payment = paymentApi.getPayment(kbPaymentId, false, false, ImmutableList.<PluginProperty>of(), (TenantContext) invocation.getArguments()[4]);
+                       final Payment payment = paymentApi.getPayment(kbPaymentId, false, false, Collections.emptyList(), (TenantContext) invocation.getArguments()[4]);
                        Assert.assertNotNull(payment);
 
                        final String kbPaymentTransactionExternalKey = (String) invocation.getArguments()[3];
@@ -229,11 +233,11 @@ public abstract class TestUtils {
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
                        final UUID accountId = ((Account) invocation.getArguments()[0]).getId();
                        final UUID paymentMethodId = (UUID) invocation.getArguments()[1];
-                       final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
+                       final UUID paymentId = Objects.requireNonNullElse((UUID) invocation.getArguments()[2], UUID.randomUUID());
                        final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
                        final Currency currency = (Currency) invocation.getArguments()[4];
-                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], UUID.randomUUID().toString());
-                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[7], paymentExternalKey);
+                       final String paymentExternalKey = Objects.requireNonNullElse((String) invocation.getArguments()[6], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = Objects.requireNonNullElse((String) invocation.getArguments()[7], paymentExternalKey);
 
                        final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
                        final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.AUTHORIZE, TransactionStatus.UNKNOWN, amount, currency);
@@ -266,11 +270,11 @@ public abstract class TestUtils {
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
                        final UUID accountId = ((Account) invocation.getArguments()[0]).getId();
                        final UUID paymentMethodId = (UUID) invocation.getArguments()[1];
-                       final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
+                       final UUID paymentId = Objects.requireNonNullElse((UUID) invocation.getArguments()[2], UUID.randomUUID());
                        final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
                        final Currency currency = (Currency) invocation.getArguments()[4];
-                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], UUID.randomUUID().toString());
-                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[7], paymentExternalKey);
+                       final String paymentExternalKey = Objects.requireNonNullElse((String) invocation.getArguments()[6], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = Objects.requireNonNullElse((String) invocation.getArguments()[7], paymentExternalKey);
 
                        final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
                        final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.PURCHASE, TransactionStatus.UNKNOWN, amount, currency);
@@ -303,11 +307,11 @@ public abstract class TestUtils {
                    public Payment answer(final InvocationOnMock invocation) throws Throwable {
                        final UUID accountId = ((Account) invocation.getArguments()[0]).getId();
                        final UUID paymentMethodId = (UUID) invocation.getArguments()[1];
-                       final UUID paymentId = MoreObjects.firstNonNull((UUID) invocation.getArguments()[2], UUID.randomUUID());
+                       final UUID paymentId = Objects.requireNonNullElse((UUID) invocation.getArguments()[2], UUID.randomUUID());
                        final BigDecimal amount = (BigDecimal) invocation.getArguments()[3];
                        final Currency currency = (Currency) invocation.getArguments()[4];
-                       final String paymentExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[6], UUID.randomUUID().toString());
-                       final String paymentTransactionExternalKey = MoreObjects.firstNonNull((String) invocation.getArguments()[7], paymentExternalKey);
+                       final String paymentExternalKey = Objects.requireNonNullElse((String) invocation.getArguments()[6], UUID.randomUUID().toString());
+                       final String paymentTransactionExternalKey = Objects.requireNonNullElse((String) invocation.getArguments()[7], paymentExternalKey);
 
                        final Payment payment = buildPayment(accountId, paymentMethodId, paymentId, currency, paymentExternalKey, killbillApi);
                        final PaymentTransaction paymentTransaction = buildPaymentTransaction(payment, paymentTransactionExternalKey, TransactionType.CREDIT, TransactionStatus.UNKNOWN, amount, currency);
@@ -432,7 +436,7 @@ public abstract class TestUtils {
         if (killbillApi != null) {
             Mockito.when(killbillApi.getPaymentApi().getPayment(Mockito.eq(payment.getId()), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payment);
 
-            final List<Payment> payments = MoreObjects.firstNonNull(killbillApi.getPaymentApi().getAccountPayments(accountId, false, false, ImmutableList.<PluginProperty>of(), Mockito.mock(TenantContext.class)), new LinkedList<Payment>());
+            final List<Payment> payments = Objects.requireNonNullElse(killbillApi.getPaymentApi().getAccountPayments(accountId, false, false, Collections.emptyList(), Mockito.mock(TenantContext.class)), new LinkedList<Payment>());
             payments.add(payment);
 
             Mockito.when(killbillApi.getPaymentApi().getAccountPayments(Mockito.eq(accountId), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(payments);
@@ -487,7 +491,7 @@ public abstract class TestUtils {
         Mockito.when(paymentMethod.getPluginName()).thenReturn(pluginName);
 
         if (killbillApi != null) {
-            Mockito.when(killbillApi.getPaymentApi().getAccountPaymentMethods(Mockito.eq(accountId), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(ImmutableList.<PaymentMethod>of(paymentMethod));
+            Mockito.when(killbillApi.getPaymentApi().getAccountPaymentMethods(Mockito.eq(accountId), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(List.of(paymentMethod));
             Mockito.when(killbillApi.getPaymentApi().getPaymentMethodById(Mockito.eq(paymentMethod.getId()), Mockito.anyBoolean(), Mockito.anyBoolean(), Mockito.<Iterable<PluginProperty>>any(), Mockito.<TenantContext>any())).thenReturn(paymentMethod);
         }
 

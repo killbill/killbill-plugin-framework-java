@@ -19,6 +19,7 @@
 package org.killbill.billing.plugin.api.core;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,11 +39,9 @@ import org.killbill.billing.payment.api.TransactionType;
 import org.killbill.billing.payment.plugin.api.PaymentPluginStatus;
 import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
+import org.killbill.commons.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 
 public class PaymentApiWrapper {
 
@@ -64,11 +63,11 @@ public class PaymentApiWrapper {
             return null;
         }
 
-        final Payment payment = osgiKillbillAPI.getPaymentApi().getPayment(kbPaymentId, false, true, ImmutableList.<PluginProperty>of(), context);
+        final Payment payment = osgiKillbillAPI.getPaymentApi().getPayment(kbPaymentId, false, true, Collections.emptyList(), context);
         if (payment.getPaymentAttempts() != null && !payment.getPaymentAttempts().isEmpty()) {
-            return ImmutableList.<String>copyOf(Splitter.on(",").split(payment.getPaymentAttempts().get(0).getPluginName()));
+            return Strings.split(payment.getPaymentAttempts().get(0).getPluginName(), ",");
         } else {
-            return ImmutableList.<String>of();
+            return Collections.emptyList();
         }
     }
 
@@ -125,8 +124,8 @@ public class PaymentApiWrapper {
                     updatedPaymentTransaction.getPaymentInfoPlugin().getStatus(),
                     paymentPluginStatus);
 
-        osgiKillbillAPI.getAdminPaymentApi().fixPaymentTransactionState(payment, updatedPaymentTransaction, transactionStatus, lastSuccessfulPaymentStateName, currentPaymentStateName, ImmutableList.<PluginProperty>of(), context);
-        final Payment fixedPayment = osgiKillbillAPI.getPaymentApi().getPayment(payment.getId(), true, false, ImmutableList.<PluginProperty>of(), context);
+        osgiKillbillAPI.getAdminPaymentApi().fixPaymentTransactionState(payment, updatedPaymentTransaction, transactionStatus, lastSuccessfulPaymentStateName, currentPaymentStateName, Collections.emptyList(), context);
+        final Payment fixedPayment = osgiKillbillAPI.getPaymentApi().getPayment(payment.getId(), true, false, Collections.emptyList(), context);
         return filterForTransaction(fixedPayment, updatedPaymentTransaction.getId());
     }
 

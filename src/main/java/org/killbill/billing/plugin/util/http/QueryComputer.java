@@ -20,7 +20,7 @@ package org.killbill.billing.plugin.util.http;
 
 import java.util.Map;
 
-import com.google.common.base.Strings;
+import org.killbill.commons.utils.Strings;
 
 public enum QueryComputer {
 
