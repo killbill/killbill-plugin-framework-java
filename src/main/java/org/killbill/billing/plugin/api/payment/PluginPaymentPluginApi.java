@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.jooq.Table;
@@ -42,11 +43,6 @@ import org.killbill.billing.util.callcontext.CallContext;
 import org.killbill.billing.util.callcontext.TenantContext;
 import org.killbill.billing.util.entity.Pagination;
 import org.killbill.clock.Clock;
-
-import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP_R>, RESP_T extends Table<RESP_R>, PM_R extends UpdatableRecord<PM_R>, PM_T extends Table<PM_R>> extends PluginApi implements PaymentPluginApi {
 
@@ -100,14 +96,9 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
         } catch (final SQLException e) {
             throw new PaymentPluginApiException("Unable to retrieve payments for kbPaymentId " + kbPaymentId, e);
         }
-
-        return Lists.<RESP_R, PaymentTransactionInfoPlugin>transform(records,
-                                                                     new Function<RESP_R, PaymentTransactionInfoPlugin>() {
-                                                                         @Override
-                                                                         public PaymentTransactionInfoPlugin apply(final RESP_R record) {
-                                                                             return buildPaymentTransactionInfoPlugin(record);
-                                                                         }
-                                                                     });
+        return records.stream()
+                      .map(this::buildPaymentTransactionInfoPlugin)
+                      .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -171,13 +162,9 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
             throw new PaymentPluginApiException("Unable to retrieve payment methods for kbAccountId " + kbAccountId, e);
         }
 
-        return Lists.<PM_R, PaymentMethodInfoPlugin>transform(records,
-                                                              new Function<PM_R, PaymentMethodInfoPlugin>() {
-                                                                  @Override
-                                                                  public PaymentMethodInfoPlugin apply(final PM_R record) {
-                                                                      return buildPaymentMethodInfoPlugin(record);
-                                                                  }
-                                                              });
+        return records.stream()
+                      .map(this::buildPaymentMethodInfoPlugin)
+                      .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
@@ -194,13 +181,9 @@ public abstract class PluginPaymentPluginApi<RESP_R extends UpdatableRecord<RESP
             throw new PaymentPluginApiException("Unable to retrieve payment methods for kbAccountId " + kbAccountId, e);
         }
 
-        final Set<UUID> existingPaymentMethodIds = ImmutableSet.<UUID>copyOf(Iterables.<PM_R, UUID>transform(records,
-                                                                                                             new Function<PM_R, UUID>() {
-                                                                                                                 @Override
-                                                                                                                 public UUID apply(final PM_R input) {
-                                                                                                                     return UUID.fromString(getPaymentMethodId(input));
-                                                                                                                 }
-                                                                                                             }));
+        final Set<UUID> existingPaymentMethodIds = records.stream()
+                .map(input -> UUID.fromString(getPaymentMethodId(input)))
+                .collect(Collectors.toUnmodifiableSet());
 
         final DateTime utcNow = clock.getUTCNow();
         for (final PaymentMethodInfoPlugin existingPaymentMethod : paymentMethods) {

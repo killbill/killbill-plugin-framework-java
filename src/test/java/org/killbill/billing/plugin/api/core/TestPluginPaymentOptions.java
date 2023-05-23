@@ -16,23 +16,22 @@
 
 package org.killbill.billing.plugin.api.core;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.google.common.collect.ImmutableList;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 @Test(groups = { "fast" })
 public class TestPluginPaymentOptions {
 
     final private boolean isExternalPayment = true;
-    final private List<String> paymentControlPluginNames = ImmutableList.<String>of();
+    final private List<String> paymentControlPluginNames = Collections.emptyList();
 
     @Test
     void builderIsEquivalentToConstructor() {

@@ -18,26 +18,25 @@
 
 package org.killbill.billing.plugin.api.payment;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import org.killbill.billing.payment.api.PluginProperty;
-import org.killbill.billing.payment.plugin.api.GatewayNotification;
 import org.killbill.billing.payment.plugin.api.boilerplate.GatewayNotificationImp;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize( builder = PluginGatewayNotification.Builder.class )
 public class PluginGatewayNotification extends GatewayNotificationImp {
 
     public PluginGatewayNotification(final String entity) {
         this(null,
-                200,
-                entity,
-                ImmutableMap.<String, List<String>>of(),
-                ImmutableList.<PluginProperty>of());
+             200,
+             entity,
+             Collections.emptyMap(),
+             Collections.emptyList());
     }
 
     public PluginGatewayNotification(final UUID kbPaymentId,
@@ -68,8 +67,8 @@ public class PluginGatewayNotification extends GatewayNotificationImp {
 
         public Builder() {
             this.withStatus(200);
-            this.withHeaders(ImmutableMap.<String, List<String>>of());
-            this.withProperties(ImmutableList.<PluginProperty>of());
+            this.withHeaders(Collections.emptyMap());
+            this.withProperties(Collections.emptyList());
         }
 
         public Builder(final Builder that) {

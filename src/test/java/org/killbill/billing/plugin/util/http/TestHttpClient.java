@@ -36,7 +36,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableMap;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -195,8 +194,8 @@ public class TestHttpClient {
             return doCall(POST,
                           url + "/test/check",
                           mapper.writeValueAsString(car),
-                          ImmutableMap.<String, String>of("nocache", "1"),
-                          ImmutableMap.<String, String>of("X-Plugin-Client", "12345"),
+                          Map.of("nocache", "1"),
+                          Map.of("X-Plugin-Client", "12345"),
                           Car.class,
                           ResponseFormat.JSON);
         }
@@ -205,8 +204,8 @@ public class TestHttpClient {
             return doCall(GET,
                           url + "/secure/",
                           null,
-                          ImmutableMap.<String, String>of("nocache", "1"),
-                          ImmutableMap.<String, String>of("X-Plugin-Client", "12345"),
+                          Map.of("nocache", "1"),
+                          Map.of("X-Plugin-Client", "12345"),
                           InputStream.class,
                           ResponseFormat.RAW);
         }

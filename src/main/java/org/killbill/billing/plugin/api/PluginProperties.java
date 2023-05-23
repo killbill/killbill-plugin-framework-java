@@ -18,39 +18,41 @@
 
 package org.killbill.billing.plugin.api;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
 import org.killbill.billing.payment.api.PluginProperty;
 import org.killbill.billing.plugin.util.http.UTF8UrlDecoder;
+import org.killbill.commons.utils.Strings;
+import org.killbill.commons.utils.collect.Iterables;
 
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Maps;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public abstract class PluginProperties {
 
     // Last one has precedence
+    @SafeVarargs
     public static Iterable<PluginProperty> merge(final Iterable<PluginProperty>... propertiesLists) {
         return buildPluginProperties(toMap(propertiesLists));
     }
 
     // Last one has precedence
-    public static Iterable<PluginProperty> merge(@Nullable final Map data, final Iterable<PluginProperty>... propertiesLists) {
+    @SafeVarargs
+    public static <K, V> Iterable<PluginProperty> merge(@Nullable final Map<K, V> data, final Iterable<PluginProperty>... propertiesLists) {
         return merge(buildPluginProperties(data), merge(propertiesLists));
     }
 
     // Last one has precedence
+    @SafeVarargs
     public static Map<String, Object> toMap(final Iterable<PluginProperty>... propertiesLists) {
-        final Map<String, Object> mergedProperties = new HashMap<String, Object>();
+        final Map<String, Object> mergedProperties = new HashMap<>();
         for (final Iterable<PluginProperty> propertiesList : propertiesLists) {
             if (propertiesList == null) {
                 continue;
@@ -65,14 +67,12 @@ public abstract class PluginProperties {
     }
 
     // Last one has precedence
+    @SafeVarargs
     public static Map<String, String> toStringMap(final Iterable<PluginProperty>... propertiesLists) {
-        return Maps.transformValues(toMap(propertiesLists),
-                                    new Function<Object, String>() {
-                                        @Override
-                                        public String apply(final Object input) {
-                                            return input == null ? null : input.toString();
-                                        }
-                                    });
+        return toMap(propertiesLists)
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Entry::getKey, entry -> entry.getValue() == null ? null : entry.getValue().toString()));
     }
 
     // Return the value from the plugin properties if it exists, or the fallback otherwise
@@ -86,13 +86,9 @@ public abstract class PluginProperties {
             return null;
         }
 
-        final PluginProperty pluginProperty = Iterables.tryFind(properties,
-                                                                new Predicate<PluginProperty>() {
-                                                                    @Override
-                                                                    public boolean apply(final PluginProperty input) {
-                                                                        return input != null && pluginPropertyName.equals(input.getKey());
-                                                                    }
-                                                                }).orNull();
+        final PluginProperty pluginProperty = Iterables.toStream(properties)
+                                                       .filter(input -> input != null && pluginPropertyName.equals(input.getKey()))
+                                                       .findFirst().orElse(null);
 
         if (pluginProperty == null || pluginProperty.getValue() == null) {
             return null;
@@ -111,13 +107,9 @@ public abstract class PluginProperties {
             return null;
         }
 
-        return Iterables.filter(properties,
-                                new Predicate<PluginProperty>() {
-                                    @Override
-                                    public boolean apply(final PluginProperty input) {
-                                        return key != null && key.equals(input.getKey());
-                                    }
-                                });
+        return Iterables.toStream(properties)
+                        .filter(input -> key != null && input != null && key.equals(input.getKey()))
+                        .collect(Collectors.toUnmodifiableSet());
     }
 
     public static Iterable<PluginProperty> findPluginProperties(final Pattern keyPattern, @Nullable final Iterable<PluginProperty> properties) {
@@ -125,26 +117,18 @@ public abstract class PluginProperties {
             return null;
         }
 
-        return Iterables.filter(properties,
-                                new Predicate<PluginProperty>() {
-                                    @Override
-                                    public boolean apply(final PluginProperty input) {
-                                        return input != null && keyPattern.matcher(input.getKey()).matches();
-                                    }
-                                });
+        return Iterables.toStream(properties)
+                        .filter(input -> keyPattern != null && input != null && keyPattern.matcher(input.getKey()).matches())
+                        .collect(Collectors.toUnmodifiableSet());
     }
 
     @SuppressFBWarnings("WMI_WRONG_MAP_ITERATOR")
-    public static List<PluginProperty> buildPluginProperties(@Nullable final Map data) {
-        final ImmutableList.Builder<PluginProperty> propertiesBuilder = ImmutableList.builder();
-        if (data != null) {
-            for (final Object key : data.keySet()) {
-                if (key != null) {
-                    final PluginProperty property = new PluginProperty(key.toString(), data.get(key), false);
-                    propertiesBuilder.add(property);
-                }
-            }
+    public static <K, V> List<PluginProperty> buildPluginProperties(@Nullable final Map<K, V> data) {
+        if (data == null || data.isEmpty()) {
+            return Collections.emptyList();
         }
-        return propertiesBuilder.build();
+        return data.entrySet().stream()
+                   .map(entry -> new PluginProperty(entry.getKey().toString(), entry.getValue(), false))
+                   .collect(Collectors.toUnmodifiableList());
     }
 }

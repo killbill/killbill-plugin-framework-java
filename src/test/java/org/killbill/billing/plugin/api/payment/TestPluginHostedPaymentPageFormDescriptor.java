@@ -16,35 +16,31 @@
 
 package org.killbill.billing.plugin.api.payment;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import org.killbill.billing.payment.api.PluginProperty;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.google.common.collect.ImmutableList;
-import org.killbill.billing.payment.api.PluginProperty;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 public class TestPluginHostedPaymentPageFormDescriptor {
 
-    private final List<PluginProperty> formFields = ImmutableList.<PluginProperty>of();
+    private final List<PluginProperty> formFields = Collections.emptyList();
     private final String formMethod = PluginHostedPaymentPageFormDescriptor.POST;
     private final String formUrl = "https://www.nowhere.com/target";
     private final UUID kbAccountId = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private final List<PluginProperty> properties = ImmutableList.<PluginProperty>of();
+    private final List<PluginProperty> properties = Collections.emptyList();
 
     @Test
     void builderIsEquivalentToConstructor() {
 
-        PluginHostedPaymentPageFormDescriptor a = new PluginHostedPaymentPageFormDescriptor.Builder<>()
+        final PluginHostedPaymentPageFormDescriptor a = new PluginHostedPaymentPageFormDescriptor.Builder<>()
             .withKbAccountId(kbAccountId)
             .withFormMethod(formMethod)
             .withFormUrl(formUrl)
@@ -52,14 +48,14 @@ public class TestPluginHostedPaymentPageFormDescriptor {
             .withProperties(properties)
             .build();
 
-        PluginHostedPaymentPageFormDescriptor b = new PluginHostedPaymentPageFormDescriptor(
+        final PluginHostedPaymentPageFormDescriptor b = new PluginHostedPaymentPageFormDescriptor(
                 kbAccountId,
                 formMethod,
                 formUrl,
                 formFields,
                 properties);
 
-        Assert.assertTrue(a.equals(b));
+        Assert.assertEquals(b, a);
     }
 
     @Test
@@ -78,7 +74,7 @@ public class TestPluginHostedPaymentPageFormDescriptor {
     @Test
     void callAllGetters() {
 
-        PluginHostedPaymentPageFormDescriptor a = new PluginHostedPaymentPageFormDescriptor.Builder<>()
+        final PluginHostedPaymentPageFormDescriptor a = new PluginHostedPaymentPageFormDescriptor.Builder<>()
             .withKbAccountId(kbAccountId)
             .withFormMethod(formMethod)
             .withFormUrl(formUrl)
@@ -96,7 +92,7 @@ public class TestPluginHostedPaymentPageFormDescriptor {
     @Test 
     void roundTripJson() throws Exception
     {
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.setDateFormat(new StdDateFormat().withColonInTimeZone(true));
         mapper.registerModule(new JodaModule());
@@ -110,10 +106,10 @@ public class TestPluginHostedPaymentPageFormDescriptor {
             .withProperties(properties)
             .build();
 
-        String json =  mapper.writeValueAsString(a);;
-        PluginHostedPaymentPageFormDescriptor b = mapper.readValue(json, PluginHostedPaymentPageFormDescriptor.class);
+        final String json =  mapper.writeValueAsString(a);;
+        final PluginHostedPaymentPageFormDescriptor b = mapper.readValue(json, PluginHostedPaymentPageFormDescriptor.class);
 
-        Assert.assertTrue(a.equals(b));
+        Assert.assertEquals(b, a);
     }
 }
 

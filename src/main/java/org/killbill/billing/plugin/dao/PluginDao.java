@@ -38,13 +38,13 @@ import org.jooq.conf.MappedSchema;
 import org.jooq.conf.RenderMapping;
 import org.jooq.conf.RenderNameCase;
 import org.jooq.conf.Settings;
+import org.killbill.commons.utils.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.google.common.base.Strings;
 
 public class PluginDao {
 

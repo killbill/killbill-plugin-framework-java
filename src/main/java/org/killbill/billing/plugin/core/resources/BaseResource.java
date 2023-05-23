@@ -19,6 +19,8 @@
 package org.killbill.billing.plugin.core.resources;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.concurrent.Callable;
 
 import org.jooby.Result;
@@ -28,8 +30,6 @@ import org.killbill.billing.osgi.libs.killbill.OSGIKillbillAPI;
 import org.killbill.billing.osgi.libs.killbill.OSGIKillbillClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.io.BaseEncoding;
 
 public class BaseResource {
 
@@ -67,7 +67,7 @@ public class BaseResource {
             return;
         }
 
-        final String credentials = new String(BaseEncoding.base64().decode(authHeaderChunks[1]), "UTF-8");
+        final String credentials = new String(Base64.getDecoder().decode(authHeaderChunks[1]), StandardCharsets.UTF_8);
         final int p = credentials.indexOf(":");
         if (p == -1) {
             return;

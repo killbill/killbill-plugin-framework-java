@@ -40,6 +40,8 @@ import java.util.Map.Entry;
 
 import javax.annotation.Nullable;
 
+import org.killbill.commons.utils.annotation.VisibleForTesting;
+import org.killbill.commons.utils.io.CharStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,9 +50,6 @@ import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Charsets;
-import com.google.common.io.CharStreams;
 
 import static org.killbill.billing.plugin.util.http.ResponseFormat.RAW;
 
@@ -213,7 +212,7 @@ public class HttpClient implements Closeable {
         try (final InputStream in = response.body()) {
             switch (format) {
                 case TEXT:
-                    return (T) CharStreams.toString(new InputStreamReader(in, Charsets.UTF_8));
+                    return (T) CharStreams.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
                 default:
                     return mapper.readValue(in, clazz);
             }

@@ -18,17 +18,18 @@
 
 package org.killbill.billing.plugin.api.core;
 
+import java.util.Collections;
 import java.util.List;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.common.collect.ImmutableList;
-import org.killbill.billing.payment.api.PaymentOptions;
+
 import org.killbill.billing.payment.api.boilerplate.PaymentOptionsImp;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize( builder = PluginPaymentOptions.Builder.class )
 public class PluginPaymentOptions extends PaymentOptionsImp {
 
     public PluginPaymentOptions() {
-        this(false, ImmutableList.<String>of());
+        this(false, Collections.emptyList());
     }
 
     public PluginPaymentOptions(final List<String> paymentControlPluginNames) {

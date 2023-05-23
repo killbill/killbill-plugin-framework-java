@@ -15,21 +15,20 @@
  */
 package org.killbill.billing.plugin.api.core;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.google.common.collect.ImmutableList;
+
 import org.killbill.billing.catalog.api.Currency;
 import org.killbill.billing.catalog.api.PlanPhaseSpecifier;
 import org.killbill.billing.catalog.api.UsagePriceOverride;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 @Test(groups = { "fast" })
 public class TestPluginPlanPhasePriceOverride {
@@ -39,7 +38,7 @@ public class TestPluginPlanPhasePriceOverride {
     protected String phaseName = "TestPhaseName";
     protected PlanPhaseSpecifier planPhaseSpecifier = null;
     protected BigDecimal recurringPrice = new BigDecimal("200000");
-    protected List<UsagePriceOverride> usagePriceOverrides = ImmutableList.<UsagePriceOverride>of();
+    protected List<UsagePriceOverride> usagePriceOverrides = Collections.emptyList();
 
     @Test
     void builderIsEquivalentToConstructor() {

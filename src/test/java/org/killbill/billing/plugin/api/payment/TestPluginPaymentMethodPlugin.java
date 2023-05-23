@@ -16,19 +16,18 @@
 
 package org.killbill.billing.plugin.api.payment;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import org.killbill.billing.payment.api.PluginProperty;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-import java.util.UUID;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.util.StdDateFormat;
-import com.google.common.collect.ImmutableList;
-import org.killbill.billing.payment.api.PluginProperty;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 @Test(groups = { "fast" })
 public class TestPluginPaymentMethodPlugin {
@@ -36,7 +35,7 @@ public class TestPluginPaymentMethodPlugin {
     private final String externalPaymentMethodId = "TestExternalPaymentMethodId";
     private final boolean isDefaultPaymentMethod = true;
     private final UUID kbPaymentMethodId = UUID.fromString("00000000-0000-0000-0000-000000000001");
-    private final List<PluginProperty> properties = ImmutableList.<PluginProperty>of();
+    private final List<PluginProperty> properties = Collections.emptyList();
 
     @Test
     void builderIsEquivalentToConstructor() {

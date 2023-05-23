@@ -20,16 +20,17 @@ package org.killbill.billing.plugin.api.payment;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.google.common.collect.ImmutableList;
+
 import org.killbill.billing.payment.api.PluginProperty;
-import org.killbill.billing.payment.plugin.api.HostedPaymentPageFormDescriptor;
 import org.killbill.billing.payment.plugin.api.boilerplate.HostedPaymentPageFormDescriptorImp;
 import org.killbill.billing.plugin.util.http.QueryComputer;
 import org.killbill.billing.plugin.util.http.URIUtils;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonDeserialize( builder = PluginHostedPaymentPageFormDescriptor.Builder.class )
 public class PluginHostedPaymentPageFormDescriptor extends HostedPaymentPageFormDescriptorImp {
@@ -38,7 +39,7 @@ public class PluginHostedPaymentPageFormDescriptor extends HostedPaymentPageForm
     public static final String POST = "POST";
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formUrl) {
-        this(kbAccountId, GET, formUrl, ImmutableList.<PluginProperty>of());
+        this(kbAccountId, GET, formUrl, Collections.emptyList());
     }
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formUrl, final List<PluginProperty> formFields) {
@@ -46,7 +47,7 @@ public class PluginHostedPaymentPageFormDescriptor extends HostedPaymentPageForm
     }
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formMethod, final String formUrl, final List<PluginProperty> formFields) {
-        this(kbAccountId, formMethod, formUrl, formFields, ImmutableList.<PluginProperty>of());
+        this(kbAccountId, formMethod, formUrl, formFields, Collections.emptyList());
     }
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formUrl, final Map<String, String> queryParams) throws URISyntaxException {
@@ -54,7 +55,7 @@ public class PluginHostedPaymentPageFormDescriptor extends HostedPaymentPageForm
     }
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId, final String formMethod, final String formUrl, final Map<String, String> queryParams) throws URISyntaxException {
-        this(kbAccountId,formMethod, toFullUrl(formUrl, queryParams), ImmutableList.<PluginProperty>of(), ImmutableList.<PluginProperty>of());
+        this(kbAccountId,formMethod, toFullUrl(formUrl, queryParams), Collections.emptyList(), Collections.emptyList());
     }
 
     public PluginHostedPaymentPageFormDescriptor(final UUID kbAccountId,

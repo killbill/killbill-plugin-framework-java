@@ -20,7 +20,7 @@ package org.killbill.billing.plugin.core.config;
 
 import java.util.Properties;
 
-import com.google.common.base.Strings;
+import org.killbill.commons.utils.Strings;
 
 public class PluginEnvironmentConfig {
 

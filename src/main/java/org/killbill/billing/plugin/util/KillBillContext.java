@@ -18,11 +18,10 @@
 
 package org.killbill.billing.plugin.util;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import org.slf4j.MDC;
-
-import com.google.common.base.MoreObjects;
 
 public abstract class KillBillContext {
 
@@ -33,6 +32,6 @@ public abstract class KillBillContext {
 
     public static String getXRequestId() {
         // We know Kill Bill passed the X-Request-Id from the user in the slf4j MDC. Maybe one day, there will be a real API for it?
-        return MoreObjects.firstNonNull(MDC.get(MDC_REQUEST_ID), UUID.randomUUID().toString());
+        return Objects.requireNonNullElse(MDC.get(MDC_REQUEST_ID), UUID.randomUUID().toString());
     }
 }

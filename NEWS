@@ -1,3 +1,7 @@
+5.1.0
+    Make java.net.http.HttpClient.Builder overridable
+    Remove all Guava classes and dependency
+
 4.2.15
     Update killbill-oss-parent to 0.144.68
 
