@@ -46,3 +46,4 @@ org.killbill.billing.invoice.plugin.api.boilerplate.plugin.Module
 org.killbill.billing.currency.plugin.api.boilerplate.plugin.Module
 
 
+org.killbill.billing.usage.plugin.api.boilerplate.plugin.Module
