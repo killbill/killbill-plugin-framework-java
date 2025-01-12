@@ -57,7 +57,7 @@ public class TestPluginConfigurationHandler {
     }
 
     @Test(groups = "fast")
-    void testConfigure_withValidJsonKey() throws Exception {
+    void testConfigureWithValidJsonKey() throws Exception {
         final String eventConfigKeyName = "{\"key\":\"PLUGIN_CONFIG_email-notification-plugin\"}";
         final UUID kbTenantId = UUID.randomUUID();
 
@@ -74,7 +74,7 @@ public class TestPluginConfigurationHandler {
     }
 
     @Test(groups = "fast")
-    void testConfigure_withPlainString() {
+    void testConfigureWithPlainString() {
         final String eventConfigKeyName = "PLUGIN_CONFIG_email-notification-plugin";
         final UUID kbTenantId = UUID.randomUUID();
 
