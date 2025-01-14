@@ -7,4 +7,12 @@ on:
 
 jobs:
   ci:
-    uses: killbill/gh-actions-shared/.github/workflows/ci.yml@main
+    runs-on: ${{ inputs.ff-os }}
+    steps:
+      - name: Set up Ubuntu package dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libaio1
+
+      - name: Run shared CI workflow
+        uses: killbill/gh-actions-shared/.github/workflows/ci.yml@main
