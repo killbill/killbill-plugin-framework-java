@@ -6,11 +6,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  install-dependencies:
-    runs-on: ${{ inputs.ff-os }}
-    steps:
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y libaio1
   ci:
     uses: killbill/gh-actions-shared/.github/workflows/ci.yml@main
