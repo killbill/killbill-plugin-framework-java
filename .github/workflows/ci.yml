@@ -6,13 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  ci:
+  install-dependencies:
     runs-on: ${{ inputs.ff-os }}
     steps:
-      - name: Set up Ubuntu package dependencies
-        run: |
+      - run: |
           sudo apt-get update
           sudo apt-get install -y libaio1
-
-      - name: Run shared CI workflow
-        uses: killbill/gh-actions-shared/.github/workflows/ci.yml@main
+  ci:
+    uses: killbill/gh-actions-shared/.github/workflows/ci.yml@main
