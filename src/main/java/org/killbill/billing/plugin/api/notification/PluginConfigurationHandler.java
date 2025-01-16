@@ -34,6 +34,10 @@ import org.killbill.billing.util.callcontext.TenantContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public abstract class PluginConfigurationHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(PluginConfigurationHandler.class);
@@ -49,7 +53,18 @@ public abstract class PluginConfigurationHandler {
     protected abstract void configure(@Nullable UUID kbTenantId);
 
     protected void configure(final String eventConfigKeyName, @Nullable final UUID kbTenantId) {
-        if (eventConfigKeyName.equals(configKeyName)) {
+        String extractedKeyName = eventConfigKeyName;
+
+        try {
+            final JsonNode jsonNode = new ObjectMapper().readTree(eventConfigKeyName);
+            if (jsonNode.has("key")) {
+                extractedKeyName = jsonNode.get("key").asText();
+            }
+        } catch (final JsonProcessingException e) {
+            // No action required, eventConfigKeyName is a plain string.
+        }
+
+        if (extractedKeyName.equals(configKeyName)) {
             configure(kbTenantId);
         }
     }
