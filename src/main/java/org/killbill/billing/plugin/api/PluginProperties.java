@@ -33,8 +33,6 @@ import org.killbill.billing.plugin.util.http.UTF8UrlDecoder;
 import org.killbill.commons.utils.Strings;
 import org.killbill.commons.utils.collect.Iterables;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 public abstract class PluginProperties {
 
     // Last one has precedence
@@ -122,7 +120,6 @@ public abstract class PluginProperties {
                         .collect(Collectors.toUnmodifiableSet());
     }
 
-    @SuppressFBWarnings("WMI_WRONG_MAP_ITERATOR")
     public static <K, V> List<PluginProperty> buildPluginProperties(@Nullable final Map<K, V> data) {
         if (data == null || data.isEmpty()) {
             return Collections.emptyList();
