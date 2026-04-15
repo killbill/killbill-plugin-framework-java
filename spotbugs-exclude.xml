@@ -18,4 +18,19 @@
 <FindBugsFilter>
     <Bug pattern="EI_EXPOSE_REP"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
+    <!-- Constructor validates and normalizes input URLs, and the checked exception is part of the public API. -->
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+        <Class name="org.killbill.billing.plugin.api.payment.PluginHostedPaymentPageFormDescriptor"/>
+    </Match>
+    <!-- Constructor performs DB metadata and schema resolution eagerly, and SQL failures are part of the public API. -->
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+        <Class name="org.killbill.billing.plugin.dao.PluginDao"/>
+    </Match>
+    <!-- Constructor builds SSL/HTTP client state eagerly, and security setup failures are part of the public API. -->
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+        <Class name="org.killbill.billing.plugin.util.http.HttpClient"/>
+    </Match>
 </FindBugsFilter>
