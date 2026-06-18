@@ -42,9 +42,7 @@ public class SslUtils {
         }
     }
 
-    private final SSLContext looseTrustManagerSSLContext = looseTrustManagerSSLContext();
-
-    private SSLContext looseTrustManagerSSLContext() {
+    private static SSLContext buildLooseTrustManagerSSLContext() {
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new TrustManager[]{new LooseTrustManager()}, new SecureRandom());
@@ -60,11 +58,15 @@ public class SslUtils {
         public static final SslUtils instance = new SslUtils();
     }
 
+    private static class LooseTrustManagerSSLContextHolder {
+        public static final SSLContext instance = buildLooseTrustManagerSSLContext();
+    }
+
     public static SslUtils getInstance() {
         return SingletonHolder.instance;
     }
 
     public SSLContext getSSLContext(final boolean acceptAnyCertificate) throws GeneralSecurityException {
-        return acceptAnyCertificate ? looseTrustManagerSSLContext : SSLContext.getDefault();
+        return acceptAnyCertificate ? LooseTrustManagerSSLContextHolder.instance : SSLContext.getDefault();
     }
 }

@@ -18,7 +18,7 @@
 
 package org.killbill.billing.plugin.core.resources.jooby;
 
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServlet;
 
 import org.jooby.Jooby;
 import org.jooby.json.Jackson;
