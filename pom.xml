@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.kill-bill.billing</groupId>
         <artifactId>killbill-oss-parent</artifactId>
-        <version>0.147.8</version>
+        <version>0.147.26</version>
     </parent>
     <groupId>org.kill-bill.billing.plugin.java</groupId>
     <artifactId>killbill-base-plugin</artifactId>
@@ -44,6 +44,7 @@
         <check.fail-spotbugs>true</check.fail-spotbugs>
         <check.spotbugs-exclude-filter-file>spotbugs-exclude.xml</check.spotbugs-exclude-filter-file>
         <killbill-platform.version>0.40.13</killbill-platform.version>
+        <repository.cloudsmith.repo>killbill-plugin-framework-java</repository.cloudsmith.repo>
     </properties>
     <dependencies>
         <dependency>
